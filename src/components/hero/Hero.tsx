@@ -4,7 +4,7 @@ import arrowAsset from "@/assets/hero/arrow.svg.asset.json";
 import videoAsset from "@/assets/hero/hero-video.mp4.asset.json";
 
 const BADGE_TEXT =
-  "40 שנות ניסיון מקצועי – עכשיו גם בדיגיטל • 40 שנות ניסיון מקצועי – עכשיו גם בדיגיטל • ";
+  "40 שנות ניסיון מקצועי – עכשיו גם בדיגיטל";
 
 export function Hero() {
   return (
@@ -153,7 +153,7 @@ function RotatingBadge() {
           <defs>
             <path
               id="hero-badge-circle"
-              d={`M ${center},${center - textRadius} A ${textRadius},${textRadius} 0 1 0 ${center},${center + textRadius} A ${textRadius},${textRadius} 0 1 0 ${center},${center - textRadius}`}
+              d={`M ${center},${center - textRadius} A ${textRadius},${textRadius} 0 1 1 ${center},${center + textRadius} A ${textRadius},${textRadius} 0 1 1 ${center},${center - textRadius}`}
               fill="none"
             />
           </defs>
@@ -171,17 +171,18 @@ function RotatingBadge() {
             unicodeBidi="bidi-override"
             style={{
               fontFamily: "var(--font-discovery)",
-              fontSize: "12.5px",
-              letterSpacing: "0px",
+              fontSize: "15.5px",
+              letterSpacing: "1.2px",
               fill: "rgba(158, 36, 43, 1)",
             }}
           >
             <textPath
               href="#hero-badge-circle"
-              startOffset="77%"
+              startOffset="50%"
               textAnchor="middle"
+              {...({ side: "right" } as any)}
             >
-              40 שנות ניסיון מקצועי – עכשיו גם בדיגיטל
+              {BADGE_TEXT}
             </textPath>
           </text>
         </svg>
