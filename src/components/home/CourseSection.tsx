@@ -19,7 +19,7 @@ function CourseBlock({ number, image, imageAlt, decoText, title, description, im
     <section dir="rtl" className="relative w-full overflow-hidden" style={{ background: '#fff', padding: '80px 0 100px' }}>
       <div aria-hidden className="absolute pointer-events-none select-none" style={{
         fontFamily: 'Atletico FS, sans-serif', fontSize: 680, lineHeight: 1,
-        color: 'rgba(158,36,43,0.05)', top: '50%', left: number === "02" ? '44%' : number === "03" ? '42%' : '50%',
+        color: 'rgba(158,36,43,0.05)', top: '50%', left: number === "01" ? '44%' : number === "02" ? '47%' : number === "03" ? '42%' : '50%',
         transform: 'translate(-50%,-42%)', whiteSpace: 'nowrap', zIndex: 0
       }}>{number}</div>
 
@@ -35,9 +35,9 @@ function CourseBlock({ number, image, imageAlt, decoText, title, description, im
             fontFamily: 'Bateran, cursive', fontSize: 180, fontWeight: 400,
             color: 'rgba(255,20,20,1)', whiteSpace: 'nowrap', lineHeight: 1,
             position: 'absolute',
-            top: imageRight ? undefined : undefined,
-            bottom: imageRight ? -80 : -80,
-            right: imageRight ? -280 : undefined,
+            top: (imageRight && number !== "03") ? 0 : undefined,
+            bottom: (imageRight && number === "03") ? -40 : (!imageRight ? -80 : undefined),
+            right: imageRight ? (number === "03" ? -180 : -280) : undefined,
             left: !imageRight ? -480 : undefined,
             width: 'calc(100% + 260px)', zIndex: 3
           }}>{decoText}</div>
