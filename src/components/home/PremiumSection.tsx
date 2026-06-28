@@ -49,7 +49,7 @@ export function PremiumSection() {
         </div>
         <div style={{ gridColumn: 2, display: 'flex', flexDirection: 'row', alignItems: 'flex-start', gap: 10, height: 460, order: 1 }}>
           {[{ src: premium1Asset.url, mt: 0 }, { src: premium2Asset.url, mt: 70 }, { src: premium3Asset.url, mt: 0 }].map(({ src, mt }, i) => (
-            <div key={i} style={{ flex: '0 0 237px', width: 237, height: '100%', overflow: 'hidden', borderRadius: 4, marginTop: mt }}>
+            <div key={i} className="premium-parallax-img" style={{ flex: '0 0 237px', width: 237, height: '100%', overflow: 'hidden', borderRadius: 4, marginTop: mt }}>
               <img src={src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }} />
             </div>
           ))}
