@@ -38,7 +38,7 @@ function CourseBlock({ number, image, imageAlt, decoText, title, description, im
             top: imageRight ? 0 : undefined,
             bottom: imageRight ? undefined : -80,
             right: imageRight ? -280 : undefined,
-            left: !imageRight ? -260 : undefined,
+            left: !imageRight ? -480 : undefined,
             width: 'calc(100% + 260px)', zIndex: 3
           }}>{decoText}</div>
           <div style={{ direction: 'rtl', textAlign: 'right', display: 'block', width: '100%' }}>
