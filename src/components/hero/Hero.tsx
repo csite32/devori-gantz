@@ -41,8 +41,11 @@ export function Hero() {
 
       {/* Content layer */}
       <div className="relative z-10 flex min-h-screen flex-col md:pr-[70px]">
-        {/* Header: logo right, user left */}
-        <header className="flex items-center justify-between px-6 pt-8 md:px-16">
+        {/* Header: logo right, user left (force LTR order regardless of RTL) */}
+        <header
+          dir="ltr"
+          className="flex items-center justify-between px-6 pt-8 md:px-16"
+        >
           <button
             type="button"
             aria-label="התחברות"
@@ -63,7 +66,7 @@ export function Hero() {
             className="text-right"
             style={{
               fontFamily: "var(--font-atletico)",
-              color: "rgba(82, 16, 20, 1)",
+              color: "rgba(158, 36, 43, 1)",
               lineHeight: 1.02,
             }}
           >
@@ -124,15 +127,19 @@ export function Hero() {
 }
 
 function RotatingBadge() {
-  const size = 170;
-  const radius = 72;
+  const size = 190;
+  const center = size / 2;
+  const outerInset = 0;
+  const innerInset = 16;
+  // Path radius sits between outer and inner ring
+  const textRadius = center - (outerInset + innerInset) / 2 - 2;
 
   return (
     <div
       className="relative grid place-items-center rounded-full"
       style={{ width: size, height: size }}
     >
-      {/* Outer ring with rotating text */}
+      {/* Rotating layer: outer ring + text */}
       <div
         className="absolute inset-0 rounded-full"
         style={{
@@ -140,45 +147,53 @@ function RotatingBadge() {
           animation: "hero-badge-spin 25s linear infinite",
         }}
       >
-        {/* Inner ring */}
-        <div
-          className="absolute rounded-full"
-          style={{
-            inset: 14,
-            border: "0.7px solid rgba(255, 20, 20, 1)",
-          }}
-        />
         <svg
           viewBox={`0 0 ${size} ${size}`}
-          className="absolute inset-0 h-full w-full"
+          className="absolute inset-0 h-full w-full overflow-visible"
         >
           <defs>
+            {/* Circular path, drawn clockwise starting at top */}
             <path
               id="hero-badge-circle"
-              d={`M ${size / 2}, ${size / 2} m -${radius}, 0 a ${radius},${radius} 0 1,1 ${radius * 2},0 a ${radius},${radius} 0 1,1 -${radius * 2},0`}
+              d={`M ${center},${center - textRadius} a ${textRadius},${textRadius} 0 1,1 -0.01,0`}
+              fill="none"
             />
           </defs>
           <text
             style={{
               fontFamily: "var(--font-discovery)",
-              fontSize: "11px",
+              fontSize: "13px",
               letterSpacing: "0.5px",
               fill: "rgba(158, 36, 43, 1)",
             }}
           >
-            <textPath href="#hero-badge-circle" startOffset="0">
-              {BADGE_TEXT}
+            <textPath
+              href="#hero-badge-circle"
+              startOffset="50%"
+              textAnchor="middle"
+              {...({ side: "right" } as Record<string, string>)}
+            >
+              40 שנות ניסיון מקצועי – עכשיו גם בדיגיטל
             </textPath>
           </text>
         </svg>
       </div>
 
-      {/* Center arrow (not rotating) */}
+      {/* Static inner ring */}
+      <div
+        className="pointer-events-none absolute rounded-full"
+        style={{
+          inset: innerInset,
+          border: "0.7px solid rgba(255, 20, 20, 1)",
+        }}
+      />
+
+      {/* Center arrow (static) */}
       <img
         src={arrowAsset.url}
         alt=""
         className="relative z-10"
-        style={{ width: 28, height: 32 }}
+        style={{ width: 30, height: 34 }}
       />
 
       <style>{`
@@ -190,3 +205,4 @@ function RotatingBadge() {
     </div>
   );
 }
+
