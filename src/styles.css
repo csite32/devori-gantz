@@ -2,6 +2,53 @@
 @source "../src";
 @import "tw-animate-css";
 
+/* =========================================================
+ * Brand fonts (served from Lovable CDN)
+ * Families: Bateran, "Discovery FS", "Atletico FS"
+ * ========================================================= */
+@font-face {
+  font-family: "Bateran";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/__l5e/assets-v1/cdd49d2d-fc2d-4d1c-99fc-c47e791140b2/Bateran.woff") format("woff");
+}
+@font-face {
+  font-family: "Bateran";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/__l5e/assets-v1/6794391a-649c-4dd6-b652-d9fa60e44141/Bateran-Bold.woff") format("woff");
+}
+@font-face {
+  font-family: "Discovery FS";
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("/__l5e/assets-v1/74b63473-915d-4559-b59a-e69c2de43b83/Discovery_Fs-Light.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Discovery FS";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/__l5e/assets-v1/98ff5d85-0c05-4453-918c-e3870a20921f/Discovery_Fs-Demibold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Atletico FS";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/__l5e/assets-v1/86802dc3-de6c-44d1-afec-f9a9e3113907/Atletico_FS-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Atletico FS";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/__l5e/assets-v1/07d19833-fb9e-4ccf-ba83-d2762c67d28c/Atletico_FS-Bold.woff2") format("woff2");
+}
+
 @custom-variant dark (&:is(.dark *));
 
 /*
