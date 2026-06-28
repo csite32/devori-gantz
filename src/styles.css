@@ -229,10 +229,12 @@
   50% { transform: translateX(-4px); }
 }
 
-.group:hover .arrow-hover {
+.group:hover .arrow-hover,
+button:hover .arrow-hover {
   animation: arrow-bounce 1.6s ease-in-out infinite;
 }
-.group:hover .premium-arrow-hover {
+.group:hover .premium-arrow-hover,
+button:hover .premium-arrow-hover {
   animation: premium-arrow-bounce 1.6s ease-in-out infinite;
 }
 
