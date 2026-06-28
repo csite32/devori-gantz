@@ -127,12 +127,12 @@ export function Hero() {
 }
 
 function RotatingBadge() {
-  const size = 190;
+  const size = 184;
   const center = size / 2;
-  const outerInset = 0;
-  const innerInset = 16;
-  // Path radius sits between outer and inner ring
-  const textRadius = center - (outerInset + innerInset) / 2 - 2;
+  const strokeWidth = 0.7;
+  const outerRadius = 72;
+  const innerRadius = 39;
+  const textRadius = 55;
 
   return (
     <div
@@ -141,9 +141,8 @@ function RotatingBadge() {
     >
       {/* Rotating layer: outer ring + text */}
       <div
-        className="absolute inset-0 rounded-full"
+        className="absolute inset-0"
         style={{
-          border: "0.7px solid rgba(255, 20, 20, 1)",
           animation: "hero-badge-spin 25s linear infinite",
         }}
       >
@@ -152,26 +151,35 @@ function RotatingBadge() {
           className="absolute inset-0 h-full w-full overflow-visible"
         >
           <defs>
-            {/* Circular path, drawn clockwise starting at top */}
             <path
               id="hero-badge-circle"
-              d={`M ${center},${center - textRadius} a ${textRadius},${textRadius} 0 1,1 -0.01,0`}
+              d={`M ${center},${center - textRadius} A ${textRadius},${textRadius} 0 1 0 ${center},${center + textRadius} A ${textRadius},${textRadius} 0 1 0 ${center},${center - textRadius}`}
               fill="none"
             />
           </defs>
+          <circle
+            cx={center}
+            cy={center}
+            r={outerRadius}
+            fill="none"
+            stroke="rgba(255, 20, 20, 1)"
+            strokeWidth={strokeWidth}
+            vectorEffect="non-scaling-stroke"
+          />
           <text
+            direction="rtl"
+            unicodeBidi="bidi-override"
             style={{
               fontFamily: "var(--font-discovery)",
-              fontSize: "13px",
-              letterSpacing: "0.5px",
+              fontSize: "12.5px",
+              letterSpacing: "0px",
               fill: "rgba(158, 36, 43, 1)",
             }}
           >
             <textPath
               href="#hero-badge-circle"
-              startOffset="50%"
+              startOffset="77%"
               textAnchor="middle"
-              {...({ side: "right" } as Record<string, string>)}
             >
               40 שנות ניסיון מקצועי – עכשיו גם בדיגיטל
             </textPath>
@@ -183,8 +191,9 @@ function RotatingBadge() {
       <div
         className="pointer-events-none absolute rounded-full"
         style={{
-          inset: innerInset,
-          border: "0.7px solid rgba(255, 20, 20, 1)",
+          width: innerRadius * 2,
+          height: innerRadius * 2,
+          border: `${strokeWidth}px solid rgba(255, 20, 20, 1)`,
         }}
       />
 
