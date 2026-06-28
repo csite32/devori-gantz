@@ -18,7 +18,7 @@ export function PremiumSection() {
         display: 'grid', gridTemplateColumns: '1fr 1fr',
         direction: 'ltr', alignItems: 'end', alignContent: 'center', gap: 40, zIndex: 2, boxSizing: 'border-box'
       }}>
-        <div style={{ gridColumn: 1, direction: 'rtl', textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 20, paddingTop: 30 }}>
+        <div style={{ gridColumn: 1, direction: 'rtl', textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 20, paddingTop: 50 }}>
           <h2 className="gsap-title" style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 60, lineHeight: '1.1em', color: 'white', textAlign: 'right', margin: 0, width: '100%', paddingRight: 0 }}>
             <span style={{ fontWeight: 600, display: 'block', lineHeight: '1.1em', margin: 0, padding: 0 }}>חבילת פרימיום -</span>
             <span style={{ fontWeight: 300, display: 'block', lineHeight: '1.1em', margin: 0, padding: 0, whiteSpace: 'nowrap' }}>כל 3 הקורסים במחיר מיוחד</span>
