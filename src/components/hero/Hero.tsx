@@ -41,8 +41,11 @@ export function Hero() {
 
       {/* Content layer */}
       <div className="relative z-10 flex min-h-screen flex-col md:pr-[70px]">
-        {/* Header: logo right, user left */}
-        <header className="flex items-center justify-between px-6 pt-8 md:px-16">
+        {/* Header: logo right, user left (force LTR order regardless of RTL) */}
+        <header
+          dir="ltr"
+          className="flex items-center justify-between px-6 pt-8 md:px-16"
+        >
           <button
             type="button"
             aria-label="התחברות"
@@ -63,7 +66,7 @@ export function Hero() {
             className="text-right"
             style={{
               fontFamily: "var(--font-atletico)",
-              color: "rgba(82, 16, 20, 1)",
+              color: "rgba(158, 36, 43, 1)",
               lineHeight: 1.02,
             }}
           >
