@@ -35,8 +35,8 @@ function CourseBlock({ number, image, imageAlt, decoText, title, description, im
             fontFamily: 'Bateran, cursive', fontSize: 180, fontWeight: 400,
             color: 'rgba(255,20,20,1)', whiteSpace: 'nowrap', lineHeight: 1,
             position: 'absolute',
-            top: imageRight ? 0 : undefined,
-            bottom: imageRight ? undefined : -80,
+            top: imageRight ? undefined : undefined,
+            bottom: imageRight ? -80 : -80,
             right: imageRight ? -280 : undefined,
             left: !imageRight ? -480 : undefined,
             width: 'calc(100% + 260px)', zIndex: 3
