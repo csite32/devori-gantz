@@ -34,7 +34,11 @@ function CourseBlock({ number, image, imageAlt, decoText, title, description, im
           <div aria-hidden className="pointer-events-none select-none" style={{
             fontFamily: 'Bateran, cursive', fontSize: 180, fontWeight: 400,
             color: 'rgba(255,20,20,1)', whiteSpace: 'nowrap', lineHeight: 1,
-            position: 'absolute', top: 0, right: imageRight ? -280 : undefined, left: !imageRight ? -260 : undefined,
+            position: 'absolute',
+            top: imageRight ? 0 : undefined,
+            bottom: imageRight ? undefined : 60,
+            right: imageRight ? -280 : undefined,
+            left: !imageRight ? -260 : undefined,
             width: 'calc(100% + 260px)', zIndex: 3
           }}>{decoText}</div>
           <div style={{ direction: 'rtl', textAlign: 'right', display: 'block', width: '100%' }}>
@@ -43,7 +47,7 @@ function CourseBlock({ number, image, imageAlt, decoText, title, description, im
             <div style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 50, fontWeight: 600, color: 'rgba(158,36,43,1)', marginBottom: 8 }}>800 ₪</div>
             <button className="inline-flex items-center group" style={{ gap: 14, padding: '14px 32px', border: '1px solid rgba(158,36,43,1)', borderRadius: 33.5, background: 'transparent', cursor: 'pointer', fontFamily: 'Discovery FS, sans-serif', fontSize: 22, fontWeight: 300, color: 'rgba(82,16,20,1)', direction: 'rtl', marginTop: 15 }}>
               <span>לרכישת הקורס</span>
-              <img src={arrowBtnAsset.url} alt="" style={{ width: 28, height: 23 }} className="group-hover:[animation:arrow-bounce_1.6s_ease-in-out_infinite]" />
+              <img src={arrowBtnAsset.url} alt="" style={{ width: 28, height: 23 }} className="arrow-hover" />
             </button>
           </div>
         </div>
