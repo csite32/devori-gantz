@@ -39,10 +39,12 @@ export function PremiumSection() {
             <div style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 50, fontWeight: 600, color: 'white', textAlign: 'right', direction: 'rtl', width: '100%', margin: 0 }}>
               1,800 ₪ <span style={{ fontSize: 50, fontWeight: 600 }}>במקום 2,400 ₪.</span>
             </div>
-            <button className="inline-flex items-center group" style={{ gap: 14, padding: '16px 40px', background: 'white', color: 'rgba(82,16,20,1)', fontFamily: 'Discovery FS, sans-serif', fontSize: 25, fontWeight: 300, border: 'none', borderRadius: 33.5, cursor: 'pointer', direction: 'rtl', alignSelf: 'flex-end' }}>
-              <span>לרכישת חבילת פרימיום</span>
-              <img src={arrowBtn2Asset.url} alt="" style={{ width: 28, height: 23 }} className="group-hover:[animation:premium-arrow-bounce_1.6s_ease-in-out_infinite]" />
-            </button>
+            <div style={{ width: '100%', textAlign: 'right' }}>
+              <button className="inline-flex items-center group" style={{ gap: 14, padding: '16px 40px', background: 'white', color: 'rgba(82,16,20,1)', fontFamily: 'Discovery FS, sans-serif', fontSize: 25, fontWeight: 300, border: 'none', borderRadius: 33.5, cursor: 'pointer', direction: 'rtl' }}>
+                <span>לרכישת חבילת פרימיום</span>
+                <img src={arrowBtn2Asset.url} alt="" style={{ width: 28, height: 23 }} className="premium-arrow-hover" />
+              </button>
+            </div>
           </div>
         </div>
         <div style={{ gridColumn: 2, display: 'flex', flexDirection: 'row', alignItems: 'flex-start', gap: 10, height: 460, order: 1 }}>
