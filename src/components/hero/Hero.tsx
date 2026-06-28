@@ -10,10 +10,9 @@ export function Hero() {
   return (
     <section
       dir="rtl"
-      className="relative w-full overflow-hidden"
+      className="relative w-full min-h-[auto] overflow-hidden md:min-h-screen"
       style={{
         backgroundColor: "rgba(255, 238, 218, 1)",
-        minHeight: "100vh",
       }}
     >
       {/* Right decorative vertical strip */}
@@ -40,11 +39,11 @@ export function Hero() {
       </div>
 
       {/* Content layer */}
-      <div className="relative z-10 flex min-h-screen flex-col md:pr-[70px]">
+      <div className="relative z-10 flex min-h-[auto] flex-col md:min-h-screen md:pr-[110px]">
         {/* Header: logo right, user left (force LTR order regardless of RTL) */}
         <header
           dir="ltr"
-          className="flex items-center justify-between px-6 pt-8 md:px-16"
+          className="flex items-center justify-between px-6 pt-6 md:pt-8 md:px-16"
         >
           <button
             type="button"
@@ -61,7 +60,7 @@ export function Hero() {
         </header>
 
         {/* Right-aligned text block (sits to the right of the video) */}
-        <div className="flex flex-1 flex-col justify-center px-6 py-10 md:px-16 md:max-w-[58%] md:ml-auto">
+        <div className="flex flex-1 flex-col justify-center px-6 py-6 md:py-10 md:px-16 md:max-w-[58%] md:ml-auto">
           <h1
             className="text-right"
             style={{
@@ -71,31 +70,30 @@ export function Hero() {
             }}
           >
             <span
-              className="block"
-              style={{ fontWeight: 700, fontSize: "clamp(48px, 8vw, 117px)" }}
+              className="block text-[clamp(42px,9vw,64px)] md:text-[clamp(48px,8vw,117px)]"
+              style={{ fontWeight: 700 }}
             >
               קורסי התספורות
             </span>
             <span
-              className="block"
-              style={{ fontWeight: 700, fontSize: "clamp(48px, 8vw, 117px)" }}
+              className="block text-[clamp(42px,9vw,64px)] md:text-[clamp(48px,8vw,117px)]"
+              style={{ fontWeight: 700 }}
             >
               הדיגיטליים
             </span>
             <span
-              className="block"
-              style={{ fontWeight: 400, fontSize: "clamp(40px, 7vw, 100px)" }}
+              className="block text-[clamp(36px,7.5vw,54px)] md:text-[clamp(40px,7vw,100px)]"
+              style={{ fontWeight: 400 }}
             >
               של דבורי גנץ-אדלר
             </span>
           </h1>
 
           <p
-            className="mt-8 max-w-[640px] text-right"
+            className="mt-4 md:mt-8 max-w-[640px] text-right text-[clamp(18px,4vw,22px)] md:text-[clamp(18px,2.4vw,35px)]"
             style={{
               fontFamily: "var(--font-discovery)",
               color: "rgba(82, 16, 20, 1)",
-              fontSize: "clamp(18px, 2.4vw, 35px)",
               lineHeight: 1.35,
             }}
           >
@@ -215,4 +213,3 @@ function RotatingBadge() {
     </div>
   );
 }
-
