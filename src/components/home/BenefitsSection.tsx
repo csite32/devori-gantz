@@ -18,8 +18,8 @@ export function BenefitsSection() {
         בכל קורס תקבלי:
       </h2>
       <div className="relative inline-block text-center" style={{ zIndex: 1 }}>
-        <img src={scissors1Asset.url} alt="" aria-hidden style={{ position: 'absolute', width: 567, top: -160, right: -260, transform: 'rotate(5deg) translateY(26px)', zIndex: 3, pointerEvents: 'none' }} />
-        <img src={scissors2Asset.url} alt="" aria-hidden style={{ position: 'absolute', width: 420, bottom: -40, left: -220, transform: 'rotate(-6deg)', zIndex: 3, pointerEvents: 'none' }} />
+        <img src={scissors1Asset.url} alt="" aria-hidden className="scissors-parallax-1" style={{ position: 'absolute', width: 567, top: -160, right: -260, transform: 'rotate(5deg) translateY(26px)', zIndex: 3, pointerEvents: 'none' }} />
+        <img src={scissors2Asset.url} alt="" aria-hidden className="scissors-parallax-2" style={{ position: 'absolute', width: 420, bottom: -40, left: -220, transform: 'rotate(-6deg)', zIndex: 3, pointerEvents: 'none' }} />
         <div style={{ fontFamily: 'Atletico FS, sans-serif', fontWeight: 400, fontSize: 92, lineHeight: '1.6em', color: 'rgba(82,16,20,1)', textAlign: 'center', position: 'relative', zIndex: 2, display: 'block', width: '100%' }}>
           {BENEFITS.map((item) => (
             <p key={item} style={{ margin: 0, padding: 0, display: 'flex', flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'center', gap: 14, width: '100%' }}>
