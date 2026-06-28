@@ -19,7 +19,7 @@ function CourseBlock({ number, image, imageAlt, decoText, title, description, im
     <section dir="rtl" className="relative w-full overflow-hidden" style={{ background: '#fff', padding: '80px 0 100px' }}>
       <div aria-hidden className="absolute pointer-events-none select-none" style={{
         fontFamily: 'Atletico FS, sans-serif', fontSize: 680, lineHeight: 1,
-        color: 'rgba(158,36,43,0.05)', top: '50%', left: number === "02" ? '44%' : '50%',
+        color: 'rgba(158,36,43,0.05)', top: '50%', left: number === "02" ? '44%' : number === "03" ? '42%' : '50%',
         transform: 'translate(-50%,-42%)', whiteSpace: 'nowrap', zIndex: 0
       }}>{number}</div>
 
@@ -30,13 +30,13 @@ function CourseBlock({ number, image, imageAlt, decoText, title, description, im
       )}
 
       <div className="relative mx-auto" style={{ maxWidth: 1300, padding: '0 60px', display: 'grid', gridTemplateColumns: '1fr 1fr', direction: 'ltr', gap: 160, alignItems: 'end', zIndex: 1 }}>
-        <div className="flex flex-col" style={{ direction: 'rtl', textAlign: 'right', position: 'relative', minHeight: 500, paddingTop: imageRight ? 200 : 0, justifyContent: imageRight ? 'space-between' : 'center', alignItems: 'flex-end', order: imageRight ? 1 : 2 }}>
+        <div className="flex flex-col" style={{ direction: 'rtl', textAlign: 'right', position: 'relative', minHeight: 500, paddingTop: imageRight ? 80 : 0, justifyContent: imageRight ? 'space-between' : 'center', alignItems: 'flex-end', order: imageRight ? 1 : 2 }}>
           <div aria-hidden className="pointer-events-none select-none" style={{
             fontFamily: 'Bateran, cursive', fontSize: 180, fontWeight: 400,
             color: 'rgba(255,20,20,1)', whiteSpace: 'nowrap', lineHeight: 1,
             position: 'absolute',
-            top: imageRight ? 0 : undefined,
-            bottom: imageRight ? undefined : -80,
+            top: imageRight ? undefined : undefined,
+            bottom: imageRight ? -80 : -80,
             right: imageRight ? -280 : undefined,
             left: !imageRight ? -480 : undefined,
             width: 'calc(100% + 260px)', zIndex: 3
