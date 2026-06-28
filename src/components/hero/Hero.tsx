@@ -178,9 +178,9 @@ function RotatingBadge() {
           >
             <textPath
               href="#hero-badge-circle"
-              side="right"
               startOffset="50%"
               textAnchor="middle"
+              {...({ side: "right" } as any)}
             >
               {BADGE_TEXT}
             </textPath>
