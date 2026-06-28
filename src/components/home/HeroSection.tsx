@@ -42,7 +42,7 @@ export function HeroSection() {
   return (
     <section dir="rtl" className="relative w-full overflow-hidden flex flex-col" style={{ height: '100vh', background: 'rgba(255,238,218,1)' }}>
       <div className="absolute top-0 right-0 h-full z-10 pointer-events-none" style={{ width: '35px', background: 'rgba(208,164,145,0.56)' }} />
-      <div className="absolute top-0 left-0 h-full z-0" style={{ width: '44%', background: 'rgba(229,197,177,1)' }} />
+      
       <div className="absolute top-0 left-0 bottom-0 z-10 hidden md:block" style={{ width: '44%' }}>
         <video src={videoAsset.url} autoPlay muted loop playsInline className="w-full h-full object-cover" />
       </div>
