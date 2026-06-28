@@ -171,7 +171,7 @@ function RotatingBadge() {
               href="#hero-badge-circle"
               startOffset="50%"
               textAnchor="middle"
-              side="right"
+              {...({ side: "right" } as Record<string, string>)}
             >
               40 שנות ניסיון מקצועי – עכשיו גם בדיגיטל
             </textPath>
