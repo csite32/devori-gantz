@@ -14,7 +14,7 @@ const BENEFITS = [
 export function BenefitsSection() {
   return (
     <section dir="rtl" className="relative w-full overflow-hidden text-center" style={{ background: 'rgba(255,238,218,1)', padding: '100px' }}>
-      <h2 style={{ fontFamily: 'Discovery FS, sans-serif', fontWeight: 300, fontSize: 60, color: 'rgba(82,16,20,1)', textAlign: 'center', margin: '0 0 70px 0', position: 'relative', zIndex: 2 }}>
+      <h2 className="gsap-title" style={{ fontFamily: 'Discovery FS, sans-serif', fontWeight: 300, fontSize: 60, color: 'rgba(82,16,20,1)', textAlign: 'center', margin: '0 0 70px 0', position: 'relative', zIndex: 2 }}>
         בכל קורס תקבלי:
       </h2>
       <div className="relative inline-block text-center" style={{ zIndex: 1 }}>

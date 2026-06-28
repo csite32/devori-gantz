@@ -54,7 +54,7 @@ export function HeroSection() {
       </header>
       <div className="relative z-20 flex-1 flex items-center" style={{ padding: '0 110px 60px 24px', maxWidth: '58%', marginLeft: 'auto' }}>
         <div>
-          <h1 className="text-right" style={{ fontFamily: 'Atletico FS, sans-serif', color: 'rgba(158,36,43,1)', lineHeight: 1.05 }}>
+          <h1 className="text-right gsap-title" style={{ fontFamily: 'Atletico FS, sans-serif', color: 'rgba(158,36,43,1)', lineHeight: 1.05 }}>
             <span className="block font-bold" style={{ fontSize: 'clamp(32px,6vw,117px)' }}>קורסי התספורות</span>
             <span className="block font-bold" style={{ fontSize: 'clamp(32px,6vw,117px)' }}>הדיגיטליים</span>
             <span className="block font-normal" style={{ fontSize: 'clamp(26px,5vw,95px)' }}>של דבורי גנץ-אדלר</span>

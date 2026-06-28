@@ -7,7 +7,7 @@ export function DvoriSection() {
         <img src={dvoriAsset.url} alt="דבורי גנץ-אדלר" style={{ width: 'auto', maxWidth: '100%', maxHeight: '70vh', objectFit: 'contain', display: 'block' }} />
       </div>
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'stretch', justifyContent: 'center', textAlign: 'right', direction: 'rtl', padding: '80px 60px', gap: 28, order: 1 }}>
-        <h2 style={{ fontFamily: 'Discovery FS, sans-serif', fontWeight: 300, fontSize: 60, lineHeight: '1em', color: 'rgba(158,36,43,1)', textAlign: 'right', margin: 0, direction: 'rtl' }}>
+        <h2 className="gsap-title" style={{ fontFamily: 'Discovery FS, sans-serif', fontWeight: 300, fontSize: 60, lineHeight: '1em', color: 'rgba(158,36,43,1)', textAlign: 'right', margin: 0, direction: 'rtl' }}>
           מה הופך את הקורסים<br />האלו למיוחדים?
         </h2>
         <p style={{ fontFamily: 'Discovery FS, sans-serif', fontWeight: 400, fontSize: 30, lineHeight: '1em', color: 'rgba(82,16,20,1)', textAlign: 'right', margin: 0 }}>
