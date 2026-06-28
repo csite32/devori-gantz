@@ -4,7 +4,7 @@ import arrowAsset from "@/assets/hero/arrow.svg.asset.json";
 import videoAsset from "@/assets/hero/hero-video.mp4.asset.json";
 
 const BADGE_TEXT =
-  "40 שנות ניסיון מקצועי – עכשיו גם בדיגיטל • 40 שנות ניסיון מקצועי – עכשיו גם בדיגיטל • ";
+  "40 שנות ניסיון מקצועי – עכשיו גם בדיגיטל";
 
 export function Hero() {
   return (
