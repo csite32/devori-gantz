@@ -20,6 +20,7 @@ export type DashboardData = {
     email: string | null;
   };
   courses: DashboardCourse[];
+  is_admin: boolean;
 };
 
 export const getDashboard = createServerFn({ method: "GET" })
@@ -97,6 +98,13 @@ export const getDashboard = createServerFn({ method: "GET" })
     const email =
       (claims as { email?: string } | null)?.email ?? null;
 
+    const { data: adminRow } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", userId)
+      .eq("role", "admin")
+      .maybeSingle();
+
     return {
       profile: {
         id: userId,
@@ -105,6 +113,7 @@ export const getDashboard = createServerFn({ method: "GET" })
         email,
       },
       courses,
+      is_admin: !!adminRow,
     };
   });
 
