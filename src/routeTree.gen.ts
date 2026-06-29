@@ -16,6 +16,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedCoursesSlugRouteImport } from './routes/_authenticated/courses.$slug'
 import { Route as AuthenticatedAdminUsersIndexRouteImport } from './routes/_authenticated/admin.users.index'
 import { Route as AuthenticatedAdminCoursesIndexRouteImport } from './routes/_authenticated/admin.courses.index'
 import { Route as AuthenticatedAdminBundlesIndexRouteImport } from './routes/_authenticated/admin.bundles.index'
@@ -62,6 +63,12 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedCoursesSlugRoute =
+  AuthenticatedCoursesSlugRouteImport.update({
+    id: '/courses/$slug',
+    path: '/courses/$slug',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAdminUsersIndexRoute =
   AuthenticatedAdminUsersIndexRouteImport.update({
     id: '/users/',
@@ -135,6 +142,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/courses/$slug': typeof AuthenticatedCoursesSlugRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/admin/bundles/$id': typeof AuthenticatedAdminBundlesIdRoute
   '/admin/bundles/new': typeof AuthenticatedAdminBundlesNewRoute
@@ -153,6 +161,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/courses/$slug': typeof AuthenticatedCoursesSlugRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/admin/bundles/$id': typeof AuthenticatedAdminBundlesIdRoute
   '/admin/bundles/new': typeof AuthenticatedAdminBundlesNewRoute
@@ -173,6 +182,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/courses/$slug': typeof AuthenticatedCoursesSlugRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/admin/bundles/$id': typeof AuthenticatedAdminBundlesIdRoute
   '/_authenticated/admin/bundles/new': typeof AuthenticatedAdminBundlesNewRoute
@@ -194,6 +204,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/admin'
     | '/dashboard'
+    | '/courses/$slug'
     | '/admin/'
     | '/admin/bundles/$id'
     | '/admin/bundles/new'
@@ -212,6 +223,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/dashboard'
+    | '/courses/$slug'
     | '/admin'
     | '/admin/bundles/$id'
     | '/admin/bundles/new'
@@ -231,6 +243,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/_authenticated/admin'
     | '/_authenticated/dashboard'
+    | '/_authenticated/courses/$slug'
     | '/_authenticated/admin/'
     | '/_authenticated/admin/bundles/$id'
     | '/_authenticated/admin/bundles/new'
@@ -302,6 +315,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/courses/$slug': {
+      id: '/_authenticated/courses/$slug'
+      path: '/courses/$slug'
+      fullPath: '/courses/$slug'
+      preLoaderRoute: typeof AuthenticatedCoursesSlugRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/admin/users/': {
       id: '/_authenticated/admin/users/'
@@ -435,11 +455,13 @@ const AuthenticatedAdminRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedCoursesSlugRoute: typeof AuthenticatedCoursesSlugRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedCoursesSlugRoute: AuthenticatedCoursesSlugRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
