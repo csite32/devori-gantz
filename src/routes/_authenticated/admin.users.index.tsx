@@ -28,12 +28,20 @@ function UsersList() {
   const qc = useQueryClient();
   const fn = useServerFn(listAdminUsers);
   const inviteFn = useServerFn(adminInviteUser);
+  const resetFn = useServerFn(adminSendPasswordReset);
+  const deleteFn = useServerFn(adminDeleteUser);
   const [search, setSearch] = useState("");
   const [showNew, setShowNew] = useState(false);
   const { data, isLoading } = useQuery({
     queryKey: ["admin", "users", search],
     queryFn: () => fn({ data: { search } }),
   });
+  const { data: meId } = useQuery({
+    queryKey: ["auth", "me", "id"],
+    queryFn: async () => (await supabase.auth.getUser()).data.user?.id ?? null,
+    staleTime: Infinity,
+  });
+
 
   const [form, setForm] = useState({
     email: "",
