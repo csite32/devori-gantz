@@ -78,6 +78,37 @@ function UsersList() {
     onError: (e: Error) => setMsg({ kind: "err", text: e.message }),
   });
 
+  const [rowMsg, setRowMsg] = useState<{
+    kind: "ok" | "err";
+    text: string;
+  } | null>(null);
+
+  const sendReset = useMutation({
+    mutationFn: (user_id: string) =>
+      resetFn({
+        data: {
+          user_id,
+          redirect_to:
+            typeof window !== "undefined"
+              ? `${window.location.origin}/reset-password`
+              : undefined,
+        },
+      }),
+    onSuccess: (r) =>
+      setRowMsg({ kind: "ok", text: `נשלח מייל איפוס סיסמה אל ${r.email}` }),
+    onError: (e: Error) => setRowMsg({ kind: "err", text: e.message }),
+  });
+
+  const deleteUser = useMutation({
+    mutationFn: (user_id: string) => deleteFn({ data: { user_id } }),
+    onSuccess: () => {
+      setRowMsg({ kind: "ok", text: "המשתמש נמחק." });
+      qc.invalidateQueries({ queryKey: ["admin", "users"] });
+    },
+    onError: (e: Error) => setRowMsg({ kind: "err", text: e.message }),
+  });
+
+
   return (
     <>
       <AdminPageHeader
