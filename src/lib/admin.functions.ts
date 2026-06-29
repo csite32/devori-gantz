@@ -8,10 +8,8 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
  * enforces this — these guards just produce clearer 403s and avoid leaking
  * RLS errors to the UI.
  */
-async function assertAdmin(context: {
-  supabase: { rpc: (...a: unknown[]) => Promise<{ data: unknown; error: unknown }> };
-  userId: string;
-}) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function assertAdmin(context: any) {
   const { data, error } = await context.supabase.rpc("has_role", {
     _user_id: context.userId,
     _role: "admin",

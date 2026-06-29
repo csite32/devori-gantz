@@ -1,11 +1,12 @@
 import { Link } from "@tanstack/react-router";
 
-const items = [
+type Item = { to: string; label: string; exact?: boolean };
+const items: Item[] = [
   { to: "/admin", label: "ראשי", exact: true },
   { to: "/admin/courses", label: "קורסים" },
   { to: "/admin/bundles", label: "חבילות" },
   { to: "/admin/users", label: "משתמשים" },
-] as const;
+];
 
 export function AdminNavBar() {
   return (
