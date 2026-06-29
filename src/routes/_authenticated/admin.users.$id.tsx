@@ -137,30 +137,6 @@ function UserDetail() {
                 </PrimaryButton>
               </div>
             </div>
-            <div>
-              <label className="block text-sm mb-1">חבילה</label>
-              <div className="flex gap-2">
-                <select
-                  value={bundleSel}
-                  onChange={(e) => setBundleSel(e.target.value)}
-                  className={inputClass}
-                >
-                  <option value="">בחרי חבילה…</option>
-                  {data.all_bundles.map((b) => (
-                    <option key={b.id} value={b.id}>
-                      {b.title}
-                    </option>
-                  ))}
-                </select>
-                <PrimaryButton
-                  type="button"
-                  disabled={!bundleSel || addBundle.isPending}
-                  onClick={() => addBundle.mutate()}
-                >
-                  פתיחה
-                </PrimaryButton>
-              </div>
-            </div>
           </div>
         </Card>
       </div>
