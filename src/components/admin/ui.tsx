@@ -10,18 +10,18 @@ export function AdminPageHeader({
   actions?: ReactNode;
 }) {
   return (
-    <header className="flex flex-wrap items-end justify-between gap-3 mb-6">
+    <header className="flex flex-wrap items-end justify-between gap-3 mb-7">
       <div>
         {eyebrow && (
           <p
-            className="text-xs tracking-[0.3em] uppercase text-brand-primary/80"
+            className="text-sm tracking-[0.3em] uppercase text-brand-primary/80"
             style={{ fontFamily: "var(--font-discovery)" }}
           >
             {eyebrow}
           </p>
         )}
         <h1
-          className="mt-2 text-3xl md:text-4xl text-brand-primary-dark"
+          className="mt-2 text-4xl md:text-5xl text-brand-primary-dark"
           style={{ fontFamily: "var(--font-bateran)" }}
         >
           {title}
@@ -61,7 +61,7 @@ export function PrimaryButton({
     <button
       {...rest}
       className={
-        "inline-flex items-center justify-center gap-2 rounded-full bg-brand-primary px-5 py-2.5 text-sm text-brand-white hover:bg-brand-primary-dark transition disabled:opacity-60 " +
+        "inline-flex items-center justify-center gap-2 rounded-full bg-brand-primary px-6 py-3 text-base text-brand-white hover:bg-brand-primary-dark transition disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer " +
         className
       }
     >
@@ -79,7 +79,7 @@ export function GhostButton({
     <button
       {...rest}
       className={
-        "inline-flex items-center justify-center gap-2 rounded-full border border-brand-primary/40 px-4 py-2 text-sm text-brand-primary hover:bg-brand-primary hover:text-brand-white transition disabled:opacity-60 " +
+        "inline-flex items-center justify-center gap-2 rounded-full border border-brand-primary/40 px-5 py-2.5 text-base text-brand-primary hover:bg-brand-primary hover:text-brand-white transition disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer " +
         className
       }
     >
@@ -97,7 +97,7 @@ export function DangerButton({
     <button
       {...rest}
       className={
-        "inline-flex items-center justify-center gap-2 rounded-full border border-brand-accent-alert/50 px-4 py-2 text-sm text-brand-accent-alert hover:bg-brand-accent-alert hover:text-brand-white transition disabled:opacity-60 " +
+        "inline-flex items-center justify-center gap-2 rounded-full border border-brand-accent-alert/50 px-5 py-2.5 text-base text-brand-accent-alert hover:bg-brand-accent-alert hover:text-brand-white transition disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer " +
         className
       }
     >
@@ -118,14 +118,14 @@ export function FormField({
   return (
     <label className="block">
       <span
-        className="block text-sm md:text-base font-medium text-brand-primary-dark mb-2"
+        className="block text-base md:text-lg font-medium text-brand-primary-dark mb-2"
         style={{ fontFamily: "var(--font-discovery)" }}
       >
         {label}
       </span>
       {children}
       {hint && (
-        <span className="block text-xs text-brand-primary-dark/55 mt-1">
+        <span className="block text-sm text-brand-primary-dark/60 mt-1.5">
           {hint}
         </span>
       )}
@@ -134,4 +134,4 @@ export function FormField({
 }
 
 export const inputClass =
-  "w-full rounded-xl border border-brand-accent-soft bg-brand-white px-4 py-2.5 text-brand-primary-dark outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/15";
+  "w-full rounded-xl border border-brand-accent-soft bg-brand-white px-4 py-3 text-base text-brand-primary-dark outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/15";
