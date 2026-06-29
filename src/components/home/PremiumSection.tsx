@@ -31,8 +31,8 @@ export function PremiumSection() {
         }}>
 
         {/* תמונות — ראשונות במובייל */}
-        <div className="flex flex-row items-start gap-2 mb-6 md:mb-0 md:h-[460px] md:mt-[30px] h-[220px]"
-          style={{ gridColumn: 2, order: 1 }}>
+        <div className="flex flex-row items-start gap-2 mb-6 md:mb-0 md:h-[460px] h-[220px]"
+          style={{ gridColumn: 2, order: 1, alignSelf: 'flex-end', marginTop: '60px' }}>
           {[{ src: premium1Asset.url, mt: 0 }, { src: premium2Asset.url, mt: 0 }, { src: premium3Asset.url, mt: 0 }].map(({ src }, i) => (
             <div key={i} className={`premium-parallax-img flex-1 md:flex-none overflow-hidden rounded-sm h-full ${i === 1 ? 'mt-[25px] md:mt-[70px]' : 'mt-0'}`}
               style={{ width: undefined }}>
@@ -42,8 +42,8 @@ export function PremiumSection() {
         </div>
 
         {/* תוכן */}
-        <div className="flex flex-col items-end gap-4 md:gap-5 w-full md:pt-[20px]"
-          style={{ gridColumn: 1, direction: 'rtl', textAlign: 'right', order: 2 }}>
+        <div className="flex flex-col items-end gap-4 md:gap-5 w-full mt-[100px] md:mt-0"
+          style={{ gridColumn: 1, direction: 'rtl', textAlign: 'right', order: 2, paddingTop: 0 }}>
 
           <h2 className="gsap-title w-full" style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(28px, 5vw, 60px)', lineHeight: '1.1em', color: 'white', textAlign: 'right', margin: 0 }}>
             <span style={{ fontWeight: 600, display: 'block', lineHeight: '1.1em', margin: 0, padding: 0 }}>חבילת פרימיום -</span>
