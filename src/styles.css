@@ -290,8 +290,11 @@ button:hover .premium-arrow-hover {
 /* 1. Premium package מעל התמונות במובייל */
 @media (max-width: 768px) {
   .premium-deco {
+    z-index: 10 !important;
+  }
+  .premium-parallax-img {
     position: relative;
-    z-index: 10;
+    z-index: 2;
   }
 }
 
