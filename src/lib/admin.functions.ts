@@ -128,16 +128,31 @@ export const upsertCourse = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     await assertAdmin(context);
     if (data.id) {
+      const updatePayload: {
+        title: string;
+        slug: string;
+        description?: string | null;
+        cover_url?: string | null;
+        is_published: boolean;
+        sort_order: number;
+      } = {
+        title: data.title,
+        slug: data.slug,
+        is_published: data.is_published,
+        sort_order: data.sort_order,
+      };
+
+      if (Object.prototype.hasOwnProperty.call(data, "description")) {
+        updatePayload.description = data.description ?? null;
+      }
+
+      if (Object.prototype.hasOwnProperty.call(data, "cover_url")) {
+        updatePayload.cover_url = data.cover_url ?? null;
+      }
+
       const { data: row, error } = await context.supabase
         .from("courses")
-        .update({
-          title: data.title,
-          slug: data.slug,
-          description: data.description ?? null,
-          cover_url: data.cover_url ?? null,
-          is_published: data.is_published,
-          sort_order: data.sort_order,
-        })
+        .update(updatePayload)
         .eq("id", data.id)
         .select("id")
         .maybeSingle();
