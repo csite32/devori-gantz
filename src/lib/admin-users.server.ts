@@ -169,6 +169,9 @@ export async function inviteUserWithRoleInternal(input: {
     }
   }
 
+  return { user_id: userId, email, invited };
+}
+
 export async function sendPasswordResetInternal(input: {
   user_id: string;
   redirectTo?: string;
@@ -188,8 +191,8 @@ export async function sendPasswordResetInternal(input: {
 export async function deleteUserCompletelyInternal(input: {
   user_id: string;
 }): Promise<{ ok: true }> {
-  // Clean up related rows first (FKs to auth.users normally cascade, but
-  // we also remove app-level rows defensively to avoid orphans).
+  // Clean up app-level rows first to avoid orphans (in case FKs aren't all
+  // CASCADE). auth.admin.deleteUser handles auth.users itself.
   await supabaseAdmin
     .from("course_access")
     .delete()
@@ -202,10 +205,6 @@ export async function deleteUserCompletelyInternal(input: {
     .from("lesson_progress")
     .delete()
     .eq("user_id", input.user_id);
-  await supabaseAdmin
-    .from("purchases")
-    .delete()
-    .eq("user_id", input.user_id);
   await supabaseAdmin.from("profiles").delete().eq("id", input.user_id);
 
   const { error } = await supabaseAdmin.auth.admin.deleteUser(input.user_id);
@@ -213,5 +212,3 @@ export async function deleteUserCompletelyInternal(input: {
   return { ok: true };
 }
 
-  return { user_id: userId, email, invited };
-}
