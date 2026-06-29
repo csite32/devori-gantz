@@ -234,6 +234,18 @@ function UsersList() {
             className={inputClass}
           />
         </div>
+        {rowMsg && (
+          <p
+            className={
+              "mb-4 text-lg " +
+              (rowMsg.kind === "ok"
+                ? "text-brand-primary"
+                : "text-brand-accent-alert")
+            }
+          >
+            {rowMsg.text}
+          </p>
+        )}
         {isLoading ? (
           <p className="text-lg md:text-xl">טוען…</p>
         ) : !data || data.length === 0 ? (
@@ -254,42 +266,86 @@ function UsersList() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-brand-accent-soft/50">
-                {data.map((u) => (
-                  <tr key={u.user_id} className="text-brand-primary-dark">
-                    <td className="py-3 pr-2" dir="ltr">
-                      {u.email ?? "—"}
-                    </td>
-                    <td className="py-3">{u.full_name ?? "—"}</td>
-                    <td className="py-3">
-                      {u.is_admin ? (
-                        <span className="rounded-full bg-brand-primary/10 text-brand-primary px-3 py-1 text-base md:text-lg">
-                          מנהל
-                        </span>
-                      ) : (
-                        <span className="text-brand-primary-dark/60 text-base md:text-lg">
-                          תלמידה
-                        </span>
-                      )}
-                    </td>
-                    <td className="py-3">{u.access_count}</td>
-                    <td className="py-3 text-base md:text-lg text-brand-primary-dark/60">
-                      {new Date(u.created_at).toLocaleDateString("he-IL")}
-                    </td>
-                    <td className="py-3">
-                      <Link
-                        to="/admin/users/$id"
-                        params={{ id: u.user_id }}
-                      >
-                        <GhostButton type="button">פתיחה</GhostButton>
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
+                {data.map((u) => {
+                  const isSelf = meId === u.user_id;
+                  const busyReset =
+                    sendReset.isPending && sendReset.variables === u.user_id;
+                  const busyDel =
+                    deleteUser.isPending && deleteUser.variables === u.user_id;
+                  return (
+                    <tr key={u.user_id} className="text-brand-primary-dark">
+                      <td className="py-3 pr-2" dir="ltr">
+                        {u.email ?? "—"}
+                      </td>
+                      <td className="py-3">{u.full_name ?? "—"}</td>
+                      <td className="py-3">
+                        {u.is_admin ? (
+                          <span className="rounded-full bg-brand-primary/10 text-brand-primary px-3 py-1 text-base md:text-lg">
+                            מנהל
+                          </span>
+                        ) : (
+                          <span className="text-brand-primary-dark/60 text-base md:text-lg">
+                            תלמידה
+                          </span>
+                        )}
+                      </td>
+                      <td className="py-3">{u.access_count}</td>
+                      <td className="py-3 text-base md:text-lg text-brand-primary-dark/60">
+                        {new Date(u.created_at).toLocaleDateString("he-IL")}
+                      </td>
+                      <td className="py-3">
+                        <div className="flex flex-wrap items-center justify-end gap-2">
+                          <Link
+                            to="/admin/users/$id"
+                            params={{ id: u.user_id }}
+                          >
+                            <GhostButton type="button">פתיחה</GhostButton>
+                          </Link>
+                          <GhostButton
+                            type="button"
+                            disabled={busyReset}
+                            onClick={() => {
+                              setRowMsg(null);
+                              sendReset.mutate(u.user_id);
+                            }}
+                          >
+                            {busyReset ? "שולח…" : "שליחת איפוס סיסמה"}
+                          </GhostButton>
+                          <DangerButton
+                            type="button"
+                            disabled={isSelf || busyDel}
+                            title={
+                              isSelf
+                                ? "לא ניתן למחוק את המשתמש של עצמך"
+                                : undefined
+                            }
+                            onClick={() => {
+                              if (isSelf) return;
+                              const label =
+                                u.full_name || u.email || "המשתמש";
+                              if (
+                                !confirm(
+                                  `למחוק את ${label}? פעולה זו בלתי הפיכה.`,
+                                )
+                              )
+                                return;
+                              setRowMsg(null);
+                              deleteUser.mutate(u.user_id);
+                            }}
+                          >
+                            {busyDel ? "מוחק…" : "מחיקה"}
+                          </DangerButton>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
         )}
       </Card>
     </>
+
   );
 }
