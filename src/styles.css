@@ -313,3 +313,10 @@ button:hover .premium-arrow-hover {
   }
 }
 
+/* Premium images — ביטול marginTop במובייל */
+@media (max-width: 768px) {
+  .premium-images-wrap {
+    margin-top: 0 !important;
+  }
+}
+
