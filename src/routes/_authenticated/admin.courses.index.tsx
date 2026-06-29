@@ -80,17 +80,17 @@ function CoursesList() {
         }
       />
       {err && (
-        <p className="mb-4 text-sm text-brand-accent-alert">{err}</p>
+          <p className="mb-4 text-lg text-brand-accent-alert">{err}</p>
       )}
       <Card>
         {isLoading ? (
-          <p className="text-brand-primary-dark/70">טוען…</p>
+          <p className="text-lg md:text-xl text-brand-primary-dark/70">טוען…</p>
         ) : !data || data.length === 0 ? (
-          <p className="text-brand-primary-dark/70">אין קורסים עדיין.</p>
+          <p className="text-lg md:text-xl text-brand-primary-dark/70">אין קורסים עדיין.</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-right text-sm">
-              <thead className="text-xs uppercase tracking-wider text-brand-primary/70">
+            <table className="w-full text-right text-lg md:text-xl">
+              <thead className="text-base md:text-lg uppercase tracking-wider text-brand-primary/70">
                 <tr>
                   <th className="py-2 pr-2">כותרת</th>
                   <th className="py-2">slug</th>
@@ -118,7 +118,7 @@ function CoursesList() {
                     <td className="py-3">
                       <span
                         className={
-                          "inline-block rounded-full px-2.5 py-0.5 text-xs " +
+                          "inline-block rounded-full px-3 py-1 text-base " +
                           (c.is_published
                             ? "bg-brand-primary/10 text-brand-primary"
                             : "bg-brand-accent-soft/40 text-brand-primary-dark/70")

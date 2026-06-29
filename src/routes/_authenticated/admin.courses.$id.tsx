@@ -69,7 +69,7 @@ function EditCourse() {
       <div className="mt-10">
         <div className="flex items-end justify-between mb-4">
           <h2
-            className="text-2xl text-brand-primary-dark"
+            className="text-4xl text-brand-primary-dark"
             style={{ fontFamily: "var(--font-bateran)" }}
           >
             שיעורי הקורס
@@ -77,13 +77,14 @@ function EditCourse() {
           <Link
             to="/admin/courses/$id/lessons/new"
             params={{ id }}
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-brand-primary px-7 py-3.5 text-lg md:text-xl text-brand-white hover:bg-brand-primary-dark transition cursor-pointer"
           >
-            <PrimaryButton type="button">+ שיעור חדש</PrimaryButton>
+            + שיעור חדש
           </Link>
         </div>
         <Card>
           {data.lessons.length === 0 ? (
-            <p className="text-brand-primary-dark/70">אין שיעורים עדיין.</p>
+            <p className="text-lg md:text-xl text-brand-primary-dark/70">אין שיעורים עדיין.</p>
           ) : (
             <ul className="divide-y divide-brand-accent-soft/50">
               {data.lessons.map((l) => (
@@ -92,15 +93,15 @@ function EditCourse() {
                   className="py-3 flex flex-wrap items-center justify-between gap-3"
                 >
                   <div className="min-w-0">
-                    <p className="text-brand-primary-dark">
-                      <span className="text-brand-primary/70 text-xs ml-2">
+                    <p className="text-lg md:text-xl text-brand-primary-dark">
+                      <span className="text-brand-primary/70 text-base ml-2">
                         #{l.sort_order}
                       </span>
                       {l.title}
                     </p>
                     {l.vimeo_url && (
                       <p
-                        className="text-xs text-brand-primary-dark/55 truncate"
+                        className="text-base text-brand-primary-dark/55 truncate"
                         dir="ltr"
                       >
                         {l.vimeo_url}

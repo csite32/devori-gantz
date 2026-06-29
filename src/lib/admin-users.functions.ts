@@ -37,6 +37,7 @@ const inviteSchema = z.object({
   email: z.string().email(),
   full_name: z.string().trim().min(1).max(120).optional(),
   role: z.enum(["student", "admin"]).default("student"),
+  redirect_to: z.string().url().optional(),
 });
 
 export const adminInviteUser = createServerFn({ method: "POST" })
@@ -57,5 +58,6 @@ export const adminInviteUser = createServerFn({ method: "POST" })
       email: data.email,
       full_name: data.full_name,
       makeAdmin: data.role === "admin",
+      redirectTo: data.redirect_to,
     });
   });

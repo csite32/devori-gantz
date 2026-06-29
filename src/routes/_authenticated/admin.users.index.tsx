@@ -44,6 +44,10 @@ function UsersList() {
           email: form.email.trim(),
           full_name: form.full_name.trim() || undefined,
           role: form.role,
+          redirect_to:
+            typeof window !== "undefined"
+              ? `${window.location.origin}/reset-password`
+              : undefined,
         },
       }),
     onSuccess: (r) => {
@@ -81,7 +85,7 @@ function UsersList() {
         <div className="mb-6">
           <Card>
             <h3
-              className="text-2xl text-brand-primary-dark mb-4"
+              className="text-4xl text-brand-primary-dark mb-5"
               style={{ fontFamily: "var(--font-bateran)" }}
             >
               יצירת משתמשת חדשה
@@ -132,7 +136,7 @@ function UsersList() {
                       onChange={() => setForm({ ...form, role: "student" })}
                       className="accent-[rgb(158,36,43)] cursor-pointer"
                     />
-                    <span className="text-base">תלמידה</span>
+                    <span className="text-lg md:text-xl">תלמידה</span>
                   </label>
                   <label className="inline-flex items-center gap-2 cursor-pointer">
                     <input
@@ -143,17 +147,17 @@ function UsersList() {
                       onChange={() => setForm({ ...form, role: "admin" })}
                       className="accent-[rgb(158,36,43)] cursor-pointer"
                     />
-                    <span className="text-base">מנהל</span>
+                    <span className="text-lg md:text-xl">מנהל</span>
                   </label>
                 </div>
               </FormField>
-              <p className="text-sm text-brand-primary-dark/70">
+              <p className="text-lg text-brand-primary-dark/70">
                 למשתמשת תישלח הזמנה במייל להגדרת סיסמה.
               </p>
               {msg && (
                 <p
                   className={
-                    "text-sm " +
+                    "text-lg " +
                     (msg.kind === "ok"
                       ? "text-brand-primary"
                       : "text-brand-accent-alert")
@@ -185,15 +189,15 @@ function UsersList() {
           />
         </div>
         {isLoading ? (
-          <p className="text-base">טוען…</p>
+          <p className="text-lg md:text-xl">טוען…</p>
         ) : !data || data.length === 0 ? (
-          <p className="text-brand-primary-dark/70 text-base">
+          <p className="text-brand-primary-dark/70 text-lg md:text-xl">
             לא נמצאו משתמשים.
           </p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-right text-base">
-              <thead className="text-sm uppercase tracking-wider text-brand-primary/70">
+            <table className="w-full text-right text-lg md:text-xl">
+              <thead className="text-base md:text-lg uppercase tracking-wider text-brand-primary/70">
                 <tr>
                   <th className="py-3 pr-2">אימייל</th>
                   <th className="py-3">שם</th>
@@ -212,17 +216,17 @@ function UsersList() {
                     <td className="py-3">{u.full_name ?? "—"}</td>
                     <td className="py-3">
                       {u.is_admin ? (
-                        <span className="rounded-full bg-brand-primary/10 text-brand-primary px-3 py-1 text-sm">
+                        <span className="rounded-full bg-brand-primary/10 text-brand-primary px-3 py-1 text-base md:text-lg">
                           מנהל
                         </span>
                       ) : (
-                        <span className="text-brand-primary-dark/60 text-sm">
+                        <span className="text-brand-primary-dark/60 text-base md:text-lg">
                           תלמידה
                         </span>
                       )}
                     </td>
                     <td className="py-3">{u.access_count}</td>
-                    <td className="py-3 text-sm text-brand-primary-dark/60">
+                    <td className="py-3 text-base md:text-lg text-brand-primary-dark/60">
                       {new Date(u.created_at).toLocaleDateString("he-IL")}
                     </td>
                     <td className="py-3">

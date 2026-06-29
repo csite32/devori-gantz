@@ -111,6 +111,7 @@ export async function inviteUserWithRoleInternal(input: {
   email: string;
   full_name?: string;
   makeAdmin: boolean;
+  redirectTo?: string;
 }): Promise<{ user_id: string; email: string; invited: boolean }> {
   const email = input.email.trim().toLowerCase();
   const full_name = input.full_name?.trim() || null;
@@ -120,6 +121,7 @@ export async function inviteUserWithRoleInternal(input: {
 
   const { data: invite, error: invErr } =
     await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
+      redirectTo: input.redirectTo,
       data: full_name ? { full_name } : undefined,
     });
 
