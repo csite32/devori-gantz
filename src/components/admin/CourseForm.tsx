@@ -46,6 +46,20 @@ export function CourseForm({
   const fileRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
+    setV(initial);
+    setSlugTouched(Boolean(initial.id && initial.slug));
+    setErr(null);
+  }, [
+    initial.id,
+    initial.title,
+    initial.slug,
+    initial.description,
+    initial.cover_url,
+    initial.is_published,
+    initial.sort_order,
+  ]);
+
+  useEffect(() => {
     let active = true;
     if (!v.cover_url) {
       setCoverPreview(null);
@@ -68,7 +82,31 @@ export function CourseForm({
   const mutation = useMutation({
     mutationFn: async () => {
       const finalSlug = v.slug.trim() || slugify(v.title);
-      const res = await save({ data: { ...v, slug: finalSlug } });
+      const payload: {
+        id?: string;
+        title: string;
+        slug: string;
+        description?: string | null;
+        cover_url?: string | null;
+        is_published: boolean;
+        sort_order: number;
+      } = {
+        id: v.id,
+        title: v.title,
+        slug: finalSlug,
+        is_published: v.is_published,
+        sort_order: v.sort_order,
+      };
+
+      if (!v.id || v.description !== initial.description) {
+        payload.description = v.description;
+      }
+
+      if (!v.id || v.cover_url !== initial.cover_url) {
+        payload.cover_url = v.cover_url;
+      }
+
+      const res = await save({ data: payload });
       return res.id;
     },
     onSuccess: (id) => {
