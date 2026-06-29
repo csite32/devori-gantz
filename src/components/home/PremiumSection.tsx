@@ -32,7 +32,7 @@ export function PremiumSection() {
         }}>
 
         {/* תמונות — ראשונות במובייל */}
-        <div className="premium-images-wrap flex flex-row items-start gap-2 mb-6 md:mb-0 md:h-[460px] h-[220px]"
+        <div className="premium-images-wrap flex flex-row items-start gap-2 mb-6 md:mb-0 md:h-[460px] h-[220px] md:translate-y-[60px]"
           style={{ gridColumn: 2, order: 1, marginTop: 60 }}>
           {[{ src: premium1Asset.url, mt: 0 }, { src: premium2Asset.url, mt: 0 }, { src: premium3Asset.url, mt: 0 }].map(({ src }, i) => (
             <div key={i} className={`premium-parallax-img flex-1 md:flex-none overflow-hidden rounded-sm h-full ${i === 1 ? 'mt-[25px] md:mt-[70px]' : 'mt-0'}`}
