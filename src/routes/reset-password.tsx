@@ -175,8 +175,9 @@ function ResetPasswordPage() {
             >
               {loading ? "מעדכן..." : "עדכון סיסמה"}
             </button>
-          </form>
-        )}
+            </form>
+          )}
+        </div>
       </div>
     </main>
   );
