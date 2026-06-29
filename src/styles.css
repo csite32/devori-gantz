@@ -320,3 +320,35 @@ button:hover .premium-arrow-hover {
   }
 }
 
+/* PremiumSection — mobile override */
+@media (max-width: 768px) {
+  .premium-body {
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 80px 24px 48px !important;
+    gap: 24px !important;
+  }
+  .premium-deco {
+    font-size: 60px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    z-index: 10 !important;
+  }
+  .premium-images-wrap {
+    height: 220px !important;
+    width: 100% !important;
+    margin-top: 0 !important;
+    gap: 6px !important;
+  }
+  .premium-images-wrap .premium-parallax-img {
+    flex: 1 !important;
+    width: auto !important;
+    position: relative;
+    z-index: 2;
+  }
+  .premium-section-wrapper .premium-body > div:last-child {
+    padding-top: 0 !important;
+  }
+}
+
+
