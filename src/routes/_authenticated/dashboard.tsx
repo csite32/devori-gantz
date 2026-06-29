@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { BrandLogoBar } from "@/components/brand/BrandLogoBar";
 import {
   getDashboard,
   updateAvatarPath,
@@ -49,6 +50,10 @@ function DashboardPage() {
         className="pointer-events-none absolute -top-32 -left-32 h-[480px] w-[480px] rounded-full blur-3xl opacity-40"
         style={{ background: "rgba(158,36,43,0.18)" }}
       />
+
+      <div className="relative">
+        <BrandLogoBar variant="transparent" />
+      </div>
 
       <div className="relative mx-auto max-w-6xl px-4 py-8 md:px-12 md:py-14">
         <DashboardHeader />
@@ -396,8 +401,8 @@ function Field({
   return (
     <div>
       <label
-        className="block text-[11px] tracking-[0.25em] uppercase text-brand-primary-dark/55 mb-2"
-        style={{ fontFamily: "var(--font-discovery)" }}
+        className="block text-sm md:text-base font-medium text-brand-primary-dark mb-2"
+        style={{ fontFamily: "var(--font-discovery)", letterSpacing: "0.02em" }}
       >
         {label}
       </label>
