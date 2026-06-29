@@ -16,7 +16,7 @@ interface CourseBlockProps {
 
 function CourseBlock({ number, image, imageAlt, decoText, title, description, imageRight = true, showMainTitle = false }: CourseBlockProps) {
   return (
-    <section dir="rtl" className="relative w-full overflow-hidden" style={{ background: '#fff', padding: '80px 0 100px' }}>
+    <section dir="rtl" className="relative w-full overflow-hidden pt-6 pb-8 md:pt-[80px] md:pb-[100px]" style={{ background: '#fff' }}>
       {/* מספר רקע — מוסתר במובייל */}
       <div aria-hidden className="absolute pointer-events-none select-none hidden md:block" style={{
         fontFamily: 'Atletico FS, sans-serif', fontSize: 680, lineHeight: 1,
@@ -37,7 +37,6 @@ function CourseBlock({ number, image, imageAlt, decoText, title, description, im
         style={{
           maxWidth: 1300,
           padding: '0 24px',
-          display: undefined,
           gridTemplateColumns: '1fr 1fr',
           direction: 'ltr',
           alignItems: 'end',
@@ -53,7 +52,7 @@ function CourseBlock({ number, image, imageAlt, decoText, title, description, im
             alignItems: 'flex-end',
             order: imageRight ? 1 : 2
           }}>
-          {/* טקסט דקורטיבי — מוסתר במובייל */}
+          {/* טקסט דקורטיבי — מוסתר במובייל (דסקטופ בלבד) */}
           <div aria-hidden className="pointer-events-none select-none hidden md:block" style={{
             fontFamily: 'Bateran, cursive', fontSize: 180, fontWeight: 400,
             color: 'rgba(255,20,20,1)', whiteSpace: 'nowrap', lineHeight: 1,
@@ -67,6 +66,12 @@ function CourseBlock({ number, image, imageAlt, decoText, title, description, im
 
           {/* פרטי קורס */}
           <div style={{ direction: 'rtl', textAlign: 'right', display: 'block', width: '100%' }}>
+            {/* טקסט אנגלי במובייל — מעל הכותרת העברית */}
+            <div aria-hidden className="block md:hidden mb-1" style={{
+              fontFamily: 'Bateran, cursive', fontSize: 'clamp(40px, 13vw, 72px)', fontWeight: 400,
+              color: 'rgba(255,20,20,1)', lineHeight: 1,
+              overflow: 'hidden'
+            }}>{decoText}</div>
             <h3 className="gsap-title" style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(28px, 4vw, 60px)', fontWeight: 300, color: 'rgba(82,16,20,1)', display: 'block', marginBottom: 12 }}>{title}</h3>
             <p style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(16px, 2.5vw, 28px)', fontWeight: 300, lineHeight: 1.4, color: 'rgba(82,16,20,1)', marginBottom: 12 }}>{description}</p>
             <div style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(28px, 4vw, 50px)', fontWeight: 600, color: 'rgba(158,36,43,1)', marginBottom: 8 }}>800 ₪</div>
@@ -77,17 +82,11 @@ function CourseBlock({ number, image, imageAlt, decoText, title, description, im
           </div>
         </div>
 
-        {/* תמונה */}
-        <div className="mt-6 md:mt-0" style={{ order: imageRight ? 2 : 1 }}>
+        {/* תמונה — מעל התוכן במובייל */}
+        <div className="mb-4 md:mb-0" style={{ order: imageRight ? 2 : 1 }}>
           <img src={image} alt={imageAlt} style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'contain' }} />
         </div>
       </div>
-
-      {/* טקסט דקורטיבי במובייל — relative, מתחת לכפתור */}
-      <div aria-hidden className="block md:hidden text-center mt-4 overflow-hidden px-4" style={{
-        fontFamily: 'Bateran, cursive', fontSize: 'clamp(48px, 15vw, 80px)', fontWeight: 400,
-        color: 'rgba(255,20,20,1)', whiteSpace: 'nowrap', lineHeight: 1
-      }}>{decoText}</div>
     </section>
   );
 }
