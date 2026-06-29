@@ -47,9 +47,7 @@ export function HeroSection() {
         <video src={videoAsset.url} autoPlay muted loop playsInline className="w-full h-full object-cover" />
       </div>
       <header dir="ltr" className="relative z-20 flex items-center justify-between px-4 pt-5 md:px-[110px] md:pt-6 md:pr-[110px] md:pl-8">
-        <button aria-label="כניסה לחשבון" className="transition-opacity hover:opacity-70">
-          <img src={userAsset.url} alt="" className="w-8 h-8 md:w-[51px] md:h-[51px]" />
-        </button>
+        <UserIconLink />
         <img src={logoAsset.url} alt="דבורי גנץ" className="h-16 md:h-[115px] w-auto object-contain" />
       </header>
       <div className="relative z-20 flex-1 flex items-center px-4 pb-8 md:pl-6 md:pr-[110px] md:pb-[60px] md:max-w-[58%] md:ml-auto">
