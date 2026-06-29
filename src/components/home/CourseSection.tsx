@@ -83,7 +83,7 @@ function CourseBlock({ number, image, imageAlt, decoText, title, description, im
         </div>
 
         {/* תמונה — מעל התוכן במובייל */}
-        <div className="mb-4 md:mb-0" style={{ order: imageRight ? 2 : 1 }}>
+        <div className="mt-6 mb-0 md:mt-0" style={{ order: imageRight ? 2 : 1 }}>
           <img src={image} alt={imageAlt} style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'contain' }} />
         </div>
       </div>
