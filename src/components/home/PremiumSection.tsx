@@ -6,9 +6,9 @@ import vectorAsset from "@/assets/icons/Vector.svg.asset.json";
 
 export function PremiumSection() {
   return (
-    <section dir="rtl" className="relative w-full overflow-hidden flex flex-col" style={{ minHeight: '100vh', background: 'rgba(82,16,20,1)' }}>
+    <section dir="rtl" className="premium-section-wrapper relative w-full overflow-hidden flex flex-col" style={{ minHeight: '100vh', background: 'rgba(82,16,20,1)' }}>
       {/* Premium package — מוקטן במובייל */}
-      <div aria-hidden className="absolute pointer-events-none select-none text-center" style={{
+      <div aria-hidden className="premium-deco absolute pointer-events-none select-none text-center" style={{
         fontFamily: 'Bateran, cursive', fontSize: 260, fontWeight: 400,
         color: 'rgba(255,255,255,1)', top: 20, left: '50%',
         transform: 'translateX(-50%)', whiteSpace: 'nowrap', lineHeight: 1, zIndex: 1

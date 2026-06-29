@@ -286,3 +286,27 @@ button:hover .premium-arrow-hover {
     margin-top: -10px !important;
   }
 }
+
+/* 1. Premium package מעל התמונות במובייל */
+@media (max-width: 768px) {
+  .premium-deco {
+    position: relative;
+    z-index: 10;
+  }
+}
+
+/* 2. מרווח לפני PremiumSection במובייל */
+@media (max-width: 768px) {
+  .premium-section-wrapper {
+    margin-top: 32px;
+  }
+}
+
+/* 3. יישור לימין ב-BenefitsSection במובייל */
+@media (max-width: 768px) {
+  .benefits-list-wrap,
+  .benefit-row {
+    text-align: right !important;
+  }
+}
+
