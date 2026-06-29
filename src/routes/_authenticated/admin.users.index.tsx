@@ -1,12 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { listAdminUsers } from "@/lib/admin.functions";
+import { adminInviteUser } from "@/lib/admin-users.functions";
 import {
   AdminPageHeader,
   Card,
   GhostButton,
+  PrimaryButton,
+  FormField,
   inputClass,
 } from "@/components/admin/ui";
 
@@ -15,16 +18,163 @@ export const Route = createFileRoute("/_authenticated/admin/users/")({
 });
 
 function UsersList() {
+  const qc = useQueryClient();
   const fn = useServerFn(listAdminUsers);
+  const inviteFn = useServerFn(adminInviteUser);
   const [search, setSearch] = useState("");
+  const [showNew, setShowNew] = useState(false);
   const { data, isLoading } = useQuery({
     queryKey: ["admin", "users", search],
     queryFn: () => fn({ data: { search } }),
   });
 
+  const [form, setForm] = useState({
+    email: "",
+    full_name: "",
+    role: "student" as "student" | "admin",
+  });
+  const [msg, setMsg] = useState<{ kind: "ok" | "err"; text: string } | null>(
+    null,
+  );
+
+  const invite = useMutation({
+    mutationFn: () =>
+      inviteFn({
+        data: {
+          email: form.email.trim(),
+          full_name: form.full_name.trim() || undefined,
+          role: form.role,
+        },
+      }),
+    onSuccess: (r) => {
+      setMsg({
+        kind: "ok",
+        text: r.invited
+          ? "ההזמנה נשלחה לאימייל להגדרת סיסמה."
+          : "המשתמש כבר קיים — הפרטים והתפקיד עודכנו.",
+      });
+      setForm({ email: "", full_name: "", role: "student" });
+      qc.invalidateQueries({ queryKey: ["admin", "users"] });
+    },
+    onError: (e: Error) => setMsg({ kind: "err", text: e.message }),
+  });
+
   return (
     <>
-      <AdminPageHeader eyebrow="ניהול" title="משתמשים" />
+      <AdminPageHeader
+        eyebrow="ניהול"
+        title="משתמשים"
+        actions={
+          <PrimaryButton
+            type="button"
+            onClick={() => {
+              setMsg(null);
+              setShowNew((s) => !s);
+            }}
+          >
+            {showNew ? "סגירה" : "+ משתמש חדש"}
+          </PrimaryButton>
+        }
+      />
+
+      {showNew && (
+        <div className="mb-6">
+          <Card>
+            <h3
+              className="text-2xl text-brand-primary-dark mb-4"
+              style={{ fontFamily: "var(--font-bateran)" }}
+            >
+              יצירת משתמשת חדשה
+            </h3>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                setMsg(null);
+                invite.mutate();
+              }}
+              className="space-y-5"
+            >
+              <div className="grid gap-5 md:grid-cols-2">
+                <FormField label="שם מלא">
+                  <input
+                    value={form.full_name}
+                    onChange={(e) =>
+                      setForm({ ...form, full_name: e.target.value })
+                    }
+                    className={inputClass}
+                    placeholder="לדוגמה: רינה כהן"
+                  />
+                </FormField>
+                <FormField label="אימייל">
+                  <input
+                    required
+                    type="email"
+                    dir="ltr"
+                    value={form.email}
+                    onChange={(e) =>
+                      setForm({ ...form, email: e.target.value })
+                    }
+                    className={inputClass}
+                  />
+                </FormField>
+              </div>
+              <FormField
+                label="סוג משתמש"
+                hint="ברירת המחדל: תלמידה."
+              >
+                <div className="flex gap-3 mt-1">
+                  <label className="inline-flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="role"
+                      value="student"
+                      checked={form.role === "student"}
+                      onChange={() => setForm({ ...form, role: "student" })}
+                      className="accent-[rgb(158,36,43)] cursor-pointer"
+                    />
+                    <span className="text-base">תלמידה</span>
+                  </label>
+                  <label className="inline-flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="role"
+                      value="admin"
+                      checked={form.role === "admin"}
+                      onChange={() => setForm({ ...form, role: "admin" })}
+                      className="accent-[rgb(158,36,43)] cursor-pointer"
+                    />
+                    <span className="text-base">מנהל</span>
+                  </label>
+                </div>
+              </FormField>
+              <p className="text-sm text-brand-primary-dark/70">
+                למשתמשת תישלח הזמנה במייל להגדרת סיסמה.
+              </p>
+              {msg && (
+                <p
+                  className={
+                    "text-sm " +
+                    (msg.kind === "ok"
+                      ? "text-brand-primary"
+                      : "text-brand-accent-alert")
+                  }
+                >
+                  {msg.text}
+                </p>
+              )}
+              <div className="flex gap-2">
+                <PrimaryButton type="submit" disabled={invite.isPending}>
+                  {invite.isPending ? "שולח…" : "שליחת הזמנה"}
+                </PrimaryButton>
+                <GhostButton type="button" onClick={() => setShowNew(false)}>
+                  ביטול
+                </GhostButton>
+              </div>
+            </form>
+          </Card>
+        </div>
+      )}
+
       <Card>
         <div className="mb-4">
           <input
@@ -35,20 +185,22 @@ function UsersList() {
           />
         </div>
         {isLoading ? (
-          <p>טוען…</p>
+          <p className="text-base">טוען…</p>
         ) : !data || data.length === 0 ? (
-          <p className="text-brand-primary-dark/70">לא נמצאו משתמשים.</p>
+          <p className="text-brand-primary-dark/70 text-base">
+            לא נמצאו משתמשים.
+          </p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-right text-sm">
-              <thead className="text-xs uppercase tracking-wider text-brand-primary/70">
+            <table className="w-full text-right text-base">
+              <thead className="text-sm uppercase tracking-wider text-brand-primary/70">
                 <tr>
-                  <th className="py-2 pr-2">אימייל</th>
-                  <th className="py-2">שם</th>
-                  <th className="py-2">תפקיד</th>
-                  <th className="py-2">קורסים</th>
-                  <th className="py-2">נרשם</th>
-                  <th className="py-2"></th>
+                  <th className="py-3 pr-2">אימייל</th>
+                  <th className="py-3">שם</th>
+                  <th className="py-3">תפקיד</th>
+                  <th className="py-3">קורסים</th>
+                  <th className="py-3">נרשם</th>
+                  <th className="py-3"></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-brand-accent-soft/50">
@@ -60,17 +212,17 @@ function UsersList() {
                     <td className="py-3">{u.full_name ?? "—"}</td>
                     <td className="py-3">
                       {u.is_admin ? (
-                        <span className="rounded-full bg-brand-primary/10 text-brand-primary px-2 py-0.5 text-xs">
+                        <span className="rounded-full bg-brand-primary/10 text-brand-primary px-3 py-1 text-sm">
                           מנהל
                         </span>
                       ) : (
-                        <span className="text-brand-primary-dark/60 text-xs">
-                          משתמש
+                        <span className="text-brand-primary-dark/60 text-sm">
+                          תלמידה
                         </span>
                       )}
                     </td>
                     <td className="py-3">{u.access_count}</td>
-                    <td className="py-3 text-xs text-brand-primary-dark/60">
+                    <td className="py-3 text-sm text-brand-primary-dark/60">
                       {new Date(u.created_at).toLocaleDateString("he-IL")}
                     </td>
                     <td className="py-3">

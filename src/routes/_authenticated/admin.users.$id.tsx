@@ -4,7 +4,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import {
   getAdminUser,
-  grantBundleAccess,
   grantCourseAccess,
   revokeCourseAccess,
   setUserAdminRole,
@@ -28,7 +27,6 @@ function UserDetail() {
   const fetchFn = useServerFn(getAdminUser);
   const grantC = useServerFn(grantCourseAccess);
   const revokeC = useServerFn(revokeCourseAccess);
-  const grantB = useServerFn(grantBundleAccess);
   const setRole = useServerFn(setUserAdminRole);
 
   const { data, isLoading } = useQuery({
@@ -36,7 +34,6 @@ function UserDetail() {
     queryFn: () => fetchFn({ data: { user_id: id } }),
   });
   const [courseSel, setCourseSel] = useState("");
-  const [bundleSel, setBundleSel] = useState("");
   const [err, setErr] = useState<string | null>(null);
 
   const refresh = () =>
@@ -47,15 +44,6 @@ function UserDetail() {
       grantC({ data: { user_id: id, course_id: courseSel } }),
     onSuccess: () => {
       setCourseSel("");
-      refresh();
-    },
-    onError: (e: Error) => setErr(e.message),
-  });
-  const addBundle = useMutation({
-    mutationFn: () =>
-      grantB({ data: { user_id: id, bundle_id: bundleSel } }),
-    onSuccess: () => {
-      setBundleSel("");
       refresh();
     },
     onError: (e: Error) => setErr(e.message),
@@ -73,7 +61,7 @@ function UserDetail() {
     onError: (e: Error) => setErr(e.message),
   });
 
-  if (isLoading) return <p>טוען…</p>;
+  if (isLoading) return <p className="text-base">טוען…</p>;
   if (!data) return <p className="text-brand-accent-alert">לא נמצא.</p>;
 
   return (
