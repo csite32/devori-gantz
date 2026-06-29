@@ -43,7 +43,7 @@ export function PremiumSection() {
         </div>
 
         {/* תוכן */}
-        <div className="flex flex-col items-end gap-4 md:gap-5 w-full mt-[100px] md:mt-0"
+        <div className="flex flex-col items-end gap-4 md:gap-5 w-full mt-[100px] md:mt-0 md:-translate-y-[120px]"
           style={{ gridColumn: 1, direction: 'rtl', textAlign: 'right', order: 2, paddingTop: 0 }}>
 
           <h2 className="gsap-title w-full" style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(28px, 5vw, 60px)', lineHeight: '1.1em', color: 'white', textAlign: 'right', margin: 0 }}>
