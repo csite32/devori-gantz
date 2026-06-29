@@ -20,7 +20,7 @@ export const Route = createFileRoute("/_authenticated/admin/courses/$id")({
 
 function EditCourse() {
   const { id } = useParams({ from: "/_authenticated/admin/courses/$id" });
-  const navigate = useNavigate();
+  // navigate not needed — using <Link> for the new-lesson action.
   const qc = useQueryClient();
   const fetchFn = useServerFn(getAdminCourse);
   const delLessonFn = useServerFn(deleteLesson);
@@ -74,16 +74,12 @@ function EditCourse() {
           >
             שיעורי הקורס
           </h2>
-          <PrimaryButton
-            onClick={() =>
-              navigate({
-                to: "/admin/courses/$id/lessons/new",
-                params: { id },
-              })
-            }
+          <Link
+            to="/admin/courses/$id/lessons/new"
+            params={{ id }}
           >
-            + שיעור חדש
-          </PrimaryButton>
+            <PrimaryButton type="button">+ שיעור חדש</PrimaryButton>
+          </Link>
         </div>
         <Card>
           {data.lessons.length === 0 ? (
