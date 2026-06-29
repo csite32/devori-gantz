@@ -14,6 +14,18 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminUsersIndexRouteImport } from './routes/_authenticated/admin.users.index'
+import { Route as AuthenticatedAdminCoursesIndexRouteImport } from './routes/_authenticated/admin.courses.index'
+import { Route as AuthenticatedAdminBundlesIndexRouteImport } from './routes/_authenticated/admin.bundles.index'
+import { Route as AuthenticatedAdminUsersIdRouteImport } from './routes/_authenticated/admin.users.$id'
+import { Route as AuthenticatedAdminCoursesNewRouteImport } from './routes/_authenticated/admin.courses.new'
+import { Route as AuthenticatedAdminCoursesIdRouteImport } from './routes/_authenticated/admin.courses.$id'
+import { Route as AuthenticatedAdminBundlesNewRouteImport } from './routes/_authenticated/admin.bundles.new'
+import { Route as AuthenticatedAdminBundlesIdRouteImport } from './routes/_authenticated/admin.bundles.$id'
+import { Route as AuthenticatedAdminCoursesIdLessonsNewRouteImport } from './routes/_authenticated/admin.courses.$id.lessons.new'
+import { Route as AuthenticatedAdminCoursesIdLessonsLessonIdRouteImport } from './routes/_authenticated/admin.courses.$id.lessons.$lessonId'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
@@ -39,18 +51,111 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedAdminUsersIndexRoute =
+  AuthenticatedAdminUsersIndexRouteImport.update({
+    id: '/users/',
+    path: '/users/',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminCoursesIndexRoute =
+  AuthenticatedAdminCoursesIndexRouteImport.update({
+    id: '/courses/',
+    path: '/courses/',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminBundlesIndexRoute =
+  AuthenticatedAdminBundlesIndexRouteImport.update({
+    id: '/bundles/',
+    path: '/bundles/',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminUsersIdRoute =
+  AuthenticatedAdminUsersIdRouteImport.update({
+    id: '/users/$id',
+    path: '/users/$id',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminCoursesNewRoute =
+  AuthenticatedAdminCoursesNewRouteImport.update({
+    id: '/courses/new',
+    path: '/courses/new',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminCoursesIdRoute =
+  AuthenticatedAdminCoursesIdRouteImport.update({
+    id: '/courses/$id',
+    path: '/courses/$id',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminBundlesNewRoute =
+  AuthenticatedAdminBundlesNewRouteImport.update({
+    id: '/bundles/new',
+    path: '/bundles/new',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminBundlesIdRoute =
+  AuthenticatedAdminBundlesIdRouteImport.update({
+    id: '/bundles/$id',
+    path: '/bundles/$id',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminCoursesIdLessonsNewRoute =
+  AuthenticatedAdminCoursesIdLessonsNewRouteImport.update({
+    id: '/lessons/new',
+    path: '/lessons/new',
+    getParentRoute: () => AuthenticatedAdminCoursesIdRoute,
+  } as any)
+const AuthenticatedAdminCoursesIdLessonsLessonIdRoute =
+  AuthenticatedAdminCoursesIdLessonsLessonIdRouteImport.update({
+    id: '/lessons/$lessonId',
+    path: '/lessons/$lessonId',
+    getParentRoute: () => AuthenticatedAdminCoursesIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/admin/bundles/$id': typeof AuthenticatedAdminBundlesIdRoute
+  '/admin/bundles/new': typeof AuthenticatedAdminBundlesNewRoute
+  '/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRouteWithChildren
+  '/admin/courses/new': typeof AuthenticatedAdminCoursesNewRoute
+  '/admin/users/$id': typeof AuthenticatedAdminUsersIdRoute
+  '/admin/bundles/': typeof AuthenticatedAdminBundlesIndexRoute
+  '/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
+  '/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
+  '/admin/courses/$id/lessons/$lessonId': typeof AuthenticatedAdminCoursesIdLessonsLessonIdRoute
+  '/admin/courses/$id/lessons/new': typeof AuthenticatedAdminCoursesIdLessonsNewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
+  '/admin/bundles/$id': typeof AuthenticatedAdminBundlesIdRoute
+  '/admin/bundles/new': typeof AuthenticatedAdminBundlesNewRoute
+  '/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRouteWithChildren
+  '/admin/courses/new': typeof AuthenticatedAdminCoursesNewRoute
+  '/admin/users/$id': typeof AuthenticatedAdminUsersIdRoute
+  '/admin/bundles': typeof AuthenticatedAdminBundlesIndexRoute
+  '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
+  '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
+  '/admin/courses/$id/lessons/$lessonId': typeof AuthenticatedAdminCoursesIdLessonsLessonIdRoute
+  '/admin/courses/$id/lessons/new': typeof AuthenticatedAdminCoursesIdLessonsNewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -58,20 +163,75 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/admin/bundles/$id': typeof AuthenticatedAdminBundlesIdRoute
+  '/_authenticated/admin/bundles/new': typeof AuthenticatedAdminBundlesNewRoute
+  '/_authenticated/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRouteWithChildren
+  '/_authenticated/admin/courses/new': typeof AuthenticatedAdminCoursesNewRoute
+  '/_authenticated/admin/users/$id': typeof AuthenticatedAdminUsersIdRoute
+  '/_authenticated/admin/bundles/': typeof AuthenticatedAdminBundlesIndexRoute
+  '/_authenticated/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
+  '/_authenticated/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
+  '/_authenticated/admin/courses/$id/lessons/$lessonId': typeof AuthenticatedAdminCoursesIdLessonsLessonIdRoute
+  '/_authenticated/admin/courses/$id/lessons/new': typeof AuthenticatedAdminCoursesIdLessonsNewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/reset-password' | '/dashboard'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/admin'
+    | '/dashboard'
+    | '/admin/'
+    | '/admin/bundles/$id'
+    | '/admin/bundles/new'
+    | '/admin/courses/$id'
+    | '/admin/courses/new'
+    | '/admin/users/$id'
+    | '/admin/bundles/'
+    | '/admin/courses/'
+    | '/admin/users/'
+    | '/admin/courses/$id/lessons/$lessonId'
+    | '/admin/courses/$id/lessons/new'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/reset-password' | '/dashboard'
+  to:
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/dashboard'
+    | '/admin'
+    | '/admin/bundles/$id'
+    | '/admin/bundles/new'
+    | '/admin/courses/$id'
+    | '/admin/courses/new'
+    | '/admin/users/$id'
+    | '/admin/bundles'
+    | '/admin/courses'
+    | '/admin/users'
+    | '/admin/courses/$id/lessons/$lessonId'
+    | '/admin/courses/$id/lessons/new'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
     | '/reset-password'
+    | '/_authenticated/admin'
     | '/_authenticated/dashboard'
+    | '/_authenticated/admin/'
+    | '/_authenticated/admin/bundles/$id'
+    | '/_authenticated/admin/bundles/new'
+    | '/_authenticated/admin/courses/$id'
+    | '/_authenticated/admin/courses/new'
+    | '/_authenticated/admin/users/$id'
+    | '/_authenticated/admin/bundles/'
+    | '/_authenticated/admin/courses/'
+    | '/_authenticated/admin/users/'
+    | '/_authenticated/admin/courses/$id/lessons/$lessonId'
+    | '/_authenticated/admin/courses/$id/lessons/new'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -118,14 +278,146 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/users/': {
+      id: '/_authenticated/admin/users/'
+      path: '/users'
+      fullPath: '/admin/users/'
+      preLoaderRoute: typeof AuthenticatedAdminUsersIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/courses/': {
+      id: '/_authenticated/admin/courses/'
+      path: '/courses'
+      fullPath: '/admin/courses/'
+      preLoaderRoute: typeof AuthenticatedAdminCoursesIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/bundles/': {
+      id: '/_authenticated/admin/bundles/'
+      path: '/bundles'
+      fullPath: '/admin/bundles/'
+      preLoaderRoute: typeof AuthenticatedAdminBundlesIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/users/$id': {
+      id: '/_authenticated/admin/users/$id'
+      path: '/users/$id'
+      fullPath: '/admin/users/$id'
+      preLoaderRoute: typeof AuthenticatedAdminUsersIdRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/courses/new': {
+      id: '/_authenticated/admin/courses/new'
+      path: '/courses/new'
+      fullPath: '/admin/courses/new'
+      preLoaderRoute: typeof AuthenticatedAdminCoursesNewRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/courses/$id': {
+      id: '/_authenticated/admin/courses/$id'
+      path: '/courses/$id'
+      fullPath: '/admin/courses/$id'
+      preLoaderRoute: typeof AuthenticatedAdminCoursesIdRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/bundles/new': {
+      id: '/_authenticated/admin/bundles/new'
+      path: '/bundles/new'
+      fullPath: '/admin/bundles/new'
+      preLoaderRoute: typeof AuthenticatedAdminBundlesNewRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/bundles/$id': {
+      id: '/_authenticated/admin/bundles/$id'
+      path: '/bundles/$id'
+      fullPath: '/admin/bundles/$id'
+      preLoaderRoute: typeof AuthenticatedAdminBundlesIdRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/courses/$id/lessons/new': {
+      id: '/_authenticated/admin/courses/$id/lessons/new'
+      path: '/lessons/new'
+      fullPath: '/admin/courses/$id/lessons/new'
+      preLoaderRoute: typeof AuthenticatedAdminCoursesIdLessonsNewRouteImport
+      parentRoute: typeof AuthenticatedAdminCoursesIdRoute
+    }
+    '/_authenticated/admin/courses/$id/lessons/$lessonId': {
+      id: '/_authenticated/admin/courses/$id/lessons/$lessonId'
+      path: '/lessons/$lessonId'
+      fullPath: '/admin/courses/$id/lessons/$lessonId'
+      preLoaderRoute: typeof AuthenticatedAdminCoursesIdLessonsLessonIdRouteImport
+      parentRoute: typeof AuthenticatedAdminCoursesIdRoute
+    }
   }
 }
 
+interface AuthenticatedAdminCoursesIdRouteChildren {
+  AuthenticatedAdminCoursesIdLessonsLessonIdRoute: typeof AuthenticatedAdminCoursesIdLessonsLessonIdRoute
+  AuthenticatedAdminCoursesIdLessonsNewRoute: typeof AuthenticatedAdminCoursesIdLessonsNewRoute
+}
+
+const AuthenticatedAdminCoursesIdRouteChildren: AuthenticatedAdminCoursesIdRouteChildren =
+  {
+    AuthenticatedAdminCoursesIdLessonsLessonIdRoute:
+      AuthenticatedAdminCoursesIdLessonsLessonIdRoute,
+    AuthenticatedAdminCoursesIdLessonsNewRoute:
+      AuthenticatedAdminCoursesIdLessonsNewRoute,
+  }
+
+const AuthenticatedAdminCoursesIdRouteWithChildren =
+  AuthenticatedAdminCoursesIdRoute._addFileChildren(
+    AuthenticatedAdminCoursesIdRouteChildren,
+  )
+
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+  AuthenticatedAdminBundlesIdRoute: typeof AuthenticatedAdminBundlesIdRoute
+  AuthenticatedAdminBundlesNewRoute: typeof AuthenticatedAdminBundlesNewRoute
+  AuthenticatedAdminCoursesIdRoute: typeof AuthenticatedAdminCoursesIdRouteWithChildren
+  AuthenticatedAdminCoursesNewRoute: typeof AuthenticatedAdminCoursesNewRoute
+  AuthenticatedAdminUsersIdRoute: typeof AuthenticatedAdminUsersIdRoute
+  AuthenticatedAdminBundlesIndexRoute: typeof AuthenticatedAdminBundlesIndexRoute
+  AuthenticatedAdminCoursesIndexRoute: typeof AuthenticatedAdminCoursesIndexRoute
+  AuthenticatedAdminUsersIndexRoute: typeof AuthenticatedAdminUsersIndexRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+  AuthenticatedAdminBundlesIdRoute: AuthenticatedAdminBundlesIdRoute,
+  AuthenticatedAdminBundlesNewRoute: AuthenticatedAdminBundlesNewRoute,
+  AuthenticatedAdminCoursesIdRoute:
+    AuthenticatedAdminCoursesIdRouteWithChildren,
+  AuthenticatedAdminCoursesNewRoute: AuthenticatedAdminCoursesNewRoute,
+  AuthenticatedAdminUsersIdRoute: AuthenticatedAdminUsersIdRoute,
+  AuthenticatedAdminBundlesIndexRoute: AuthenticatedAdminBundlesIndexRoute,
+  AuthenticatedAdminCoursesIndexRoute: AuthenticatedAdminCoursesIndexRoute,
+  AuthenticatedAdminUsersIndexRoute: AuthenticatedAdminUsersIndexRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
 }
 
