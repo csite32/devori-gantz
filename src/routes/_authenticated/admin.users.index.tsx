@@ -2,16 +2,23 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { listAdminUsers } from "@/lib/admin.functions";
-import { adminInviteUser } from "@/lib/admin-users.functions";
+import {
+  adminDeleteUser,
+  adminInviteUser,
+  adminSendPasswordReset,
+} from "@/lib/admin-users.functions";
 import {
   AdminPageHeader,
   Card,
+  DangerButton,
   GhostButton,
   PrimaryButton,
   FormField,
   inputClass,
 } from "@/components/admin/ui";
+
 
 export const Route = createFileRoute("/_authenticated/admin/users/")({
   component: UsersList,
