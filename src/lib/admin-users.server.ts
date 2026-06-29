@@ -171,3 +171,44 @@ export async function inviteUserWithRoleInternal(input: {
 
   return { user_id: userId, email, invited };
 }
+
+export async function sendPasswordResetInternal(input: {
+  user_id: string;
+  redirectTo?: string;
+}): Promise<{ ok: true; email: string }> {
+  const { data: u, error: ge } = await supabaseAdmin.auth.admin.getUserById(
+    input.user_id,
+  );
+  if (ge || !u?.user?.email) throw new Error("המשתמש לא נמצא");
+  const email = u.user.email;
+  const { error } = await supabaseAdmin.auth.resetPasswordForEmail(email, {
+    redirectTo: input.redirectTo,
+  });
+  if (error) throw new Error(`שליחת איפוס סיסמה נכשלה: ${error.message}`);
+  return { ok: true, email };
+}
+
+export async function deleteUserCompletelyInternal(input: {
+  user_id: string;
+}): Promise<{ ok: true }> {
+  // Clean up app-level rows first to avoid orphans (in case FKs aren't all
+  // CASCADE). auth.admin.deleteUser handles auth.users itself.
+  await supabaseAdmin
+    .from("course_access")
+    .delete()
+    .eq("user_id", input.user_id);
+  await supabaseAdmin
+    .from("user_roles")
+    .delete()
+    .eq("user_id", input.user_id);
+  await supabaseAdmin
+    .from("lesson_progress")
+    .delete()
+    .eq("user_id", input.user_id);
+  await supabaseAdmin.from("profiles").delete().eq("id", input.user_id);
+
+  const { error } = await supabaseAdmin.auth.admin.deleteUser(input.user_id);
+  if (error) throw new Error(`מחיקת המשתמש נכשלה: ${error.message}`);
+  return { ok: true };
+}
+

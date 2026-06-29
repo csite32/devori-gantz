@@ -2,16 +2,23 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { listAdminUsers } from "@/lib/admin.functions";
-import { adminInviteUser } from "@/lib/admin-users.functions";
+import {
+  adminDeleteUser,
+  adminInviteUser,
+  adminSendPasswordReset,
+} from "@/lib/admin-users.functions";
 import {
   AdminPageHeader,
   Card,
+  DangerButton,
   GhostButton,
   PrimaryButton,
   FormField,
   inputClass,
 } from "@/components/admin/ui";
+
 
 export const Route = createFileRoute("/_authenticated/admin/users/")({
   component: UsersList,
@@ -21,12 +28,20 @@ function UsersList() {
   const qc = useQueryClient();
   const fn = useServerFn(listAdminUsers);
   const inviteFn = useServerFn(adminInviteUser);
+  const resetFn = useServerFn(adminSendPasswordReset);
+  const deleteFn = useServerFn(adminDeleteUser);
   const [search, setSearch] = useState("");
   const [showNew, setShowNew] = useState(false);
   const { data, isLoading } = useQuery({
     queryKey: ["admin", "users", search],
     queryFn: () => fn({ data: { search } }),
   });
+  const { data: meId } = useQuery({
+    queryKey: ["auth", "me", "id"],
+    queryFn: async () => (await supabase.auth.getUser()).data.user?.id ?? null,
+    staleTime: Infinity,
+  });
+
 
   const [form, setForm] = useState({
     email: "",
@@ -62,6 +77,37 @@ function UsersList() {
     },
     onError: (e: Error) => setMsg({ kind: "err", text: e.message }),
   });
+
+  const [rowMsg, setRowMsg] = useState<{
+    kind: "ok" | "err";
+    text: string;
+  } | null>(null);
+
+  const sendReset = useMutation({
+    mutationFn: (user_id: string) =>
+      resetFn({
+        data: {
+          user_id,
+          redirect_to:
+            typeof window !== "undefined"
+              ? `${window.location.origin}/reset-password`
+              : undefined,
+        },
+      }),
+    onSuccess: (r) =>
+      setRowMsg({ kind: "ok", text: `נשלח מייל איפוס סיסמה אל ${r.email}` }),
+    onError: (e: Error) => setRowMsg({ kind: "err", text: e.message }),
+  });
+
+  const deleteUser = useMutation({
+    mutationFn: (user_id: string) => deleteFn({ data: { user_id } }),
+    onSuccess: () => {
+      setRowMsg({ kind: "ok", text: "המשתמש נמחק." });
+      qc.invalidateQueries({ queryKey: ["admin", "users"] });
+    },
+    onError: (e: Error) => setRowMsg({ kind: "err", text: e.message }),
+  });
+
 
   return (
     <>
@@ -188,6 +234,18 @@ function UsersList() {
             className={inputClass}
           />
         </div>
+        {rowMsg && (
+          <p
+            className={
+              "mb-4 text-lg " +
+              (rowMsg.kind === "ok"
+                ? "text-brand-primary"
+                : "text-brand-accent-alert")
+            }
+          >
+            {rowMsg.text}
+          </p>
+        )}
         {isLoading ? (
           <p className="text-lg md:text-xl">טוען…</p>
         ) : !data || data.length === 0 ? (
@@ -208,42 +266,86 @@ function UsersList() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-brand-accent-soft/50">
-                {data.map((u) => (
-                  <tr key={u.user_id} className="text-brand-primary-dark">
-                    <td className="py-3 pr-2" dir="ltr">
-                      {u.email ?? "—"}
-                    </td>
-                    <td className="py-3">{u.full_name ?? "—"}</td>
-                    <td className="py-3">
-                      {u.is_admin ? (
-                        <span className="rounded-full bg-brand-primary/10 text-brand-primary px-3 py-1 text-base md:text-lg">
-                          מנהל
-                        </span>
-                      ) : (
-                        <span className="text-brand-primary-dark/60 text-base md:text-lg">
-                          תלמידה
-                        </span>
-                      )}
-                    </td>
-                    <td className="py-3">{u.access_count}</td>
-                    <td className="py-3 text-base md:text-lg text-brand-primary-dark/60">
-                      {new Date(u.created_at).toLocaleDateString("he-IL")}
-                    </td>
-                    <td className="py-3">
-                      <Link
-                        to="/admin/users/$id"
-                        params={{ id: u.user_id }}
-                      >
-                        <GhostButton type="button">פתיחה</GhostButton>
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
+                {data.map((u) => {
+                  const isSelf = meId === u.user_id;
+                  const busyReset =
+                    sendReset.isPending && sendReset.variables === u.user_id;
+                  const busyDel =
+                    deleteUser.isPending && deleteUser.variables === u.user_id;
+                  return (
+                    <tr key={u.user_id} className="text-brand-primary-dark">
+                      <td className="py-3 pr-2" dir="ltr">
+                        {u.email ?? "—"}
+                      </td>
+                      <td className="py-3">{u.full_name ?? "—"}</td>
+                      <td className="py-3">
+                        {u.is_admin ? (
+                          <span className="rounded-full bg-brand-primary/10 text-brand-primary px-3 py-1 text-base md:text-lg">
+                            מנהל
+                          </span>
+                        ) : (
+                          <span className="text-brand-primary-dark/60 text-base md:text-lg">
+                            תלמידה
+                          </span>
+                        )}
+                      </td>
+                      <td className="py-3">{u.access_count}</td>
+                      <td className="py-3 text-base md:text-lg text-brand-primary-dark/60">
+                        {new Date(u.created_at).toLocaleDateString("he-IL")}
+                      </td>
+                      <td className="py-3">
+                        <div className="flex flex-wrap items-center justify-end gap-2">
+                          <Link
+                            to="/admin/users/$id"
+                            params={{ id: u.user_id }}
+                          >
+                            <GhostButton type="button">פתיחה</GhostButton>
+                          </Link>
+                          <GhostButton
+                            type="button"
+                            disabled={busyReset}
+                            onClick={() => {
+                              setRowMsg(null);
+                              sendReset.mutate(u.user_id);
+                            }}
+                          >
+                            {busyReset ? "שולח…" : "שליחת איפוס סיסמה"}
+                          </GhostButton>
+                          <DangerButton
+                            type="button"
+                            disabled={isSelf || busyDel}
+                            title={
+                              isSelf
+                                ? "לא ניתן למחוק את המשתמש של עצמך"
+                                : undefined
+                            }
+                            onClick={() => {
+                              if (isSelf) return;
+                              const label =
+                                u.full_name || u.email || "המשתמש";
+                              if (
+                                !confirm(
+                                  `למחוק את ${label}? פעולה זו בלתי הפיכה.`,
+                                )
+                              )
+                                return;
+                              setRowMsg(null);
+                              deleteUser.mutate(u.user_id);
+                            }}
+                          >
+                            {busyDel ? "מוחק…" : "מחיקה"}
+                          </DangerButton>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
         )}
       </Card>
     </>
+
   );
 }
