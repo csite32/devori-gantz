@@ -24,7 +24,7 @@ export function AdminNavBar() {
         {items.map((it) => (
           <Link
             key={it.to}
-            to={it.to}
+            to={it.to as "/admin"}
             activeOptions={it.exact ? { exact: true } : undefined}
             activeProps={{
               className:
