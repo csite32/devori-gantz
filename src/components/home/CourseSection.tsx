@@ -16,7 +16,7 @@ interface CourseBlockProps {
 
 function CourseBlock({ number, image, imageAlt, decoText, title, description, imageRight = true, showMainTitle = false }: CourseBlockProps) {
   return (
-    <section dir="rtl" className="relative w-full overflow-hidden pt-6 pb-8 md:pt-[80px] md:pb-[100px]" style={{ background: '#fff' }}>
+    <section dir="rtl" className="relative w-full overflow-hidden pt-6 pb-4 md:pt-[80px] md:pb-[100px]" style={{ background: '#fff' }}>
       {/* מספר רקע — מוסתר במובייל */}
       <div aria-hidden className="absolute pointer-events-none select-none hidden md:block" style={{
         fontFamily: 'Atletico FS, sans-serif', fontSize: 680, lineHeight: 1,
