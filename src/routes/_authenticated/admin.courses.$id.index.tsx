@@ -50,6 +50,7 @@ function EditCourse() {
         }
       />
       <CourseForm
+        key={`${data.id}:${data.updated_at}`}
         initial={{
           id: data.id,
           title: data.title,
@@ -63,6 +64,7 @@ function EditCourse() {
           qc.invalidateQueries({ queryKey: ["admin", "course", id] })
         }
       />
+
 
       <div className="mt-10">
         <div className="flex flex-wrap items-end justify-between gap-3 mb-4">

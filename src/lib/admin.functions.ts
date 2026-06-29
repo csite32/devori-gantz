@@ -76,6 +76,7 @@ export type AdminCourseDetail = {
   cover_url: string | null;
   is_published: boolean;
   sort_order: number;
+  updated_at: string;
   lessons: {
     id: string;
     title: string;
@@ -92,7 +93,7 @@ export const getAdminCourse = createServerFn({ method: "GET" })
     await assertAdmin(context);
     const { data: course, error } = await context.supabase
       .from("courses")
-      .select("id, title, slug, description, cover_url, is_published, sort_order")
+      .select("id, title, slug, description, cover_url, is_published, sort_order, updated_at")
       .eq("id", data.id)
       .maybeSingle();
     if (error) throw new Error(error.message);
@@ -104,6 +105,7 @@ export const getAdminCourse = createServerFn({ method: "GET" })
       .order("sort_order", { ascending: true });
     return { ...course, lessons: lessons ?? [] };
   });
+
 
 const courseInput = z.object({
   id: z.string().uuid().optional(),

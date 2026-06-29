@@ -61,3 +61,49 @@ export const adminInviteUser = createServerFn({ method: "POST" })
       redirectTo: data.redirect_to,
     });
   });
+
+const resetSchema = z.object({
+  user_id: z.string().uuid(),
+  redirect_to: z.string().url().optional(),
+});
+
+export const adminSendPasswordReset = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => resetSchema.parse(data))
+  .handler(async ({ data, context }) => {
+    const { data: isAdmin, error: roleErr } = await context.supabase.rpc(
+      "has_role",
+      { _user_id: context.userId, _role: "admin" },
+    );
+    if (roleErr) throw new Error("Failed to verify caller role");
+    if (!isAdmin) throw new Error("Forbidden");
+
+    const { sendPasswordResetInternal } = await import("./admin-users.server");
+    return sendPasswordResetInternal({
+      user_id: data.user_id,
+      redirectTo: data.redirect_to,
+    });
+  });
+
+const deleteSchema = z.object({ user_id: z.string().uuid() });
+
+export const adminDeleteUser = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: unknown) => deleteSchema.parse(data))
+  .handler(async ({ data, context }) => {
+    const { data: isAdmin, error: roleErr } = await context.supabase.rpc(
+      "has_role",
+      { _user_id: context.userId, _role: "admin" },
+    );
+    if (roleErr) throw new Error("Failed to verify caller role");
+    if (!isAdmin) throw new Error("Forbidden");
+    if (data.user_id === context.userId) {
+      throw new Error("לא ניתן למחוק את המשתמש של עצמך");
+    }
+
+    const { deleteUserCompletelyInternal } = await import(
+      "./admin-users.server"
+    );
+    return deleteUserCompletelyInternal({ user_id: data.user_id });
+  });
+
