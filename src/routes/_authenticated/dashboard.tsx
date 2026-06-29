@@ -605,13 +605,7 @@ function CourseCard({ course }: { course: DashboardData["courses"][number] }) {
             loading="lazy"
           />
         ) : (
-          <div
-            className="w-full h-full"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(229,197,177,0.6), rgba(255,238,218,1))",
-            }}
-          />
+          <CoursePlaceholder />
         )}
         <div
           aria-hidden
@@ -661,12 +655,9 @@ function CourseCard({ course }: { course: DashboardData["courses"][number] }) {
           </div>
         </div>
 
-        <button
-          type="button"
+        <a
+          href={`/courses/${course.slug}`}
           className="mt-6 inline-flex items-center justify-center gap-2 w-full rounded-full bg-brand-primary px-4 py-2.5 text-brand-white text-sm hover:bg-brand-primary-dark transition shadow-md"
-          onClick={() => {
-            window.alert("עמוד הקורס יושק בקרוב.");
-          }}
         >
           כניסה לקורס
           <svg
@@ -682,8 +673,36 @@ function CourseCard({ course }: { course: DashboardData["courses"][number] }) {
             <line x1="19" y1="12" x2="5" y2="12" />
             <polyline points="12 19 5 12 12 5" />
           </svg>
-        </button>
+        </a>
       </div>
     </article>
   );
 }
+
+function CoursePlaceholder() {
+  return (
+    <div
+      className="w-full h-full grid place-items-center"
+      style={{
+        background:
+          "linear-gradient(135deg, rgba(229,197,177,0.65), rgba(255,238,218,1))",
+      }}
+    >
+      <svg
+        aria-hidden
+        viewBox="0 0 24 24"
+        className="w-10 h-10 text-brand-primary/60"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <circle cx="9" cy="11" r="1.6" />
+        <path d="M21 17l-5-5-7 7" />
+      </svg>
+    </div>
+  );
+}
+
