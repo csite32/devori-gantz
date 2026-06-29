@@ -101,3 +101,71 @@ async function findUserIdByEmail(email: string): Promise<string | null> {
   }
   return null;
 }
+
+/**
+ * Invites a user by email (sends Supabase invite email so they can set their
+ * own password), ensures a profile row, and optionally grants the admin role.
+ * Idempotent on email — if the user already exists, only profile/role are synced.
+ */
+export async function inviteUserWithRoleInternal(input: {
+  email: string;
+  full_name?: string;
+  makeAdmin: boolean;
+}): Promise<{ user_id: string; email: string; invited: boolean }> {
+  const email = input.email.trim().toLowerCase();
+  const full_name = input.full_name?.trim() || null;
+
+  let userId: string | undefined;
+  let invited = true;
+
+  const { data: invite, error: invErr } =
+    await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
+      data: full_name ? { full_name } : undefined,
+    });
+
+  if (invErr) {
+    const msg = (invErr.message || "").toLowerCase();
+    const exists =
+      msg.includes("already") ||
+      msg.includes("registered") ||
+      msg.includes("exists") ||
+      msg.includes("duplicate");
+    if (!exists) {
+      throw new Error(`Failed to invite user: ${invErr.message}`);
+    }
+    const existing = await findUserIdByEmail(email);
+    if (!existing) throw new Error("User exists but could not be located");
+    userId = existing;
+    invited = false;
+  } else {
+    userId = invite.user?.id;
+  }
+
+  if (!userId) throw new Error("Invite returned no user id");
+
+  // Ensure profile row
+  const { error: profileErr } = await supabaseAdmin
+    .from("profiles")
+    .upsert(
+      { id: userId, full_name },
+      { onConflict: "id", ignoreDuplicates: false },
+    );
+  if (profileErr) {
+    throw new Error(`Failed to upsert profile: ${profileErr.message}`);
+  }
+
+  // Grant admin role if requested
+  if (input.makeAdmin) {
+    const { error: roleErr } = await supabaseAdmin
+      .from("user_roles")
+      .upsert(
+        { user_id: userId, role: "admin" },
+        { onConflict: "user_id,role", ignoreDuplicates: true },
+      );
+    if (roleErr) {
+      throw new Error(`Failed to grant admin role: ${roleErr.message}`);
+    }
+  }
+
+  return { user_id: userId, email, invited };
+}
