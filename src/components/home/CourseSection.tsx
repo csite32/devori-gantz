@@ -17,21 +17,44 @@ interface CourseBlockProps {
 function CourseBlock({ number, image, imageAlt, decoText, title, description, imageRight = true, showMainTitle = false }: CourseBlockProps) {
   return (
     <section dir="rtl" className="relative w-full overflow-hidden" style={{ background: '#fff', padding: '80px 0 100px' }}>
-      <div aria-hidden className="absolute pointer-events-none select-none" style={{
+      {/* מספר רקע — מוסתר במובייל */}
+      <div aria-hidden className="absolute pointer-events-none select-none hidden md:block" style={{
         fontFamily: 'Atletico FS, sans-serif', fontSize: 680, lineHeight: 1,
-        color: 'rgba(158,36,43,0.05)', top: '50%', left: number === "01" ? '44%' : number === "02" ? '47%' : number === "03" ? '42%' : '50%',
+        color: 'rgba(158,36,43,0.05)', top: '50%',
+        left: number === "01" ? '44%' : number === "02" ? '47%' : number === "03" ? '42%' : '50%',
         transform: 'translate(-50%,-42%)', whiteSpace: 'nowrap', zIndex: 0
       }}>{number}</div>
 
       {showMainTitle && (
-        <h2 className="relative text-center mb-[120px] gsap-title" style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 60, fontWeight: 300, color: 'rgba(82,16,20,1)', zIndex: 1 }}>
+        <h2 className="relative text-center mb-8 md:mb-[120px] gsap-title px-4 md:px-0"
+          style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(28px, 5vw, 60px)', fontWeight: 300, color: 'rgba(82,16,20,1)', zIndex: 1 }}>
           בחרי את הקורס שמתאים לך
         </h2>
       )}
 
-      <div className="relative mx-auto" style={{ maxWidth: 1300, padding: '0 60px', display: 'grid', gridTemplateColumns: '1fr 1fr', direction: 'ltr', gap: 160, alignItems: 'end', zIndex: 1 }}>
-        <div className="flex flex-col" style={{ direction: 'rtl', textAlign: 'right', position: 'relative', minHeight: 500, paddingTop: imageRight ? 80 : 0, justifyContent: imageRight ? 'space-between' : 'center', alignItems: 'flex-end', order: imageRight ? 1 : 2 }}>
-          <div aria-hidden className="pointer-events-none select-none" style={{
+      {/* Layout: בדסקטופ Grid, במובייל עמודה */}
+      <div className="relative mx-auto md:grid md:gap-[160px]"
+        style={{
+          maxWidth: 1300,
+          padding: '0 24px',
+          display: undefined,
+          gridTemplateColumns: '1fr 1fr',
+          direction: 'ltr',
+          alignItems: 'end',
+          zIndex: 1
+        }}>
+
+        {/* עמודת תוכן */}
+        <div className="flex flex-col w-full md:min-h-[500px]"
+          style={{
+            direction: 'rtl', textAlign: 'right', position: 'relative',
+            paddingTop: imageRight ? 80 : 0,
+            justifyContent: imageRight ? 'space-between' : 'center',
+            alignItems: 'flex-end',
+            order: imageRight ? 1 : 2
+          }}>
+          {/* טקסט דקורטיבי — מוסתר במובייל */}
+          <div aria-hidden className="pointer-events-none select-none hidden md:block" style={{
             fontFamily: 'Bateran, cursive', fontSize: 180, fontWeight: 400,
             color: 'rgba(255,20,20,1)', whiteSpace: 'nowrap', lineHeight: 1,
             position: 'absolute',
@@ -41,20 +64,30 @@ function CourseBlock({ number, image, imageAlt, decoText, title, description, im
             left: !imageRight ? -480 : undefined,
             width: 'calc(100% + 260px)', zIndex: 3
           }}>{decoText}</div>
+
+          {/* פרטי קורס */}
           <div style={{ direction: 'rtl', textAlign: 'right', display: 'block', width: '100%' }}>
-            <h3 className="gsap-title" style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 60, fontWeight: 300, color: 'rgba(82,16,20,1)', display: 'block', marginBottom: 12 }}>{title}</h3>
-            <p style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 28, fontWeight: 300, lineHeight: 1.4, color: 'rgba(82,16,20,1)', marginBottom: 12 }}>{description}</p>
-            <div style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 50, fontWeight: 600, color: 'rgba(158,36,43,1)', marginBottom: 8 }}>800 ₪</div>
-            <button className="inline-flex items-center group" style={{ gap: 14, padding: '14px 32px', border: '1px solid rgba(158,36,43,1)', borderRadius: 33.5, background: 'transparent', cursor: 'pointer', fontFamily: 'Discovery FS, sans-serif', fontSize: 22, fontWeight: 300, color: 'rgba(82,16,20,1)', direction: 'rtl', marginTop: 15 }}>
+            <h3 className="gsap-title" style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(28px, 4vw, 60px)', fontWeight: 300, color: 'rgba(82,16,20,1)', display: 'block', marginBottom: 12 }}>{title}</h3>
+            <p style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(16px, 2.5vw, 28px)', fontWeight: 300, lineHeight: 1.4, color: 'rgba(82,16,20,1)', marginBottom: 12 }}>{description}</p>
+            <div style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(28px, 4vw, 50px)', fontWeight: 600, color: 'rgba(158,36,43,1)', marginBottom: 8 }}>800 ₪</div>
+            <button className="inline-flex items-center group" style={{ gap: 14, padding: '14px 32px', border: '1px solid rgba(158,36,43,1)', borderRadius: 33.5, background: 'transparent', cursor: 'pointer', fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(16px, 2vw, 22px)', fontWeight: 300, color: 'rgba(82,16,20,1)', direction: 'rtl', marginTop: 15 }}>
               <span>לרכישת הקורס</span>
               <img src={arrowBtnAsset.url} alt="" style={{ width: 28, height: 23 }} className="arrow-hover" />
             </button>
           </div>
         </div>
-        <div style={{ order: imageRight ? 2 : 1 }}>
+
+        {/* תמונה */}
+        <div className="mt-6 md:mt-0" style={{ order: imageRight ? 2 : 1 }}>
           <img src={image} alt={imageAlt} style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'contain' }} />
         </div>
       </div>
+
+      {/* טקסט דקורטיבי במובייל — relative, מתחת לכפתור */}
+      <div aria-hidden className="block md:hidden text-center mt-4 overflow-hidden px-4" style={{
+        fontFamily: 'Bateran, cursive', fontSize: 'clamp(48px, 15vw, 80px)', fontWeight: 400,
+        color: 'rgba(255,20,20,1)', whiteSpace: 'nowrap', lineHeight: 1
+      }}>{decoText}</div>
     </section>
   );
 }
