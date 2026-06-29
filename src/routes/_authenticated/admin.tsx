@@ -26,7 +26,7 @@ function AdminLayout() {
   return (
     <main
       dir="rtl"
-      className="min-h-screen"
+      className="min-h-screen text-lg md:text-xl text-brand-primary-dark"
       style={{
         background:
           "radial-gradient(120% 80% at 100% 0%, rgba(229,197,177,0.45) 0%, rgba(255,238,218,1) 55%, rgba(255,238,218,1) 100%)",

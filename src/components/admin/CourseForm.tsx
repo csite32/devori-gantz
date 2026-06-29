@@ -144,7 +144,7 @@ export function CourseForm({
           <button
             type="button"
             onClick={() => setShowSlug((s) => !s)}
-            className="text-sm text-brand-primary-dark/70 hover:text-brand-primary cursor-pointer"
+            className="text-lg text-brand-primary-dark/70 hover:text-brand-primary cursor-pointer"
           >
             {showSlug ? "הסתרת הגדרות מתקדמות" : "הגדרות מתקדמות (Slug)"}
           </button>
@@ -178,7 +178,7 @@ export function CourseForm({
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <span className="text-brand-primary-dark/50 text-sm">
+                <span className="text-brand-primary-dark/50 text-lg">
                   אין תמונה
                 </span>
               )}
@@ -231,13 +231,13 @@ export function CourseForm({
                   }
                   className="h-4 w-4 accent-[rgb(158,36,43)] cursor-pointer"
                 />
-                <span className="text-base">פורסם — מופיע לתלמידות</span>
+                <span className="text-lg md:text-xl">פורסם — מופיע לתלמידות</span>
               </label>
             </FormField>
           </div>
         </div>
 
-        {err && <p className="text-sm text-brand-accent-alert">{err}</p>}
+        {err && <p className="text-lg text-brand-accent-alert">{err}</p>}
 
         <div className="flex gap-2">
           <PrimaryButton type="submit" disabled={mutation.isPending}>

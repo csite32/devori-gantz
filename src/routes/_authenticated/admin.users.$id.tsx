@@ -61,7 +61,7 @@ function UserDetail() {
     onError: (e: Error) => setErr(e.message),
   });
 
-  if (isLoading) return <p className="text-base">טוען…</p>;
+  if (isLoading) return <p className="text-lg md:text-xl">טוען…</p>;
   if (!data) return <p className="text-brand-accent-alert">לא נמצא.</p>;
 
   return (
@@ -76,18 +76,18 @@ function UserDetail() {
         }
       />
       {err && (
-        <p className="mb-4 text-sm text-brand-accent-alert">{err}</p>
+          <p className="mb-4 text-lg text-brand-accent-alert">{err}</p>
       )}
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>
           <h3
-            className="text-xl text-brand-primary-dark mb-3"
+            className="text-3xl text-brand-primary-dark mb-4"
             style={{ fontFamily: "var(--font-bateran)" }}
           >
             פרטים
           </h3>
-          <dl className="text-sm text-brand-primary-dark space-y-2">
+          <dl className="text-lg md:text-xl text-brand-primary-dark space-y-3">
             <Row k="אימייל" v={data.email ?? "—"} ltr />
             <Row k="שם מלא" v={data.full_name ?? "—"} />
             <Row k="תפקיד" v={data.is_admin ? "מנהל" : "משתמש"} />
@@ -107,14 +107,14 @@ function UserDetail() {
 
         <Card>
           <h3
-            className="text-xl text-brand-primary-dark mb-3"
+            className="text-3xl text-brand-primary-dark mb-4"
             style={{ fontFamily: "var(--font-bateran)" }}
           >
             פתיחת הרשאות
           </h3>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm mb-1">קורס בודד</label>
+              <label className="block text-xl mb-2">קורס בודד</label>
               <div className="flex gap-2">
                 <select
                   value={courseSel}
@@ -144,13 +144,13 @@ function UserDetail() {
       <div className="mt-6">
         <Card>
           <h3
-            className="text-xl text-brand-primary-dark mb-3"
+            className="text-3xl text-brand-primary-dark mb-4"
             style={{ fontFamily: "var(--font-bateran)" }}
           >
             הרשאות פתוחות ({data.access.length})
           </h3>
           {data.access.length === 0 ? (
-            <p className="text-brand-primary-dark/70">אין הרשאות עדיין.</p>
+            <p className="text-lg md:text-xl text-brand-primary-dark/70">אין הרשאות עדיין.</p>
           ) : (
             <ul className="divide-y divide-brand-accent-soft/50">
               {data.access.map((a) => (
@@ -159,8 +159,8 @@ function UserDetail() {
                   className="py-3 flex flex-wrap items-center justify-between gap-3"
                 >
                   <div>
-                    <p className="text-brand-primary-dark">{a.course_title}</p>
-                    <p className="text-xs text-brand-primary-dark/60">
+                    <p className="text-lg md:text-xl text-brand-primary-dark">{a.course_title}</p>
+                    <p className="text-base text-brand-primary-dark/60">
                       מקור: {sourceLabel(a.source)} ·{" "}
                       {new Date(a.granted_at).toLocaleDateString("he-IL")}
                     </p>

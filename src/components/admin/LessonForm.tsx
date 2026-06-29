@@ -90,7 +90,7 @@ export function LessonForm({
             />
           </FormField>
         </div>
-        {err && <p className="text-sm text-brand-accent-alert">{err}</p>}
+        {err && <p className="text-lg text-brand-accent-alert">{err}</p>}
         <PrimaryButton type="submit" disabled={mutation.isPending}>
           {mutation.isPending ? "שומר…" : "שמירה"}
         </PrimaryButton>
