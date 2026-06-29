@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { BrandLogoBar } from "@/components/brand/BrandLogoBar";
 
 export const Route = createFileRoute("/reset-password")({
   ssr: false,
@@ -79,9 +80,19 @@ function ResetPasswordPage() {
   return (
     <main
       dir="rtl"
-      className="min-h-screen flex items-center justify-center bg-brand-background-light px-4 py-12"
+      className="relative min-h-screen overflow-hidden"
+      style={{
+        background:
+          "radial-gradient(120% 80% at 100% 0%, rgba(229,197,177,0.55) 0%, rgba(255,238,218,1) 55%, rgba(255,238,218,1) 100%)",
+        fontFamily: "var(--font-discovery)",
+      }}
     >
-      <div className="w-full max-w-md rounded-2xl bg-brand-white shadow-xl border border-brand-accent-soft/40 p-8">
+      <BrandLogoBar variant="transparent" />
+      <div className="relative mx-auto flex max-w-6xl items-center justify-center px-4 py-8 md:py-16">
+        <div
+          className="relative w-full max-w-md overflow-hidden rounded-[28px] border border-brand-accent-soft/60 bg-brand-white/95 backdrop-blur p-7 md:p-10"
+          style={{ boxShadow: "0 30px 60px -40px rgba(82,16,20,0.45)" }}
+        >
         <h1
           className="text-3xl text-brand-primary-dark text-center mb-2"
           style={{ fontFamily: "var(--font-bateran)" }}
