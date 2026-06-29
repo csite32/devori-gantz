@@ -24,6 +24,7 @@ import { Route as AuthenticatedAdminCoursesNewRouteImport } from './routes/_auth
 import { Route as AuthenticatedAdminCoursesIdRouteImport } from './routes/_authenticated/admin.courses.$id'
 import { Route as AuthenticatedAdminBundlesNewRouteImport } from './routes/_authenticated/admin.bundles.new'
 import { Route as AuthenticatedAdminBundlesIdRouteImport } from './routes/_authenticated/admin.bundles.$id'
+import { Route as AuthenticatedAdminCoursesIdIndexRouteImport } from './routes/_authenticated/admin.courses.$id.index'
 import { Route as AuthenticatedAdminCoursesIdLessonsNewRouteImport } from './routes/_authenticated/admin.courses.$id.lessons.new'
 import { Route as AuthenticatedAdminCoursesIdLessonsLessonIdRouteImport } from './routes/_authenticated/admin.courses.$id.lessons.$lessonId'
 
@@ -109,6 +110,12 @@ const AuthenticatedAdminBundlesIdRoute =
     path: '/bundles/$id',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminCoursesIdIndexRoute =
+  AuthenticatedAdminCoursesIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedAdminCoursesIdRoute,
+  } as any)
 const AuthenticatedAdminCoursesIdLessonsNewRoute =
   AuthenticatedAdminCoursesIdLessonsNewRouteImport.update({
     id: '/lessons/new',
@@ -137,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/admin/bundles/': typeof AuthenticatedAdminBundlesIndexRoute
   '/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
   '/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
+  '/admin/courses/$id/': typeof AuthenticatedAdminCoursesIdIndexRoute
   '/admin/courses/$id/lessons/$lessonId': typeof AuthenticatedAdminCoursesIdLessonsLessonIdRoute
   '/admin/courses/$id/lessons/new': typeof AuthenticatedAdminCoursesIdLessonsNewRoute
 }
@@ -148,12 +156,12 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/admin/bundles/$id': typeof AuthenticatedAdminBundlesIdRoute
   '/admin/bundles/new': typeof AuthenticatedAdminBundlesNewRoute
-  '/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRouteWithChildren
   '/admin/courses/new': typeof AuthenticatedAdminCoursesNewRoute
   '/admin/users/$id': typeof AuthenticatedAdminUsersIdRoute
   '/admin/bundles': typeof AuthenticatedAdminBundlesIndexRoute
   '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
+  '/admin/courses/$id': typeof AuthenticatedAdminCoursesIdIndexRoute
   '/admin/courses/$id/lessons/$lessonId': typeof AuthenticatedAdminCoursesIdLessonsLessonIdRoute
   '/admin/courses/$id/lessons/new': typeof AuthenticatedAdminCoursesIdLessonsNewRoute
 }
@@ -174,6 +182,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/bundles/': typeof AuthenticatedAdminBundlesIndexRoute
   '/_authenticated/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
   '/_authenticated/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
+  '/_authenticated/admin/courses/$id/': typeof AuthenticatedAdminCoursesIdIndexRoute
   '/_authenticated/admin/courses/$id/lessons/$lessonId': typeof AuthenticatedAdminCoursesIdLessonsLessonIdRoute
   '/_authenticated/admin/courses/$id/lessons/new': typeof AuthenticatedAdminCoursesIdLessonsNewRoute
 }
@@ -194,6 +203,7 @@ export interface FileRouteTypes {
     | '/admin/bundles/'
     | '/admin/courses/'
     | '/admin/users/'
+    | '/admin/courses/$id/'
     | '/admin/courses/$id/lessons/$lessonId'
     | '/admin/courses/$id/lessons/new'
   fileRoutesByTo: FileRoutesByTo
@@ -205,12 +215,12 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin/bundles/$id'
     | '/admin/bundles/new'
-    | '/admin/courses/$id'
     | '/admin/courses/new'
     | '/admin/users/$id'
     | '/admin/bundles'
     | '/admin/courses'
     | '/admin/users'
+    | '/admin/courses/$id'
     | '/admin/courses/$id/lessons/$lessonId'
     | '/admin/courses/$id/lessons/new'
   id:
@@ -230,6 +240,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/bundles/'
     | '/_authenticated/admin/courses/'
     | '/_authenticated/admin/users/'
+    | '/_authenticated/admin/courses/$id/'
     | '/_authenticated/admin/courses/$id/lessons/$lessonId'
     | '/_authenticated/admin/courses/$id/lessons/new'
   fileRoutesById: FileRoutesById
@@ -348,6 +359,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminBundlesIdRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/courses/$id/': {
+      id: '/_authenticated/admin/courses/$id/'
+      path: '/'
+      fullPath: '/admin/courses/$id/'
+      preLoaderRoute: typeof AuthenticatedAdminCoursesIdIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminCoursesIdRoute
+    }
     '/_authenticated/admin/courses/$id/lessons/new': {
       id: '/_authenticated/admin/courses/$id/lessons/new'
       path: '/lessons/new'
@@ -366,12 +384,15 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminCoursesIdRouteChildren {
+  AuthenticatedAdminCoursesIdIndexRoute: typeof AuthenticatedAdminCoursesIdIndexRoute
   AuthenticatedAdminCoursesIdLessonsLessonIdRoute: typeof AuthenticatedAdminCoursesIdLessonsLessonIdRoute
   AuthenticatedAdminCoursesIdLessonsNewRoute: typeof AuthenticatedAdminCoursesIdLessonsNewRoute
 }
 
 const AuthenticatedAdminCoursesIdRouteChildren: AuthenticatedAdminCoursesIdRouteChildren =
   {
+    AuthenticatedAdminCoursesIdIndexRoute:
+      AuthenticatedAdminCoursesIdIndexRoute,
     AuthenticatedAdminCoursesIdLessonsLessonIdRoute:
       AuthenticatedAdminCoursesIdLessonsLessonIdRoute,
     AuthenticatedAdminCoursesIdLessonsNewRoute:
