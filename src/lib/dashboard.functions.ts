@@ -77,23 +77,45 @@ export const getDashboard = createServerFn({ method: "GET" })
       }
     }
 
-    const courses: DashboardCourse[] = courseRows
-      .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
-      .map((c) => {
-        const total = lessonByCourse[c.id]?.length ?? 0;
-        const completed = completedByCourse[c.id] ?? 0;
-        const pct = total === 0 ? 0 : Math.round((completed / total) * 100);
-        return {
-          course_id: c.id,
-          slug: c.slug,
-          title: c.title,
-          description: c.description,
-          cover_url: c.cover_url,
-          total_lessons: total,
-          completed_lessons: completed,
-          progress_pct: pct,
-        };
-      });
+    // Sign cover storage paths for display in the dashboard.
+    // course-covers is a private bucket — we need a short-lived signed URL.
+    let signCover: (path: string | null) => Promise<string | null> = async () =>
+      null;
+    if (courseRows.some((c) => c.cover_url && !/^https?:\/\//i.test(c.cover_url))) {
+      const { supabaseAdmin } = await import(
+        "@/integrations/supabase/client.server"
+      );
+      signCover = async (path) => {
+        if (!path) return null;
+        if (/^https?:\/\//i.test(path)) return path;
+        const { data } = await supabaseAdmin.storage
+          .from("course-covers")
+          .createSignedUrl(path, 60 * 60);
+        return data?.signedUrl ?? null;
+      };
+    } else {
+      signCover = async (path) => (path && /^https?:\/\//i.test(path) ? path : null);
+    }
+
+    const courses: DashboardCourse[] = await Promise.all(
+      courseRows
+        .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
+        .map(async (c) => {
+          const total = lessonByCourse[c.id]?.length ?? 0;
+          const completed = completedByCourse[c.id] ?? 0;
+          const pct = total === 0 ? 0 : Math.round((completed / total) * 100);
+          return {
+            course_id: c.id,
+            slug: c.slug,
+            title: c.title,
+            description: c.description,
+            cover_url: await signCover(c.cover_url),
+            total_lessons: total,
+            completed_lessons: completed,
+            progress_pct: pct,
+          };
+        }),
+    );
 
     const email =
       (claims as { email?: string } | null)?.email ?? null;
