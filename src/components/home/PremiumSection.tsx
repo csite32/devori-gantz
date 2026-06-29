@@ -19,7 +19,7 @@ export function PremiumSection() {
         <span className="inline md:hidden" style={{ fontSize: 64 }}>Premium package</span>
       </div>
 
-      <div className="relative flex-1 mx-auto w-full flex flex-col md:grid md:gap-[40px] md:items-end md:content-center"
+      <div className="relative flex-1 mx-auto w-full flex flex-col md:grid md:gap-[40px]"
         style={{
           maxWidth: 1300,
           padding: '40px 24px 60px',
@@ -27,12 +27,13 @@ export function PremiumSection() {
           direction: 'ltr',
           zIndex: 2,
           boxSizing: 'border-box',
-          gap: undefined
+          alignItems: 'end',
+          alignContent: 'center'
         }}>
 
         {/* תמונות — ראשונות במובייל */}
-        <div className="flex flex-row items-start gap-2 mb-6 md:mb-0 md:h-[460px] h-[220px]"
-          style={{ gridColumn: 2, order: 1, alignSelf: 'flex-end', marginTop: '60px' }}>
+        <div className="premium-images-wrap flex flex-row items-start gap-2 mb-6 md:mb-0 md:h-[460px] h-[220px]"
+          style={{ gridColumn: 2, order: 1, marginTop: 60 }}>
           {[{ src: premium1Asset.url, mt: 0 }, { src: premium2Asset.url, mt: 0 }, { src: premium3Asset.url, mt: 0 }].map(({ src }, i) => (
             <div key={i} className={`premium-parallax-img flex-1 md:flex-none overflow-hidden rounded-sm h-full ${i === 1 ? 'mt-[25px] md:mt-[70px]' : 'mt-0'}`}
               style={{ width: undefined }}>
