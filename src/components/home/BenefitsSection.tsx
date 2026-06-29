@@ -13,18 +13,21 @@ const BENEFITS = [
 
 export function BenefitsSection() {
   return (
-    <section dir="rtl" className="relative w-full overflow-hidden text-center" style={{ background: 'rgba(255,238,218,1)', padding: '100px' }}>
-      <h2 className="gsap-title" style={{ fontFamily: 'Discovery FS, sans-serif', fontWeight: 300, fontSize: 60, color: 'rgba(82,16,20,1)', textAlign: 'center', margin: '0 0 70px 0', position: 'relative', zIndex: 2 }}>
+    <section dir="rtl" className="relative w-full overflow-hidden text-center px-6 py-[60px] md:p-[100px]" style={{ background: 'rgba(255,238,218,1)' }}>
+      <h2 className="gsap-title" style={{ fontFamily: 'Discovery FS, sans-serif', fontWeight: 300, fontSize: 'clamp(32px, 5vw, 60px)', color: 'rgba(82,16,20,1)', textAlign: 'center', margin: '0 0 40px 0', position: 'relative', zIndex: 2 }}>
         בכל קורס תקבלי:
       </h2>
-      <div className="relative inline-block text-center" style={{ zIndex: 1 }}>
-        <img src={scissors1Asset.url} alt="" aria-hidden className="scissors-parallax-1" style={{ position: 'absolute', width: 567, top: -160, right: -260, transform: 'rotate(5deg) translateY(26px)', zIndex: 3, pointerEvents: 'none' }} />
-        <img src={scissors2Asset.url} alt="" aria-hidden className="scissors-parallax-2" style={{ position: 'absolute', width: 420, bottom: -40, left: -220, transform: 'rotate(-6deg)', zIndex: 3, pointerEvents: 'none' }} />
-        <div style={{ fontFamily: 'Atletico FS, sans-serif', fontWeight: 400, fontSize: 92, lineHeight: '1.6em', color: 'rgba(82,16,20,1)', textAlign: 'center', position: 'relative', zIndex: 2, display: 'block', width: '100%' }}>
+      <div className="relative inline-block text-center w-full md:w-auto" style={{ zIndex: 1 }}>
+        {/* מספריים — מוסתרים במובייל */}
+        <img src={scissors1Asset.url} alt="" aria-hidden className="scissors-parallax-1 hidden md:block" style={{ position: 'absolute', width: 567, top: -160, right: -260, transform: 'rotate(5deg) translateY(26px)', zIndex: 3, pointerEvents: 'none' }} />
+        <img src={scissors2Asset.url} alt="" aria-hidden className="scissors-parallax-2 hidden md:block" style={{ position: 'absolute', width: 420, bottom: -40, left: -220, transform: 'rotate(-6deg)', zIndex: 3, pointerEvents: 'none' }} />
+
+        {/* רשימת יתרונות */}
+        <div className="benefits-list-wrap" style={{ fontFamily: 'Atletico FS, sans-serif', fontWeight: 400, fontSize: 'clamp(33px, 8vw, 92px)', lineHeight: '1.6em', color: 'rgba(82,16,20,1)', textAlign: 'center', position: 'relative', zIndex: 2, display: 'block', width: '100%' }}>
           {BENEFITS.map((item) => (
-            <p key={item} style={{ margin: 0, padding: 0, display: 'flex', flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'center', gap: 14, width: '100%' }}>
+            <p key={item} className="benefit-row" style={{ margin: 0, padding: 0, display: 'flex', flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'center', gap: 14, width: '100%' }}>
               <span style={{ order: 1 }}>{item}</span>
-              <span style={{ order: 2, display: 'inline-flex', alignItems: 'flex-start', flexShrink: 0, marginTop: 36 }}>
+              <span className="b-icon" style={{ order: 2, display: 'inline-flex', alignItems: 'flex-start', flexShrink: 0, marginTop: 36 }}>
                 <img src={vector2Asset.url} alt="" style={{ width: 28, height: 28 }} />
               </span>
             </p>
@@ -32,7 +35,7 @@ export function BenefitsSection() {
         </div>
       </div>
       <div style={{ width: '85%', height: 1, background: 'rgba(229,197,177,1)', margin: '60px auto' }} />
-      <div style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 35, fontWeight: 300, color: 'rgba(82,16,20,1)', textAlign: 'center', lineHeight: '1em', position: 'relative', zIndex: 2 }}>
+      <div style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(18px, 3.5vw, 35px)', fontWeight: 300, color: 'rgba(82,16,20,1)', textAlign: 'center', lineHeight: '1em', position: 'relative', zIndex: 2 }}>
         <p style={{ margin: 0 }}>
           המטרה שלי היא לא שתעתיקי אותי.<br />
           אני רוצה שתביני.<br />

@@ -239,3 +239,50 @@ button:hover .premium-arrow-hover {
 }
 
 
+
+/* Benefits mobile */
+@media (max-width: 768px) {
+  .benefit-row {
+    justify-content: flex-start !important;
+  }
+  .b-icon {
+    margin-top: 0 !important;
+  }
+}
+
+/* Dvori mobile */
+@media (max-width: 768px) {
+  .dvori-section-mobile {
+    flex-direction: column !important;
+    min-height: auto !important;
+  }
+  .dvori-img-col {
+    order: 1 !important;
+    flex: none !important;
+    width: 100% !important;
+    padding: 24px !important;
+  }
+  .dvori-text-col {
+    order: 2 !important;
+    flex: none !important;
+    width: 100% !important;
+    padding: 32px 24px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    direction: rtl !important;
+    text-align: right !important;
+    align-items: flex-start !important;
+  }
+  .dvori-text-col > * {
+    width: 100% !important;
+    text-align: right !important;
+  }
+  .dvori-sig-name {
+    font-size: 72px !important;
+    margin-bottom: 5px !important;
+  }
+  .dvori-sig-text {
+    font-size: 20px !important;
+    margin-top: -10px !important;
+  }
+}
