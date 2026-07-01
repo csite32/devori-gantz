@@ -8,7 +8,8 @@ import {
   type UIOverride,
 } from "@/lib/ui-overrides.functions";
 import { useOverrides } from "./OverridesProvider";
-import { scanEditableElements, type ScannedElement } from "@/lib/visual-editor/scanner";
+import { scanEditableElements, isTextElement, type ScannedElement } from "@/lib/visual-editor/scanner";
+import { listProjectFonts, type ProjectFont } from "@/lib/visual-editor/fonts";
 
 /**
  * Visual editor overlay.
