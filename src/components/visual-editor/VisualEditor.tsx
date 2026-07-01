@@ -483,6 +483,8 @@ function EditorPanel() {
                           {items.map((el) => (
                             <button
                               key={el.id}
+                              onMouseEnter={() => setHoverId(el.id)}
+                              onMouseLeave={() => setHoverId(null)}
                               onClick={() => {
                                 setSelectedId(el.id);
                                 setTab("edit");
