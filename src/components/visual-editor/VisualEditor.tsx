@@ -194,16 +194,20 @@ function EditorPanel() {
     };
   }, [editMode, hoverId, selectedId]);
 
-  // Click-to-select on the page. Runs whenever the editor is mounted (admin+dev),
-  // regardless of whether the panel is open — clicking auto-opens the panel.
+  // Click-to-select / hover on the page. ONLY active when edit mode is on.
+  // When off, no listeners are registered → links, buttons, and everything
+  // else on the site work exactly like they do for regular visitors.
   useEffect(() => {
+    if (!editMode) {
+      setHoverId(null);
+      return;
+    }
     const clickHandler = (e: MouseEvent) => {
       const target = e.target as HTMLElement | null;
       if (!target) return;
       if (target.closest("[data-editor-panel]")) return;
       let match = target.closest<HTMLElement>("[data-editor-id]");
       if (!match) return;
-      // Alt+Click → step one level up to the nearest editable ancestor.
       if (e.altKey) {
         const parent = match.parentElement?.closest<HTMLElement>("[data-editor-id]");
         if (parent) match = parent;
@@ -232,7 +236,7 @@ function EditorPanel() {
       document.removeEventListener("click", clickHandler, true);
       document.removeEventListener("mouseover", overHandler, true);
     };
-  }, []);
+  }, [editMode]);
 
   const selected = selectedId
     ? allElements.find((e) => e.id === selectedId) ?? null
