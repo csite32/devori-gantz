@@ -524,6 +524,40 @@ function EditorPanel() {
             </button>
           </div>
 
+          {/* Edit-mode indicator + toggle */}
+          <div
+            style={{
+              padding: "8px 12px",
+              borderBottom: "1px solid #eee",
+              background: editMode ? "#fdecec" : "#f4f4f4",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 8,
+            }}
+          >
+            <div style={{ fontSize: 11, fontWeight: 600, color: editMode ? "#9e242b" : "#666" }}>
+              {editMode
+                ? "🖉 מצב בחירה פעיל — לחצי על אלמנט בעמוד"
+                : "מצב בחירה כבוי — קליקים באתר עובדים רגיל"}
+            </div>
+            <button
+              onClick={() => setEditMode((v) => !v)}
+              style={{
+                background: editMode ? "#9e242b" : "white",
+                color: editMode ? "white" : "#9e242b",
+                border: "1px solid #9e242b",
+                borderRadius: 6,
+                padding: "4px 10px",
+                fontSize: 11,
+                fontWeight: 600,
+                cursor: "pointer",
+              }}
+            >
+              {editMode ? "כבה" : "הפעל"}
+            </button>
+          </div>
+
           {/* Save bar */}
           <div
             style={{
