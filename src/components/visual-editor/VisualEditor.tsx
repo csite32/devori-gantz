@@ -378,30 +378,65 @@ function EditorPanel() {
 
   return (
     <>
-      {/* Floating trigger */}
+      {/* Floating pencil trigger — opens panel AND toggles edit mode */}
       <button
         data-editor-panel
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => {
+          if (editMode) {
+            setEditMode(false);
+          } else {
+            setEditMode(true);
+            setOpen(true);
+          }
+        }}
         style={{
           position: "fixed",
           bottom: 20,
           left: 20,
           zIndex: 2147483000,
-          background: "#9e242b",
-          color: "white",
-          border: "none",
+          background: editMode ? "#9e242b" : "white",
+          color: editMode ? "white" : "#9e242b",
+          border: "2px solid #9e242b",
           borderRadius: 999,
           width: 52,
           height: 52,
           fontSize: 22,
           cursor: "pointer",
-          boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
+          boxShadow: editMode
+            ? "0 8px 24px rgba(158,36,43,0.45)"
+            : "0 8px 24px rgba(0,0,0,0.25)",
           fontFamily: "system-ui, sans-serif",
         }}
-        title={open ? "סגור עורך" : "פתח עורך ויזואלי"}
+        title={editMode ? "כבה מצב בחירה" : "הפעל מצב בחירת אלמנטים"}
       >
-        {open ? "×" : "✎"}
+        ✎
       </button>
+
+      {/* Secondary button to just open/close the panel without touching editMode */}
+      {!open && (
+        <button
+          data-editor-panel
+          onClick={() => setOpen(true)}
+          style={{
+            position: "fixed",
+            bottom: 20,
+            left: 84,
+            zIndex: 2147483000,
+            background: "white",
+            color: "#521014",
+            border: "1px solid #d9c9c6",
+            borderRadius: 999,
+            padding: "0 14px",
+            height: 36,
+            fontSize: 12,
+            cursor: "pointer",
+            fontFamily: "system-ui, sans-serif",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+          }}
+        >
+          פתח פאנל
+        </button>
+      )}
 
       {open && (
         <div
