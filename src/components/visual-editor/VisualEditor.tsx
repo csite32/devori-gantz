@@ -872,15 +872,119 @@ function EditPanel({
         />
       </Group>
 
+      {isText && (
+        <Group title="טיפוגרפיה">
+          <div>
+            <div style={{ fontSize: 11, color: "#666", marginBottom: 2 }}>פונט</div>
+            <select
+              value={styles["font-family"] || ""}
+              onChange={(e) => updateStyle("font-family", e.target.value)}
+              style={{
+                width: "100%",
+                border: "1px solid #ddd",
+                borderRadius: 4,
+                padding: "4px 6px",
+                fontSize: 12,
+                fontFamily: styles["font-family"] || "inherit",
+              }}
+            >
+              <option value="">(ברירת מחדל של האתר)</option>
+              {fonts.map((f) => (
+                <option key={f.stack} value={f.stack} style={{ fontFamily: f.stack }}>
+                  {f.family}
+                </option>
+              ))}
+            </select>
+            <div style={{ fontSize: 10, color: "#999", marginTop: 4 }}>
+              רק פונטים שכבר מוטענים בפרויקט
+            </div>
+          </div>
+          <SliderRow
+            label="גודל טקסט"
+            value={styles["font-size"] || ""}
+            unit="px"
+            min={8}
+            max={120}
+            onChange={(v) => updateStyle("font-size", v)}
+          />
+          <div>
+            <div style={{ fontSize: 11, color: "#666", marginBottom: 2 }}>עובי (weight)</div>
+            <select
+              value={styles["font-weight"] || ""}
+              onChange={(e) => updateStyle("font-weight", e.target.value)}
+              style={{
+                width: "100%",
+                border: "1px solid #ddd",
+                borderRadius: 4,
+                padding: "4px 6px",
+                fontSize: 12,
+              }}
+            >
+              <option value="">(ברירת מחדל)</option>
+              <option value="300">300 — Light</option>
+              <option value="400">400 — Regular</option>
+              <option value="500">500 — Medium</option>
+              <option value="600">600 — Semibold</option>
+              <option value="700">700 — Bold</option>
+              <option value="800">800 — Extra Bold</option>
+              <option value="900">900 — Black</option>
+            </select>
+          </div>
+          <SliderRow
+            label="גובה שורה"
+            value={styles["line-height"] || ""}
+            unit=""
+            min={0.8}
+            max={3}
+            onChange={(v) => updateStyle("line-height", v)}
+          />
+          <SliderRow
+            label="ריווח אותיות"
+            value={styles["letter-spacing"] || ""}
+            unit="px"
+            min={-5}
+            max={20}
+            onChange={(v) => updateStyle("letter-spacing", v)}
+          />
+          <div>
+            <div style={{ fontSize: 11, color: "#666", marginBottom: 2 }}>יישור טקסט</div>
+            <div style={{ display: "flex", gap: 4 }}>
+              {(["right", "center", "left", "justify"] as const).map((a) => (
+                <button
+                  key={a}
+                  onClick={() =>
+                    updateStyle("text-align", styles["text-align"] === a ? "" : a)
+                  }
+                  style={{
+                    flex: 1,
+                    background: styles["text-align"] === a ? "#9e242b" : "white",
+                    color: styles["text-align"] === a ? "white" : "#333",
+                    border: "1px solid #ddd",
+                    borderRadius: 4,
+                    padding: "4px 6px",
+                    fontSize: 11,
+                    cursor: "pointer",
+                  }}
+                >
+                  {a === "right" ? "ימין" : a === "center" ? "מרכז" : a === "left" ? "שמאל" : "מלא"}
+                </button>
+              ))}
+            </div>
+          </div>
+        </Group>
+      )}
+
       <Group title="גודל וריווח">
-        <SliderRow
-          label="גודל טקסט"
-          value={styles["font-size"] || ""}
-          unit="px"
-          min={8}
-          max={120}
-          onChange={(v) => updateStyle("font-size", v)}
-        />
+        {!isText && (
+          <SliderRow
+            label="גודל טקסט"
+            value={styles["font-size"] || ""}
+            unit="px"
+            min={8}
+            max={120}
+            onChange={(v) => updateStyle("font-size", v)}
+          />
+        )}
         <SliderRow
           label="ריווח פנימי"
           value={styles["padding"] || ""}
