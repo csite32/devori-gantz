@@ -5,10 +5,10 @@ import { supabase } from "@/integrations/supabase/client";
 import {
   upsertOverride,
   deleteOverride,
-  deleteAllOverrides,
   type UIOverride,
 } from "@/lib/ui-overrides.functions";
 import { useOverrides } from "./OverridesProvider";
+import { scanEditableElements, type ScannedElement } from "@/lib/visual-editor/scanner";
 
 /**
  * Visual editor overlay.
