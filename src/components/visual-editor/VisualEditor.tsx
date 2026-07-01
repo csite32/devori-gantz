@@ -64,12 +64,29 @@ function EditorPanel() {
 
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [hoverId, setHoverId] = useState<string | null>(null);
   const [tab, setTab] = useState<"list" | "edit">("list");
   const [collapsedSections, setCollapsedSections] = useState<Set<string>>(
     new Set(),
   );
+
+  // Panel position (draggable). Default: top-right.
+  const [panelPos, setPanelPos] = useState<{ top: number; left: number }>(() => {
+    if (typeof window === "undefined") return { top: 12, left: 12 };
+    try {
+      const saved = localStorage.getItem("visual-editor:panel-pos");
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return { top: 12, left: Math.max(12, window.innerWidth - 352) };
+  });
+  const dragState = useRef<{ dx: number; dy: number } | null>(null);
+  useEffect(() => {
+    try {
+      localStorage.setItem("visual-editor:panel-pos", JSON.stringify(panelPos));
+    } catch {}
+  }, [panelPos]);
 
   // Scan the DOM continuously so the list always reflects the current route.
   // Re-runs when the pathname changes (route transition may swap the tree
