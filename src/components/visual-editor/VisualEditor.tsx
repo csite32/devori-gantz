@@ -226,6 +226,20 @@ function EditorPanel() {
   const currentStyles = currentOverride?.styles ?? {};
   const currentText = currentOverride?.text_content ?? "";
 
+  const pushUndo = (id: string, prev: UIOverride | null) => {
+    undoStackRef.current.push({ id, prev: prev ? { ...prev, styles: { ...prev.styles } } : null });
+    setUndoCount(undoStackRef.current.length);
+  };
+
+  const persist = async (next: UIOverride | null, id: string) => {
+    try {
+      if (next == null) await del({ data: { editor_id: id } });
+      else await upsert({ data: next });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const updateStyle = async (key: string, value: string) => {
     if (!selectedId || !selected) return;
     const nextStyles = { ...currentStyles };
@@ -237,12 +251,9 @@ function EditorPanel() {
       styles: nextStyles,
       text_content: currentOverride?.text_content ?? null,
     };
+    pushUndo(selectedId, currentOverride);
     setLocalOverride(selectedId, next);
-    try {
-      await upsert({ data: next });
-    } catch (e) {
-      console.error(e);
-    }
+    await persist(next, selectedId);
   };
 
   const updateText = async (value: string) => {
@@ -253,32 +264,24 @@ function EditorPanel() {
       styles: currentStyles,
       text_content: value || null,
     };
+    pushUndo(selectedId, currentOverride);
     setLocalOverride(selectedId, next);
-    try {
-      await upsert({ data: next });
-    } catch (e) {
-      console.error(e);
-    }
+    await persist(next, selectedId);
   };
 
   const resetElement = async () => {
     if (!selectedId) return;
+    pushUndo(selectedId, currentOverride);
     setLocalOverride(selectedId, null);
-    try {
-      await del({ data: { editor_id: selectedId } });
-    } catch (e) {
-      console.error(e);
-    }
+    await persist(null, selectedId);
   };
 
-  const resetAll = async () => {
-    if (!confirm("לאפס את כל השינויים באתר?")) return;
-    try {
-      await delAll();
-      await refresh();
-    } catch (e) {
-      console.error(e);
-    }
+  const undoLast = async () => {
+    const last = undoStackRef.current.pop();
+    setUndoCount(undoStackRef.current.length);
+    if (!last) return;
+    setLocalOverride(last.id, last.prev);
+    await persist(last.prev, last.id);
   };
 
   const toggleSection = (s: string) => {
