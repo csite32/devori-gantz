@@ -130,3 +130,38 @@ export function scanEditableElements(routePath: string): ScannedElement[] {
 
   return results;
 }
+
+/**
+ * Lightweight variant used by OverridesProvider in ALL environments
+ * (including production). Only stamps `data-editor-id` on candidate elements
+ * so saved overrides can be applied globally. Does NOT compute labels,
+ * sections, or visibility (an override on a briefly-hidden node should still
+ * apply when it shows). Cheap enough to run on every DOM mutation batch.
+ */
+export function stampEditableElements(routePath: string): void {
+  if (typeof document === "undefined") return;
+  const raw = document.body.querySelectorAll<HTMLElement>(CANDIDATE_SELECTOR);
+  raw.forEach((el) => {
+    if (el.hasAttribute("data-editor-id")) return;
+    if (isBlacklisted(el)) return;
+    const id = computeStableId(el, routePath);
+    el.setAttribute("data-editor-id", id);
+  });
+}
+
+/**
+ * Returns true if the element is a text-bearing element that should show
+ * the typography editor (font, size, weight, line-height, etc).
+ */
+export function isTextElement(tag: string): boolean {
+  const t = tag.toUpperCase();
+  return (
+    /^H[1-6]$/.test(t) ||
+    t === "P" ||
+    t === "A" ||
+    t === "BUTTON" ||
+    t === "LI" ||
+    t === "BLOCKQUOTE" ||
+    t === "SPAN"
+  );
+}
