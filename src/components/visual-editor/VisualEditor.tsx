@@ -159,9 +159,9 @@ function EditorPanel() {
     return g;
   }, [allElements]);
 
-  // Highlight selected element with an outline
+  // Highlight selected element with an outline — only when edit mode is on.
   useEffect(() => {
-    if (!selectedId) return;
+    if (!editMode || !selectedId) return;
     const node = document.querySelector<HTMLElement>(
       `[data-editor-id="${cssEscape(selectedId)}"]`,
     );
@@ -175,11 +175,11 @@ function EditorPanel() {
       node.style.outline = prev;
       node.style.outlineOffset = prevOffset;
     };
-  }, [selectedId]);
+  }, [editMode, selectedId]);
 
-  // Hover preview outline (thin, different color) on page elements
+  // Hover preview outline (thin, different color) — only when edit mode is on.
   useEffect(() => {
-    if (!hoverId || hoverId === selectedId) return;
+    if (!editMode || !hoverId || hoverId === selectedId) return;
     const node = document.querySelector<HTMLElement>(
       `[data-editor-id="${cssEscape(hoverId)}"]`,
     );
@@ -192,7 +192,7 @@ function EditorPanel() {
       node.style.outline = prev;
       node.style.outlineOffset = prevOffset;
     };
-  }, [hoverId, selectedId]);
+  }, [editMode, hoverId, selectedId]);
 
   // Click-to-select on the page. Runs whenever the editor is mounted (admin+dev),
   // regardless of whether the panel is open — clicking auto-opens the panel.
