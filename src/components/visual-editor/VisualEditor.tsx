@@ -75,6 +75,16 @@ function EditorPanel() {
   const undoStackRef = useRef<Array<{ id: string; prev: UIOverride | null }>>([]);
   const [undoCount, setUndoCount] = useState(0);
 
+  // Pending (unsaved) changes. `baseline` = persisted value from DB before
+  // this session's edits; `next` = the current in-flight value.
+  const [dirty, setDirty] = useState<
+    Record<string, { next: UIOverride | null; baseline: UIOverride | null }>
+  >({});
+  const [saveStatus, setSaveStatus] = useState<
+    "idle" | "saving" | "saved" | "error"
+  >("idle");
+  const dirtyCount = Object.keys(dirty).length;
+
   // Panel position (draggable). Default: top-right.
   const [panelPos, setPanelPos] = useState<{ top: number; left: number }>(() => {
     if (typeof window === "undefined") return { top: 12, left: 12 };
@@ -232,20 +242,45 @@ function EditorPanel() {
   const currentText = currentOverride?.text_content ?? "";
 
   const pushUndo = (id: string, prev: UIOverride | null) => {
-    undoStackRef.current.push({ id, prev: prev ? { ...prev, styles: { ...prev.styles } } : null });
+    undoStackRef.current.push({
+      id,
+      prev: prev ? { ...prev, styles: { ...prev.styles } } : null,
+    });
     setUndoCount(undoStackRef.current.length);
   };
 
-  const persist = async (next: UIOverride | null, id: string) => {
-    try {
-      if (next == null) await del({ data: { editor_id: id } });
-      else await upsert({ data: next });
-    } catch (e) {
-      console.error(e);
-    }
+  const overridesEqual = (
+    a: UIOverride | null,
+    b: UIOverride | null,
+  ): boolean => {
+    if (a == null && b == null) return true;
+    if (a == null || b == null) return false;
+    if ((a.text_content ?? null) !== (b.text_content ?? null)) return false;
+    const ak = Object.keys(a.styles || {});
+    const bk = Object.keys(b.styles || {});
+    if (ak.length !== bk.length) return false;
+    for (const k of ak) if (a.styles[k] !== b.styles[k]) return false;
+    return true;
   };
 
-  const updateStyle = async (key: string, value: string) => {
+  const markDirty = (
+    id: string,
+    next: UIOverride | null,
+    prevLocal: UIOverride | null,
+  ) => {
+    setDirty((d) => {
+      const existing = d[id];
+      const baseline = existing ? existing.baseline : prevLocal;
+      if (overridesEqual(next, baseline)) {
+        const { [id]: _drop, ...rest } = d;
+        return rest;
+      }
+      return { ...d, [id]: { next, baseline } };
+    });
+    setSaveStatus("idle");
+  };
+
+  const updateStyle = (key: string, value: string) => {
     if (!selectedId || !selected) return;
     const nextStyles = { ...currentStyles };
     if (value === "" || value == null) delete nextStyles[key];
@@ -257,11 +292,11 @@ function EditorPanel() {
       text_content: currentOverride?.text_content ?? null,
     };
     pushUndo(selectedId, currentOverride);
+    markDirty(selectedId, next, currentOverride);
     setLocalOverride(selectedId, next);
-    await persist(next, selectedId);
   };
 
-  const updateText = async (value: string) => {
+  const updateText = (value: string) => {
     if (!selectedId || !selected) return;
     const next: UIOverride = {
       editor_id: selectedId,
@@ -270,23 +305,59 @@ function EditorPanel() {
       text_content: value || null,
     };
     pushUndo(selectedId, currentOverride);
+    markDirty(selectedId, next, currentOverride);
     setLocalOverride(selectedId, next);
-    await persist(next, selectedId);
   };
 
-  const resetElement = async () => {
+  const resetElement = () => {
     if (!selectedId) return;
+    if (
+      !window.confirm(
+        "לאפס את השינויים של האלמנט הנבחר? הפעולה תיקח אפקט רק לאחר לחיצה על 'שמירת שינויים'.",
+      )
+    )
+      return;
     pushUndo(selectedId, currentOverride);
+    markDirty(selectedId, null, currentOverride);
     setLocalOverride(selectedId, null);
-    await persist(null, selectedId);
   };
 
-  const undoLast = async () => {
+  const undoLast = () => {
     const last = undoStackRef.current.pop();
     setUndoCount(undoStackRef.current.length);
     if (!last) return;
     setLocalOverride(last.id, last.prev);
-    await persist(last.prev, last.id);
+    setDirty((d) => {
+      const existing = d[last.id];
+      if (!existing) return d;
+      if (overridesEqual(last.prev, existing.baseline)) {
+        const { [last.id]: _drop, ...rest } = d;
+        return rest;
+      }
+      return { ...d, [last.id]: { ...existing, next: last.prev } };
+    });
+    setSaveStatus("idle");
+  };
+
+  const saveAll = async () => {
+    if (dirtyCount === 0) return;
+    setSaveStatus("saving");
+    try {
+      for (const [id, { next }] of Object.entries(dirty)) {
+        if (next == null) await del({ data: { editor_id: id } });
+        else await upsert({ data: next });
+      }
+      setDirty({});
+      undoStackRef.current = [];
+      setUndoCount(0);
+      setSaveStatus("saved");
+      setTimeout(() => {
+        setSaveStatus((s) => (s === "saved" ? "idle" : s));
+      }, 2500);
+    } catch (e) {
+      console.error("[visual-editor] save failed", e);
+      setSaveStatus("error");
+    }
   };
 
   const toggleSection = (s: string) => {
@@ -410,6 +481,65 @@ function EditorPanel() {
               ×
             </button>
           </div>
+
+          {/* Save bar */}
+          <div
+            style={{
+              padding: "10px 12px",
+              borderBottom: "1px solid #eee",
+              background:
+                dirtyCount > 0
+                  ? "#fff6e5"
+                  : saveStatus === "saved"
+                    ? "#e8f7ec"
+                    : saveStatus === "error"
+                      ? "#fdecec"
+                      : "#fafafa",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 8,
+            }}
+          >
+            <div style={{ fontSize: 11, fontWeight: 600, color: "#444" }}>
+              {saveStatus === "saving"
+                ? "שומר…"
+                : saveStatus === "saved" && dirtyCount === 0
+                  ? "✓ השינויים נשמרו בהצלחה"
+                  : saveStatus === "error"
+                    ? "⚠ שגיאה בשמירה"
+                    : dirtyCount > 0
+                      ? `● יש שינויים שלא נשמרו (${dirtyCount})`
+                      : "אין שינויים ממתינים"}
+            </div>
+            <button
+              onClick={saveAll}
+              disabled={dirtyCount === 0 || saveStatus === "saving"}
+              style={{
+                background:
+                  dirtyCount === 0 || saveStatus === "saving"
+                    ? "#ddd"
+                    : "#9e242b",
+                color:
+                  dirtyCount === 0 || saveStatus === "saving"
+                    ? "#888"
+                    : "white",
+                border: "none",
+                borderRadius: 6,
+                padding: "6px 12px",
+                fontWeight: 700,
+                fontSize: 12,
+                cursor:
+                  dirtyCount === 0 || saveStatus === "saving"
+                    ? "not-allowed"
+                    : "pointer",
+              }}
+            >
+              שמירת שינויים
+            </button>
+          </div>
+
+
 
 
           <div
