@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
+import { useRouterState } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import {
-  checkIsAdmin,
   upsertOverride,
   deleteOverride,
   deleteAllOverrides,
@@ -14,25 +14,30 @@ import { useOverrides } from "./OverridesProvider";
  * Visual editor overlay.
  * - Loads only in dev (import.meta.env.DEV).
  * - Extra runtime gate: only mounts UI when signed-in user has admin role.
+ * - Admin check runs client-side via the hardened `has_role` RPC (self-query,
+ *   allowed by the security-definer function).
  */
 export function VisualEditor() {
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
-  const check = useServerFn(checkIsAdmin);
 
   useEffect(() => {
     let active = true;
     async function verify() {
-      const { data } = await supabase.auth.getSession();
-      if (!data.session) {
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) {
         if (active) setIsAdmin(false);
         return;
       }
-      try {
-        const res = await check();
-        if (active) setIsAdmin(!!res.is_admin);
-      } catch {
+      const { data, error } = await supabase.rpc("has_role", {
+        _user_id: userData.user.id,
+        _role: "admin",
+      });
+      if (error) {
+        console.warn("[visual-editor] has_role failed", error);
         if (active) setIsAdmin(false);
+        return;
       }
+      if (active) setIsAdmin(!!data);
     }
     verify();
     const { data: sub } = supabase.auth.onAuthStateChange((e) => {
@@ -44,17 +49,20 @@ export function VisualEditor() {
       active = false;
       sub.subscription.unsubscribe();
     };
-  }, [check]);
+  }, []);
 
   if (!isAdmin) return null;
   return <EditorPanel />;
 }
+
 
 function EditorPanel() {
   const { overrides, setLocalOverride, refresh, elements } = useOverrides();
   const upsert = useServerFn(upsertOverride);
   const del = useServerFn(deleteOverride);
   const delAll = useServerFn(deleteAllOverrides);
+
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   const [open, setOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -63,13 +71,15 @@ function EditorPanel() {
     new Set(),
   );
 
-  // Discover elements currently in DOM (in addition to registered ones)
+  // Scan the DOM continuously so the list always reflects the current route.
+  // Re-runs when the pathname changes (route transition may swap the tree
+  // before/after our observer fires).
   const [domElements, setDomElements] = useState<
     { id: string; section: string | null; label: string | null }[]
   >([]);
 
   useEffect(() => {
-    if (!open) return;
+    let raf = 0;
     const scan = () => {
       const nodes = document.querySelectorAll<HTMLElement>("[data-editor-id]");
       const list: { id: string; section: string | null; label: string | null }[] =
@@ -90,11 +100,26 @@ function EditorPanel() {
       });
       setDomElements(list);
     };
-    scan();
-    const obs = new MutationObserver(() => scan());
+    // Debounce via rAF; MutationObserver can fire many times per tick
+    const trigger = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(scan);
+    };
+    trigger();
+    const obs = new MutationObserver(trigger);
     obs.observe(document.body, { childList: true, subtree: true });
-    return () => obs.disconnect();
-  }, [open]);
+    return () => {
+      obs.disconnect();
+      cancelAnimationFrame(raf);
+    };
+  }, [pathname]);
+
+  // Clear selection when the route changes — the element no longer exists.
+  useEffect(() => {
+    setSelectedId(null);
+    setTab("list");
+  }, [pathname]);
+
 
   const allElements = useMemo(() => {
     const map = new Map<
@@ -318,8 +343,24 @@ function EditorPanel() {
             {tab === "list" && (
               <div>
                 {Object.keys(grouped).length === 0 && (
-                  <div style={{ color: "#888", padding: 12 }}>
-                    לא נמצאו אלמנטים עם <code>data-editor-id</code> בעמוד הזה.
+                  <div
+                    style={{
+                      color: "#888",
+                      padding: 16,
+                      textAlign: "center",
+                      background: "#faf6f5",
+                      borderRadius: 8,
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    <div style={{ fontWeight: 600, color: "#521014" }}>
+                      עדיין לא סומנו אלמנטים לעריכה
+                    </div>
+                    <div style={{ fontSize: 11, marginTop: 6 }}>
+                      בעמוד הזה ({pathname}) אין אלמנטים עם
+                      <br />
+                      <code style={{ direction: "ltr" }}>data-editor-id</code>
+                    </div>
                   </div>
                 )}
                 {Object.entries(grouped).map(([section, items]) => {

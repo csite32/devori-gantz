@@ -52,12 +52,40 @@ export function HeroSection() {
       </header>
       <div className="relative z-20 flex-1 flex items-center px-4 pb-8 md:pl-6 md:pr-[110px] md:pb-[60px] md:max-w-[58%] md:ml-auto">
         <div>
-          <h1 className="text-right gsap-title" style={{ fontFamily: 'Atletico FS, sans-serif', color: 'rgba(158,36,43,1)', lineHeight: 1.05 }}>
-            <span className="block font-bold" style={{ fontSize: 'clamp(32px,6vw,117px)' }}>קורסי התספורות</span>
-            <span className="block font-bold" style={{ fontSize: 'clamp(32px,6vw,117px)' }}>הדיגיטליים</span>
+          <h1
+            data-editor-id="home.hero.title"
+            data-editor-section="עמוד הבית — Hero"
+            data-editor-label="כותרת ראשית בהירו"
+            className="text-right gsap-title"
+            style={{ fontFamily: 'Atletico FS, sans-serif', color: 'rgba(158,36,43,1)', lineHeight: 1.05 }}
+          >
+            <span
+              data-editor-id="home.hero.title.line1"
+              data-editor-section="עמוד הבית — Hero"
+              data-editor-label="שורת כותרת ראשונה (ראשית)"
+              className="block font-bold"
+              style={{ fontSize: 'clamp(32px,6vw,117px)' }}
+            >
+              קורסי התספורות
+            </span>
+            <span
+              data-editor-id="home.hero.title.line2"
+              data-editor-section="עמוד הבית — Hero"
+              data-editor-label="שורת כותרת שנייה (משנית)"
+              className="block font-bold"
+              style={{ fontSize: 'clamp(32px,6vw,117px)' }}
+            >
+              הדיגיטליים
+            </span>
             <span className="block font-normal" style={{ fontSize: 'clamp(26px,5vw,95px)' }}>של דבורי גנץ-אדלר</span>
           </h1>
-          <p className="mt-6 text-right" style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(16px, 4vw, 35px)', fontWeight: 300, lineHeight: '1.1em', color: 'rgba(82,16,20,1)', maxWidth: 650 }}>
+          <p
+            data-editor-id="home.hero.subtitle"
+            data-editor-section="עמוד הבית — Hero"
+            data-editor-label="טקסט משנה בהירו"
+            className="mt-6 text-right"
+            style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(16px, 4vw, 35px)', fontWeight: 300, lineHeight: '1.1em', color: 'rgba(82,16,20,1)', maxWidth: 650 }}
+          >
             ידע, ניסיון וטכניקות מקצועיות שנצברו במשך עשרות שנים – זמינים עבורך בקורסים דיגיטליים מקצועיים, לצפייה מכל מקום ובכל זמן.
           </p>
         </div>
