@@ -482,6 +482,65 @@ function EditorPanel() {
             </button>
           </div>
 
+          {/* Save bar */}
+          <div
+            style={{
+              padding: "10px 12px",
+              borderBottom: "1px solid #eee",
+              background:
+                dirtyCount > 0
+                  ? "#fff6e5"
+                  : saveStatus === "saved"
+                    ? "#e8f7ec"
+                    : saveStatus === "error"
+                      ? "#fdecec"
+                      : "#fafafa",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 8,
+            }}
+          >
+            <div style={{ fontSize: 11, fontWeight: 600, color: "#444" }}>
+              {saveStatus === "saving"
+                ? "שומר…"
+                : saveStatus === "saved" && dirtyCount === 0
+                  ? "✓ השינויים נשמרו בהצלחה"
+                  : saveStatus === "error"
+                    ? "⚠ שגיאה בשמירה"
+                    : dirtyCount > 0
+                      ? `● יש שינויים שלא נשמרו (${dirtyCount})`
+                      : "אין שינויים ממתינים"}
+            </div>
+            <button
+              onClick={saveAll}
+              disabled={dirtyCount === 0 || saveStatus === "saving"}
+              style={{
+                background:
+                  dirtyCount === 0 || saveStatus === "saving"
+                    ? "#ddd"
+                    : "#9e242b",
+                color:
+                  dirtyCount === 0 || saveStatus === "saving"
+                    ? "#888"
+                    : "white",
+                border: "none",
+                borderRadius: 6,
+                padding: "6px 12px",
+                fontWeight: 700,
+                fontSize: 12,
+                cursor:
+                  dirtyCount === 0 || saveStatus === "saving"
+                    ? "not-allowed"
+                    : "pointer",
+              }}
+            >
+              שמירת שינויים
+            </button>
+          </div>
+
+
+
 
           <div
             style={{
