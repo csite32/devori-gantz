@@ -9,10 +9,12 @@ import {
   type ReactNode,
 } from "react";
 import { useServerFn } from "@tanstack/react-start";
+import { useRouterState } from "@tanstack/react-router";
 import {
   getAllOverrides,
   type UIOverride,
 } from "@/lib/ui-overrides.functions";
+import { stampEditableElements } from "@/lib/visual-editor/scanner";
 
 type OverridesMap = Record<string, UIOverride>;
 
