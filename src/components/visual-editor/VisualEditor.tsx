@@ -5,10 +5,10 @@ import { supabase } from "@/integrations/supabase/client";
 import {
   upsertOverride,
   deleteOverride,
-  deleteAllOverrides,
   type UIOverride,
 } from "@/lib/ui-overrides.functions";
 import { useOverrides } from "./OverridesProvider";
+import { scanEditableElements, type ScannedElement } from "@/lib/visual-editor/scanner";
 
 /**
  * Visual editor overlay.
@@ -57,10 +57,9 @@ export function VisualEditor() {
 
 
 function EditorPanel() {
-  const { overrides, setLocalOverride, refresh, elements } = useOverrides();
+  const { overrides, setLocalOverride, reapplyAll } = useOverrides();
   const upsert = useServerFn(upsertOverride);
   const del = useServerFn(deleteOverride);
-  const delAll = useServerFn(deleteAllOverrides);
 
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
@@ -71,6 +70,10 @@ function EditorPanel() {
   const [collapsedSections, setCollapsedSections] = useState<Set<string>>(
     new Set(),
   );
+  // Session undo stack: previous override value for each change made
+  // since the panel was opened. Never touches changes saved in earlier sessions.
+  const undoStackRef = useRef<Array<{ id: string; prev: UIOverride | null }>>([]);
+  const [undoCount, setUndoCount] = useState(0);
 
   // Panel position (draggable). Default: top-right.
   const [panelPos, setPanelPos] = useState<{ top: number; left: number }>(() => {
@@ -89,64 +92,50 @@ function EditorPanel() {
   }, [panelPos]);
 
   // Scan the DOM continuously so the list always reflects the current route.
-  // Re-runs when the pathname changes (route transition may swap the tree
-  // before/after our observer fires).
-  const [domElements, setDomElements] = useState<
-    { id: string; section: string | null; label: string | null }[]
-  >([]);
+  // Uses the shared scanner that filters technical noise and stamps
+  // `data-editor-id` (stable ID) on auto-detected elements so overrides apply.
+  const [domElements, setDomElements] = useState<ScannedElement[]>([]);
 
   useEffect(() => {
     let raf = 0;
     const scan = () => {
-      const nodes = document.querySelectorAll<HTMLElement>("[data-editor-id]");
-      const list: { id: string; section: string | null; label: string | null }[] =
-        [];
-      const seen = new Set<string>();
-      nodes.forEach((n) => {
-        const id = n.getAttribute("data-editor-id");
-        if (!id || seen.has(id)) return;
-        seen.add(id);
-        list.push({
-          id,
-          section: n.getAttribute("data-editor-section"),
-          label:
-            n.getAttribute("data-editor-label") ??
-            ((n.textContent ?? "").trim().slice(0, 40) ||
-              n.tagName.toLowerCase()),
-        });
-      });
+      const list = scanEditableElements(pathname);
       setDomElements(list);
+      // Ensure overrides apply to freshly-stamped nodes.
+      reapplyAll();
     };
-    // Debounce via rAF; MutationObserver can fire many times per tick
     const trigger = () => {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(scan);
     };
     trigger();
-    const obs = new MutationObserver(trigger);
+    const obs = new MutationObserver((mutations) => {
+      // Ignore mutations we cause ourselves (attribute stamps + style writes).
+      let interesting = false;
+      for (const m of mutations) {
+        if (m.type === "childList" && (m.addedNodes.length || m.removedNodes.length)) {
+          interesting = true;
+          break;
+        }
+      }
+      if (interesting) trigger();
+    });
     obs.observe(document.body, { childList: true, subtree: true });
     return () => {
       obs.disconnect();
       cancelAnimationFrame(raf);
     };
-  }, [pathname]);
+  }, [pathname, reapplyAll]);
 
-  // Clear selection when the route changes — the element no longer exists.
+  // Clear selection & undo history when route changes.
   useEffect(() => {
     setSelectedId(null);
     setTab("list");
+    undoStackRef.current = [];
+    setUndoCount(0);
   }, [pathname]);
 
-
-  const allElements = useMemo(() => {
-    const map = new Map<
-      string,
-      { id: string; section: string | null; label: string | null }
-    >();
-    for (const el of elements) map.set(el.id, el);
-    for (const el of domElements) map.set(el.id, el);
-    return Array.from(map.values());
-  }, [elements, domElements]);
+  const allElements = useMemo(() => domElements, [domElements]);
 
   const grouped = useMemo(() => {
     const g: Record<string, typeof allElements> = {};
@@ -199,8 +188,13 @@ function EditorPanel() {
       const target = e.target as HTMLElement | null;
       if (!target) return;
       if (target.closest("[data-editor-panel]")) return;
-      const match = target.closest<HTMLElement>("[data-editor-id]");
+      let match = target.closest<HTMLElement>("[data-editor-id]");
       if (!match) return;
+      // Alt+Click → step one level up to the nearest editable ancestor.
+      if (e.altKey) {
+        const parent = match.parentElement?.closest<HTMLElement>("[data-editor-id]");
+        if (parent) match = parent;
+      }
       e.preventDefault();
       e.stopPropagation();
       const id = match.getAttribute("data-editor-id");
@@ -237,6 +231,20 @@ function EditorPanel() {
   const currentStyles = currentOverride?.styles ?? {};
   const currentText = currentOverride?.text_content ?? "";
 
+  const pushUndo = (id: string, prev: UIOverride | null) => {
+    undoStackRef.current.push({ id, prev: prev ? { ...prev, styles: { ...prev.styles } } : null });
+    setUndoCount(undoStackRef.current.length);
+  };
+
+  const persist = async (next: UIOverride | null, id: string) => {
+    try {
+      if (next == null) await del({ data: { editor_id: id } });
+      else await upsert({ data: next });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const updateStyle = async (key: string, value: string) => {
     if (!selectedId || !selected) return;
     const nextStyles = { ...currentStyles };
@@ -248,12 +256,9 @@ function EditorPanel() {
       styles: nextStyles,
       text_content: currentOverride?.text_content ?? null,
     };
+    pushUndo(selectedId, currentOverride);
     setLocalOverride(selectedId, next);
-    try {
-      await upsert({ data: next });
-    } catch (e) {
-      console.error(e);
-    }
+    await persist(next, selectedId);
   };
 
   const updateText = async (value: string) => {
@@ -264,32 +269,24 @@ function EditorPanel() {
       styles: currentStyles,
       text_content: value || null,
     };
+    pushUndo(selectedId, currentOverride);
     setLocalOverride(selectedId, next);
-    try {
-      await upsert({ data: next });
-    } catch (e) {
-      console.error(e);
-    }
+    await persist(next, selectedId);
   };
 
   const resetElement = async () => {
     if (!selectedId) return;
+    pushUndo(selectedId, currentOverride);
     setLocalOverride(selectedId, null);
-    try {
-      await del({ data: { editor_id: selectedId } });
-    } catch (e) {
-      console.error(e);
-    }
+    await persist(null, selectedId);
   };
 
-  const resetAll = async () => {
-    if (!confirm("לאפס את כל השינויים באתר?")) return;
-    try {
-      await delAll();
-      await refresh();
-    } catch (e) {
-      console.error(e);
-    }
+  const undoLast = async () => {
+    const last = undoStackRef.current.pop();
+    setUndoCount(undoStackRef.current.length);
+    if (!last) return;
+    setLocalOverride(last.id, last.prev);
+    await persist(last.prev, last.id);
   };
 
   const toggleSection = (s: string) => {
@@ -527,20 +524,22 @@ function EditorPanel() {
                   );
                 })}
                 <button
-                  onClick={resetAll}
+                  onClick={undoLast}
+                  disabled={undoCount === 0}
                   style={{
                     marginTop: 14,
                     width: "100%",
-                    background: "#fff",
-                    color: "#9e242b",
+                    background: undoCount === 0 ? "#f4f4f4" : "#fff",
+                    color: undoCount === 0 ? "#aaa" : "#9e242b",
                     border: "1px solid #9e242b",
                     borderRadius: 6,
                     padding: "8px 10px",
-                    cursor: "pointer",
+                    cursor: undoCount === 0 ? "not-allowed" : "pointer",
                     fontWeight: 600,
                   }}
+                  title="מבטל את השינוי האחרון שבוצע בסשן הנוכחי בלבד. שינויים ישנים שכבר נשמרו לא נמחקים."
                 >
-                  אפס את כל השינויים באתר
+                  ↶ בטל שינוי אחרון{undoCount > 0 ? ` (${undoCount})` : ""}
                 </button>
               </div>
             )}

@@ -20,6 +20,7 @@ type OverridesContextValue = {
   overrides: OverridesMap;
   setLocalOverride: (id: string, next: UIOverride | null) => void;
   refresh: () => Promise<void>;
+  reapplyAll: () => void;
   registerElement: (
     id: string,
     section: string | null,
@@ -145,6 +146,15 @@ export function OverridesProvider({ children }: { children: ReactNode }) {
     [],
   );
 
+  const reapplyAll = useCallback(() => {
+    if (typeof document === "undefined") return;
+    const nodes = document.querySelectorAll<HTMLElement>("[data-editor-id]");
+    nodes.forEach((n) => {
+      const id = n.getAttribute("data-editor-id");
+      if (id) applyToNode(n, id);
+    });
+  }, [applyToNode]);
+
   const registerElement = useCallback(
     (id: string, section: string | null, label: string | null) => {
       registryRef.current.set(id, { id, section, label });
@@ -162,10 +172,11 @@ export function OverridesProvider({ children }: { children: ReactNode }) {
       overrides,
       setLocalOverride,
       refresh,
+      reapplyAll,
       registerElement,
       elements,
     }),
-    [overrides, setLocalOverride, refresh, registerElement, elements],
+    [overrides, setLocalOverride, refresh, reapplyAll, registerElement, elements],
   );
 
   return (
