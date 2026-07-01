@@ -75,6 +75,16 @@ function EditorPanel() {
   const undoStackRef = useRef<Array<{ id: string; prev: UIOverride | null }>>([]);
   const [undoCount, setUndoCount] = useState(0);
 
+  // Pending (unsaved) changes. `baseline` = persisted value from DB before
+  // this session's edits; `next` = the current in-flight value.
+  const [dirty, setDirty] = useState<
+    Record<string, { next: UIOverride | null; baseline: UIOverride | null }>
+  >({});
+  const [saveStatus, setSaveStatus] = useState<
+    "idle" | "saving" | "saved" | "error"
+  >("idle");
+  const dirtyCount = Object.keys(dirty).length;
+
   // Panel position (draggable). Default: top-right.
   const [panelPos, setPanelPos] = useState<{ top: number; left: number }>(() => {
     if (typeof window === "undefined") return { top: 12, left: 12 };
