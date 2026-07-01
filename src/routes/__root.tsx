@@ -7,10 +7,21 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, lazy, Suspense, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { OverridesProvider } from "../components/visual-editor/OverridesProvider";
+
+// Dev-only visual editor. In production the import is tree-shaken because
+// import.meta.env.DEV is a compile-time constant → false, and the branch is dead.
+const VisualEditor = import.meta.env.DEV
+  ? lazy(() =>
+      import("../components/visual-editor/VisualEditor").then((m) => ({
+        default: m.VisualEditor,
+      })),
+    )
+  : null;
 
 function NotFoundComponent() {
   return (
@@ -122,8 +133,15 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <OverridesProvider>
+        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+        <Outlet />
+        {VisualEditor && (
+          <Suspense fallback={null}>
+            <VisualEditor />
+          </Suspense>
+        )}
+      </OverridesProvider>
     </QueryClientProvider>
   );
 }
