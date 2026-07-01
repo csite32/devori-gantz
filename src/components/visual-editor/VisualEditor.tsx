@@ -755,6 +755,7 @@ function EditorPanel() {
               <EditPanel
                 key={selected.id}
                 selected={selected}
+                tag={selected.tag}
                 styles={currentStyles}
                 text={currentText}
                 updateStyle={updateStyle}
