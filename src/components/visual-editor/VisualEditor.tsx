@@ -84,8 +84,8 @@ function EditorPanel() {
           section: n.getAttribute("data-editor-section"),
           label:
             n.getAttribute("data-editor-label") ??
-            (n.textContent ?? "").trim().slice(0, 40) ||
-            n.tagName.toLowerCase(),
+            ((n.textContent ?? "").trim().slice(0, 40) ||
+              n.tagName.toLowerCase()),
         });
       });
       setDomElements(list);
