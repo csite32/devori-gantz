@@ -389,6 +389,36 @@ export type Database = {
           },
         ]
       }
+      ui_overrides: {
+        Row: {
+          created_at: string
+          editor_id: string
+          section: string | null
+          styles: Json
+          text_content: string | null
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          editor_id: string
+          section?: string | null
+          styles?: Json
+          text_content?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          editor_id?: string
+          section?: string | null
+          styles?: Json
+          text_content?: string | null
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
