@@ -45,7 +45,7 @@ function isBlacklisted(el: HTMLElement): boolean {
   if (el.closest("script,style,noscript,head")) return true;
   // Inside SVG (but not the <svg> root itself) — internal SVG shouldn't be selectable.
   const svg = el.closest("svg");
-  if (svg && el !== svg) return true;
+  if (svg && (svg as Element) !== (el as Element)) return true;
   return false;
 }
 

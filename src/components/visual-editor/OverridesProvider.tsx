@@ -172,10 +172,11 @@ export function OverridesProvider({ children }: { children: ReactNode }) {
       overrides,
       setLocalOverride,
       refresh,
+      reapplyAll,
       registerElement,
       elements,
     }),
-    [overrides, setLocalOverride, refresh, registerElement, elements],
+    [overrides, setLocalOverride, refresh, reapplyAll, registerElement, elements],
   );
 
   return (
