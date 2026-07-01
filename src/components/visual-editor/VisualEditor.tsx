@@ -809,6 +809,7 @@ function TabBtn({
 
 function EditPanel({
   selected,
+  tag,
   styles,
   text,
   updateStyle,
@@ -816,12 +817,18 @@ function EditPanel({
   resetElement,
 }: {
   selected: { id: string; section: string | null; label: string | null };
+  tag: string;
   styles: Record<string, string>;
   text: string;
   updateStyle: (k: string, v: string) => void;
   updateText: (v: string) => void;
   resetElement: () => void;
 }) {
+  const isText = isTextElement(tag);
+  const fonts = useMemo<ProjectFont[]>(
+    () => (typeof document === "undefined" ? [] : listProjectFonts()),
+    [],
+  );
   return (
     <div>
       <div
