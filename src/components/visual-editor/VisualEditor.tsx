@@ -63,7 +63,10 @@ function EditorPanel() {
 
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
+  // Edit mode: element-selection listeners + outlines active. Off by default
+  // on every page load (never persisted). Only enabled via the pencil button.
+  const [editMode, setEditMode] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hoverId, setHoverId] = useState<string | null>(null);
   const [tab, setTab] = useState<"list" | "edit">("list");
