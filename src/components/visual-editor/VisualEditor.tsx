@@ -92,64 +92,50 @@ function EditorPanel() {
   }, [panelPos]);
 
   // Scan the DOM continuously so the list always reflects the current route.
-  // Re-runs when the pathname changes (route transition may swap the tree
-  // before/after our observer fires).
-  const [domElements, setDomElements] = useState<
-    { id: string; section: string | null; label: string | null }[]
-  >([]);
+  // Uses the shared scanner that filters technical noise and stamps
+  // `data-editor-id` (stable ID) on auto-detected elements so overrides apply.
+  const [domElements, setDomElements] = useState<ScannedElement[]>([]);
 
   useEffect(() => {
     let raf = 0;
     const scan = () => {
-      const nodes = document.querySelectorAll<HTMLElement>("[data-editor-id]");
-      const list: { id: string; section: string | null; label: string | null }[] =
-        [];
-      const seen = new Set<string>();
-      nodes.forEach((n) => {
-        const id = n.getAttribute("data-editor-id");
-        if (!id || seen.has(id)) return;
-        seen.add(id);
-        list.push({
-          id,
-          section: n.getAttribute("data-editor-section"),
-          label:
-            n.getAttribute("data-editor-label") ??
-            ((n.textContent ?? "").trim().slice(0, 40) ||
-              n.tagName.toLowerCase()),
-        });
-      });
+      const list = scanEditableElements(pathname);
       setDomElements(list);
+      // Ensure overrides apply to freshly-stamped nodes.
+      reapplyAll();
     };
-    // Debounce via rAF; MutationObserver can fire many times per tick
     const trigger = () => {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(scan);
     };
     trigger();
-    const obs = new MutationObserver(trigger);
+    const obs = new MutationObserver((mutations) => {
+      // Ignore mutations we cause ourselves (attribute stamps + style writes).
+      let interesting = false;
+      for (const m of mutations) {
+        if (m.type === "childList" && (m.addedNodes.length || m.removedNodes.length)) {
+          interesting = true;
+          break;
+        }
+      }
+      if (interesting) trigger();
+    });
     obs.observe(document.body, { childList: true, subtree: true });
     return () => {
       obs.disconnect();
       cancelAnimationFrame(raf);
     };
-  }, [pathname]);
+  }, [pathname, reapplyAll]);
 
-  // Clear selection when the route changes — the element no longer exists.
+  // Clear selection & undo history when route changes.
   useEffect(() => {
     setSelectedId(null);
     setTab("list");
+    undoStackRef.current = [];
+    setUndoCount(0);
   }, [pathname]);
 
-
-  const allElements = useMemo(() => {
-    const map = new Map<
-      string,
-      { id: string; section: string | null; label: string | null }
-    >();
-    for (const el of elements) map.set(el.id, el);
-    for (const el of domElements) map.set(el.id, el);
-    return Array.from(map.values());
-  }, [elements, domElements]);
+  const allElements = useMemo(() => domElements, [domElements]);
 
   const grouped = useMemo(() => {
     const g: Record<string, typeof allElements> = {};
