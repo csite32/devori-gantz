@@ -188,8 +188,13 @@ function EditorPanel() {
       const target = e.target as HTMLElement | null;
       if (!target) return;
       if (target.closest("[data-editor-panel]")) return;
-      const match = target.closest<HTMLElement>("[data-editor-id]");
+      let match = target.closest<HTMLElement>("[data-editor-id]");
       if (!match) return;
+      // Alt+Click → step one level up to the nearest editable ancestor.
+      if (e.altKey) {
+        const parent = match.parentElement?.closest<HTMLElement>("[data-editor-id]");
+        if (parent) match = parent;
+      }
       e.preventDefault();
       e.stopPropagation();
       const id = match.getAttribute("data-editor-id");
