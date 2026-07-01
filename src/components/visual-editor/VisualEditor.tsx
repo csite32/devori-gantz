@@ -524,20 +524,22 @@ function EditorPanel() {
                   );
                 })}
                 <button
-                  onClick={resetAll}
+                  onClick={undoLast}
+                  disabled={undoCount === 0}
                   style={{
                     marginTop: 14,
                     width: "100%",
-                    background: "#fff",
-                    color: "#9e242b",
+                    background: undoCount === 0 ? "#f4f4f4" : "#fff",
+                    color: undoCount === 0 ? "#aaa" : "#9e242b",
                     border: "1px solid #9e242b",
                     borderRadius: 6,
                     padding: "8px 10px",
-                    cursor: "pointer",
+                    cursor: undoCount === 0 ? "not-allowed" : "pointer",
                     fontWeight: 600,
                   }}
+                  title="מבטל את השינוי האחרון שבוצע בסשן הנוכחי בלבד. שינויים ישנים שכבר נשמרו לא נמחקים."
                 >
-                  אפס את כל השינויים באתר
+                  ↶ בטל שינוי אחרון{undoCount > 0 ? ` (${undoCount})` : ""}
                 </button>
               </div>
             )}
