@@ -334,9 +334,9 @@ function EditorPanel() {
           dir="rtl"
           style={{
             position: "fixed",
-            top: 12,
-            right: 12,
-            bottom: 12,
+            top: panelPos.top,
+            left: panelPos.left,
+            height: "min(720px, calc(100vh - 24px))",
             width: 340,
             zIndex: 2147482999,
             background: "white",
@@ -351,21 +351,69 @@ function EditorPanel() {
           }}
         >
           <div
+            onMouseDown={(e) => {
+              // Only start drag from empty header area, not from buttons
+              if ((e.target as HTMLElement).closest("button")) return;
+              dragState.current = {
+                dx: e.clientX - panelPos.left,
+                dy: e.clientY - panelPos.top,
+              };
+              const move = (ev: MouseEvent) => {
+                if (!dragState.current) return;
+                const nx = Math.max(
+                  0,
+                  Math.min(window.innerWidth - 340, ev.clientX - dragState.current.dx),
+                );
+                const ny = Math.max(
+                  0,
+                  Math.min(window.innerHeight - 80, ev.clientY - dragState.current.dy),
+                );
+                setPanelPos({ top: ny, left: nx });
+              };
+              const up = () => {
+                dragState.current = null;
+                document.removeEventListener("mousemove", move);
+                document.removeEventListener("mouseup", up);
+              };
+              document.addEventListener("mousemove", move);
+              document.addEventListener("mouseup", up);
+            }}
             style={{
               padding: "12px 14px",
               borderBottom: "1px solid #eee",
               background: "#faf6f5",
+              cursor: "grab",
+              userSelect: "none",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 8,
             }}
           >
-            <div
-              style={{ fontWeight: 700, fontSize: 14, color: "#521014" }}
+            <div>
+              <div style={{ fontWeight: 700, fontSize: 14, color: "#521014" }}>
+                ✥ עורך ויזואלי
+              </div>
+              <div style={{ fontSize: 11, color: "#888", marginTop: 2 }}>
+                גררי מהכותרת • לחצי על אלמנט לעריכה
+              </div>
+            </div>
+            <button
+              onClick={() => setOpen(false)}
+              style={{
+                background: "transparent",
+                border: "none",
+                fontSize: 20,
+                cursor: "pointer",
+                color: "#521014",
+                lineHeight: 1,
+              }}
+              title="סגור"
             >
-              עורך ויזואלי
-            </div>
-            <div style={{ fontSize: 11, color: "#888", marginTop: 2 }}>
-              שינויים נשמרים אוטומטית לכל המבקרים
-            </div>
+              ×
+            </button>
           </div>
+
 
           <div
             style={{
