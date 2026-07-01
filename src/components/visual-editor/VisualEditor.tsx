@@ -343,8 +343,24 @@ function EditorPanel() {
             {tab === "list" && (
               <div>
                 {Object.keys(grouped).length === 0 && (
-                  <div style={{ color: "#888", padding: 12 }}>
-                    לא נמצאו אלמנטים עם <code>data-editor-id</code> בעמוד הזה.
+                  <div
+                    style={{
+                      color: "#888",
+                      padding: 16,
+                      textAlign: "center",
+                      background: "#faf6f5",
+                      borderRadius: 8,
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    <div style={{ fontWeight: 600, color: "#521014" }}>
+                      עדיין לא סומנו אלמנטים לעריכה
+                    </div>
+                    <div style={{ fontSize: 11, marginTop: 6 }}>
+                      בעמוד הזה ({pathname}) אין אלמנטים עם
+                      <br />
+                      <code style={{ direction: "ltr" }}>data-editor-id</code>
+                    </div>
                   </div>
                 )}
                 {Object.entries(grouped).map(([section, items]) => {
