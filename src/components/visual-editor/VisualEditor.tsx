@@ -175,13 +175,29 @@ function EditorPanel() {
     };
   }, [selectedId]);
 
-  // Click-to-select on the page (when editor is open)
+  // Hover preview outline (thin, different color) on page elements
   useEffect(() => {
-    if (!open) return;
-    const handler = (e: MouseEvent) => {
+    if (!hoverId || hoverId === selectedId) return;
+    const node = document.querySelector<HTMLElement>(
+      `[data-editor-id="${cssEscape(hoverId)}"]`,
+    );
+    if (!node) return;
+    const prev = node.style.outline;
+    const prevOffset = node.style.outlineOffset;
+    node.style.outline = "1px dashed rgba(158,36,43,0.5)";
+    node.style.outlineOffset = "2px";
+    return () => {
+      node.style.outline = prev;
+      node.style.outlineOffset = prevOffset;
+    };
+  }, [hoverId, selectedId]);
+
+  // Click-to-select on the page. Runs whenever the editor is mounted (admin+dev),
+  // regardless of whether the panel is open — clicking auto-opens the panel.
+  useEffect(() => {
+    const clickHandler = (e: MouseEvent) => {
       const target = e.target as HTMLElement | null;
       if (!target) return;
-      // Ignore clicks inside the editor panel itself
       if (target.closest("[data-editor-panel]")) return;
       const match = target.closest<HTMLElement>("[data-editor-id]");
       if (!match) return;
@@ -191,13 +207,25 @@ function EditorPanel() {
       if (id) {
         setSelectedId(id);
         setTab("edit");
+        setOpen(true);
       }
     };
-    document.addEventListener("click", handler, true);
-    return () => document.removeEventListener("click", handler, true);
-  }, [open]);
-
-  const selected = selectedId
+    const overHandler = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (!target || target.closest("[data-editor-panel]")) {
+        setHoverId(null);
+        return;
+      }
+      const match = target.closest<HTMLElement>("[data-editor-id]");
+      setHoverId(match ? match.getAttribute("data-editor-id") : null);
+    };
+    document.addEventListener("click", clickHandler, true);
+    document.addEventListener("mouseover", overHandler, true);
+    return () => {
+      document.removeEventListener("click", clickHandler, true);
+      document.removeEventListener("mouseover", overHandler, true);
+    };
+  }, []);
     ? allElements.find((e) => e.id === selectedId) ?? null
     : null;
   const currentOverride: UIOverride | null = selectedId
