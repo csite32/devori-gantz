@@ -9,10 +9,12 @@ import {
   type ReactNode,
 } from "react";
 import { useServerFn } from "@tanstack/react-start";
+import { useRouterState } from "@tanstack/react-router";
 import {
   getAllOverrides,
   type UIOverride,
 } from "@/lib/ui-overrides.functions";
+import { stampEditableElements } from "@/lib/visual-editor/scanner";
 
 type OverridesMap = Record<string, UIOverride>;
 
@@ -112,27 +114,50 @@ export function OverridesProvider({ children }: { children: ReactNode }) {
     });
   }, [overrides, applyToNode]);
 
-  // Observe DOM to catch newly-mounted editable nodes
+  // Global stamper + observer. Runs in ALL environments (dev + prod) so that
+  // saved overrides apply to every visitor, even when the editor UI itself
+  // is tree-shaken out of the bundle. Stamps data-editor-id on candidate
+  // elements using the same stable-id used by the editor, then applies
+  // overrides. Listens to childList mutations only (attribute mutations we
+  // cause ourselves would create an infinite loop).
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
   useEffect(() => {
     if (typeof document === "undefined") return;
+    let raf = 0;
+    let disposed = false;
+    const run = () => {
+      if (disposed) return;
+      stampEditableElements(pathname);
+      document.querySelectorAll<HTMLElement>("[data-editor-id]").forEach((n) => {
+        const id = n.getAttribute("data-editor-id");
+        if (id) applyToNode(n, id);
+      });
+    };
+    const schedule = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(run);
+    };
+    schedule();
     const observer = new MutationObserver((mutations) => {
+      // React only to real DOM structure changes, not our own attribute writes.
       for (const m of mutations) {
-        m.addedNodes.forEach((n) => {
-          if (!(n instanceof HTMLElement)) return;
-          if (n.hasAttribute("data-editor-id")) {
-            const id = n.getAttribute("data-editor-id");
-            if (id) applyToNode(n, id);
-          }
-          n.querySelectorAll<HTMLElement>("[data-editor-id]").forEach((el) => {
-            const id = el.getAttribute("data-editor-id");
-            if (id) applyToNode(el, id);
-          });
-        });
+        if (
+          m.type === "childList" &&
+          (m.addedNodes.length > 0 || m.removedNodes.length > 0)
+        ) {
+          schedule();
+          return;
+        }
       }
     });
     observer.observe(document.body, { childList: true, subtree: true });
-    return () => observer.disconnect();
-  }, [applyToNode]);
+    return () => {
+      disposed = true;
+      observer.disconnect();
+      cancelAnimationFrame(raf);
+    };
+  }, [pathname, applyToNode]);
 
   const setLocalOverride = useCallback(
     (id: string, next: UIOverride | null) => {

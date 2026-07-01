@@ -8,7 +8,8 @@ import {
   type UIOverride,
 } from "@/lib/ui-overrides.functions";
 import { useOverrides } from "./OverridesProvider";
-import { scanEditableElements, type ScannedElement } from "@/lib/visual-editor/scanner";
+import { scanEditableElements, isTextElement, type ScannedElement } from "@/lib/visual-editor/scanner";
+import { listProjectFonts, type ProjectFont } from "@/lib/visual-editor/fonts";
 
 /**
  * Visual editor overlay.
@@ -63,7 +64,10 @@ function EditorPanel() {
 
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
+  // Edit mode: element-selection listeners + outlines active. Off by default
+  // on every page load (never persisted). Only enabled via the pencil button.
+  const [editMode, setEditMode] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hoverId, setHoverId] = useState<string | null>(null);
   const [tab, setTab] = useState<"list" | "edit">("list");
@@ -156,9 +160,9 @@ function EditorPanel() {
     return g;
   }, [allElements]);
 
-  // Highlight selected element with an outline
+  // Highlight selected element with an outline — only when edit mode is on.
   useEffect(() => {
-    if (!selectedId) return;
+    if (!editMode || !selectedId) return;
     const node = document.querySelector<HTMLElement>(
       `[data-editor-id="${cssEscape(selectedId)}"]`,
     );
@@ -172,11 +176,11 @@ function EditorPanel() {
       node.style.outline = prev;
       node.style.outlineOffset = prevOffset;
     };
-  }, [selectedId]);
+  }, [editMode, selectedId]);
 
-  // Hover preview outline (thin, different color) on page elements
+  // Hover preview outline (thin, different color) — only when edit mode is on.
   useEffect(() => {
-    if (!hoverId || hoverId === selectedId) return;
+    if (!editMode || !hoverId || hoverId === selectedId) return;
     const node = document.querySelector<HTMLElement>(
       `[data-editor-id="${cssEscape(hoverId)}"]`,
     );
@@ -189,18 +193,22 @@ function EditorPanel() {
       node.style.outline = prev;
       node.style.outlineOffset = prevOffset;
     };
-  }, [hoverId, selectedId]);
+  }, [editMode, hoverId, selectedId]);
 
-  // Click-to-select on the page. Runs whenever the editor is mounted (admin+dev),
-  // regardless of whether the panel is open — clicking auto-opens the panel.
+  // Click-to-select / hover on the page. ONLY active when edit mode is on.
+  // When off, no listeners are registered → links, buttons, and everything
+  // else on the site work exactly like they do for regular visitors.
   useEffect(() => {
+    if (!editMode) {
+      setHoverId(null);
+      return;
+    }
     const clickHandler = (e: MouseEvent) => {
       const target = e.target as HTMLElement | null;
       if (!target) return;
       if (target.closest("[data-editor-panel]")) return;
       let match = target.closest<HTMLElement>("[data-editor-id]");
       if (!match) return;
-      // Alt+Click → step one level up to the nearest editable ancestor.
       if (e.altKey) {
         const parent = match.parentElement?.closest<HTMLElement>("[data-editor-id]");
         if (parent) match = parent;
@@ -229,7 +237,7 @@ function EditorPanel() {
       document.removeEventListener("click", clickHandler, true);
       document.removeEventListener("mouseover", overHandler, true);
     };
-  }, []);
+  }, [editMode]);
 
   const selected = selectedId
     ? allElements.find((e) => e.id === selectedId) ?? null
@@ -371,30 +379,65 @@ function EditorPanel() {
 
   return (
     <>
-      {/* Floating trigger */}
+      {/* Floating pencil trigger — opens panel AND toggles edit mode */}
       <button
         data-editor-panel
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => {
+          if (editMode) {
+            setEditMode(false);
+          } else {
+            setEditMode(true);
+            setOpen(true);
+          }
+        }}
         style={{
           position: "fixed",
           bottom: 20,
           left: 20,
           zIndex: 2147483000,
-          background: "#9e242b",
-          color: "white",
-          border: "none",
+          background: editMode ? "#9e242b" : "white",
+          color: editMode ? "white" : "#9e242b",
+          border: "2px solid #9e242b",
           borderRadius: 999,
           width: 52,
           height: 52,
           fontSize: 22,
           cursor: "pointer",
-          boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
+          boxShadow: editMode
+            ? "0 8px 24px rgba(158,36,43,0.45)"
+            : "0 8px 24px rgba(0,0,0,0.25)",
           fontFamily: "system-ui, sans-serif",
         }}
-        title={open ? "סגור עורך" : "פתח עורך ויזואלי"}
+        title={editMode ? "כבה מצב בחירה" : "הפעל מצב בחירת אלמנטים"}
       >
-        {open ? "×" : "✎"}
+        ✎
       </button>
+
+      {/* Secondary button to just open/close the panel without touching editMode */}
+      {!open && (
+        <button
+          data-editor-panel
+          onClick={() => setOpen(true)}
+          style={{
+            position: "fixed",
+            bottom: 20,
+            left: 84,
+            zIndex: 2147483000,
+            background: "white",
+            color: "#521014",
+            border: "1px solid #d9c9c6",
+            borderRadius: 999,
+            padding: "0 14px",
+            height: 36,
+            fontSize: 12,
+            cursor: "pointer",
+            fontFamily: "system-ui, sans-serif",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+          }}
+        >
+          פתח פאנל
+        </button>
+      )}
 
       {open && (
         <div
@@ -479,6 +522,40 @@ function EditorPanel() {
               title="סגור"
             >
               ×
+            </button>
+          </div>
+
+          {/* Edit-mode indicator + toggle */}
+          <div
+            style={{
+              padding: "8px 12px",
+              borderBottom: "1px solid #eee",
+              background: editMode ? "#fdecec" : "#f4f4f4",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 8,
+            }}
+          >
+            <div style={{ fontSize: 11, fontWeight: 600, color: editMode ? "#9e242b" : "#666" }}>
+              {editMode
+                ? "🖉 מצב בחירה פעיל — לחצי על אלמנט בעמוד"
+                : "מצב בחירה כבוי — קליקים באתר עובדים רגיל"}
+            </div>
+            <button
+              onClick={() => setEditMode((v) => !v)}
+              style={{
+                background: editMode ? "#9e242b" : "white",
+                color: editMode ? "white" : "#9e242b",
+                border: "1px solid #9e242b",
+                borderRadius: 6,
+                padding: "4px 10px",
+                fontSize: 11,
+                fontWeight: 600,
+                cursor: "pointer",
+              }}
+            >
+              {editMode ? "כבה" : "הפעל"}
             </button>
           </div>
 
@@ -678,6 +755,7 @@ function EditorPanel() {
               <EditPanel
                 key={selected.id}
                 selected={selected}
+                tag={selected.tag}
                 styles={currentStyles}
                 text={currentText}
                 updateStyle={updateStyle}
@@ -731,6 +809,7 @@ function TabBtn({
 
 function EditPanel({
   selected,
+  tag,
   styles,
   text,
   updateStyle,
@@ -738,12 +817,18 @@ function EditPanel({
   resetElement,
 }: {
   selected: { id: string; section: string | null; label: string | null };
+  tag: string;
   styles: Record<string, string>;
   text: string;
   updateStyle: (k: string, v: string) => void;
   updateText: (v: string) => void;
   resetElement: () => void;
 }) {
+  const isText = isTextElement(tag);
+  const fonts = useMemo<ProjectFont[]>(
+    () => (typeof document === "undefined" ? [] : listProjectFonts()),
+    [],
+  );
   return (
     <div>
       <div
@@ -787,15 +872,119 @@ function EditPanel({
         />
       </Group>
 
+      {isText && (
+        <Group title="טיפוגרפיה">
+          <div>
+            <div style={{ fontSize: 11, color: "#666", marginBottom: 2 }}>פונט</div>
+            <select
+              value={styles["font-family"] || ""}
+              onChange={(e) => updateStyle("font-family", e.target.value)}
+              style={{
+                width: "100%",
+                border: "1px solid #ddd",
+                borderRadius: 4,
+                padding: "4px 6px",
+                fontSize: 12,
+                fontFamily: styles["font-family"] || "inherit",
+              }}
+            >
+              <option value="">(ברירת מחדל של האתר)</option>
+              {fonts.map((f) => (
+                <option key={f.stack} value={f.stack} style={{ fontFamily: f.stack }}>
+                  {f.family}
+                </option>
+              ))}
+            </select>
+            <div style={{ fontSize: 10, color: "#999", marginTop: 4 }}>
+              רק פונטים שכבר מוטענים בפרויקט
+            </div>
+          </div>
+          <SliderRow
+            label="גודל טקסט"
+            value={styles["font-size"] || ""}
+            unit="px"
+            min={8}
+            max={120}
+            onChange={(v) => updateStyle("font-size", v)}
+          />
+          <div>
+            <div style={{ fontSize: 11, color: "#666", marginBottom: 2 }}>עובי (weight)</div>
+            <select
+              value={styles["font-weight"] || ""}
+              onChange={(e) => updateStyle("font-weight", e.target.value)}
+              style={{
+                width: "100%",
+                border: "1px solid #ddd",
+                borderRadius: 4,
+                padding: "4px 6px",
+                fontSize: 12,
+              }}
+            >
+              <option value="">(ברירת מחדל)</option>
+              <option value="300">300 — Light</option>
+              <option value="400">400 — Regular</option>
+              <option value="500">500 — Medium</option>
+              <option value="600">600 — Semibold</option>
+              <option value="700">700 — Bold</option>
+              <option value="800">800 — Extra Bold</option>
+              <option value="900">900 — Black</option>
+            </select>
+          </div>
+          <SliderRow
+            label="גובה שורה"
+            value={styles["line-height"] || ""}
+            unit=""
+            min={0.8}
+            max={3}
+            onChange={(v) => updateStyle("line-height", v)}
+          />
+          <SliderRow
+            label="ריווח אותיות"
+            value={styles["letter-spacing"] || ""}
+            unit="px"
+            min={-5}
+            max={20}
+            onChange={(v) => updateStyle("letter-spacing", v)}
+          />
+          <div>
+            <div style={{ fontSize: 11, color: "#666", marginBottom: 2 }}>יישור טקסט</div>
+            <div style={{ display: "flex", gap: 4 }}>
+              {(["right", "center", "left", "justify"] as const).map((a) => (
+                <button
+                  key={a}
+                  onClick={() =>
+                    updateStyle("text-align", styles["text-align"] === a ? "" : a)
+                  }
+                  style={{
+                    flex: 1,
+                    background: styles["text-align"] === a ? "#9e242b" : "white",
+                    color: styles["text-align"] === a ? "white" : "#333",
+                    border: "1px solid #ddd",
+                    borderRadius: 4,
+                    padding: "4px 6px",
+                    fontSize: 11,
+                    cursor: "pointer",
+                  }}
+                >
+                  {a === "right" ? "ימין" : a === "center" ? "מרכז" : a === "left" ? "שמאל" : "מלא"}
+                </button>
+              ))}
+            </div>
+          </div>
+        </Group>
+      )}
+
       <Group title="גודל וריווח">
-        <SliderRow
-          label="גודל טקסט"
-          value={styles["font-size"] || ""}
-          unit="px"
-          min={8}
-          max={120}
-          onChange={(v) => updateStyle("font-size", v)}
-        />
+        {!isText && (
+          <SliderRow
+            label="גודל טקסט"
+            value={styles["font-size"] || ""}
+            unit="px"
+            min={8}
+            max={120}
+            onChange={(v) => updateStyle("font-size", v)}
+          />
+        )}
         <SliderRow
           label="ריווח פנימי"
           value={styles["padding"] || ""}
