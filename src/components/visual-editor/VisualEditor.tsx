@@ -226,6 +226,8 @@ function EditorPanel() {
       document.removeEventListener("mouseover", overHandler, true);
     };
   }, []);
+
+  const selected = selectedId
     ? allElements.find((e) => e.id === selectedId) ?? null
     : null;
   const currentOverride: UIOverride | null = selectedId
