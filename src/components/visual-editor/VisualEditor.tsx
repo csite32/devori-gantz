@@ -57,10 +57,9 @@ export function VisualEditor() {
 
 
 function EditorPanel() {
-  const { overrides, setLocalOverride, refresh, elements } = useOverrides();
+  const { overrides, setLocalOverride, reapplyAll } = useOverrides();
   const upsert = useServerFn(upsertOverride);
   const del = useServerFn(deleteOverride);
-  const delAll = useServerFn(deleteAllOverrides);
 
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
@@ -71,6 +70,10 @@ function EditorPanel() {
   const [collapsedSections, setCollapsedSections] = useState<Set<string>>(
     new Set(),
   );
+  // Session undo stack: previous override value for each change made
+  // since the panel was opened. Never touches changes saved in earlier sessions.
+  const undoStackRef = useRef<Array<{ id: string; prev: UIOverride | null }>>([]);
+  const [undoCount, setUndoCount] = useState(0);
 
   // Panel position (draggable). Default: top-right.
   const [panelPos, setPanelPos] = useState<{ top: number; left: number }>(() => {
