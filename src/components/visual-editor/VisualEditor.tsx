@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { useRouterState } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
@@ -64,12 +64,29 @@ function EditorPanel() {
 
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [hoverId, setHoverId] = useState<string | null>(null);
   const [tab, setTab] = useState<"list" | "edit">("list");
   const [collapsedSections, setCollapsedSections] = useState<Set<string>>(
     new Set(),
   );
+
+  // Panel position (draggable). Default: top-right.
+  const [panelPos, setPanelPos] = useState<{ top: number; left: number }>(() => {
+    if (typeof window === "undefined") return { top: 12, left: 12 };
+    try {
+      const saved = localStorage.getItem("visual-editor:panel-pos");
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return { top: 12, left: Math.max(12, window.innerWidth - 352) };
+  });
+  const dragState = useRef<{ dx: number; dy: number } | null>(null);
+  useEffect(() => {
+    try {
+      localStorage.setItem("visual-editor:panel-pos", JSON.stringify(panelPos));
+    } catch {}
+  }, [panelPos]);
 
   // Scan the DOM continuously so the list always reflects the current route.
   // Re-runs when the pathname changes (route transition may swap the tree
@@ -158,13 +175,29 @@ function EditorPanel() {
     };
   }, [selectedId]);
 
-  // Click-to-select on the page (when editor is open)
+  // Hover preview outline (thin, different color) on page elements
   useEffect(() => {
-    if (!open) return;
-    const handler = (e: MouseEvent) => {
+    if (!hoverId || hoverId === selectedId) return;
+    const node = document.querySelector<HTMLElement>(
+      `[data-editor-id="${cssEscape(hoverId)}"]`,
+    );
+    if (!node) return;
+    const prev = node.style.outline;
+    const prevOffset = node.style.outlineOffset;
+    node.style.outline = "1px dashed rgba(158,36,43,0.5)";
+    node.style.outlineOffset = "2px";
+    return () => {
+      node.style.outline = prev;
+      node.style.outlineOffset = prevOffset;
+    };
+  }, [hoverId, selectedId]);
+
+  // Click-to-select on the page. Runs whenever the editor is mounted (admin+dev),
+  // regardless of whether the panel is open — clicking auto-opens the panel.
+  useEffect(() => {
+    const clickHandler = (e: MouseEvent) => {
       const target = e.target as HTMLElement | null;
       if (!target) return;
-      // Ignore clicks inside the editor panel itself
       if (target.closest("[data-editor-panel]")) return;
       const match = target.closest<HTMLElement>("[data-editor-id]");
       if (!match) return;
@@ -174,11 +207,25 @@ function EditorPanel() {
       if (id) {
         setSelectedId(id);
         setTab("edit");
+        setOpen(true);
       }
     };
-    document.addEventListener("click", handler, true);
-    return () => document.removeEventListener("click", handler, true);
-  }, [open]);
+    const overHandler = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (!target || target.closest("[data-editor-panel]")) {
+        setHoverId(null);
+        return;
+      }
+      const match = target.closest<HTMLElement>("[data-editor-id]");
+      setHoverId(match ? match.getAttribute("data-editor-id") : null);
+    };
+    document.addEventListener("click", clickHandler, true);
+    document.addEventListener("mouseover", overHandler, true);
+    return () => {
+      document.removeEventListener("click", clickHandler, true);
+      document.removeEventListener("mouseover", overHandler, true);
+    };
+  }, []);
 
   const selected = selectedId
     ? allElements.find((e) => e.id === selectedId) ?? null
@@ -287,9 +334,9 @@ function EditorPanel() {
           dir="rtl"
           style={{
             position: "fixed",
-            top: 12,
-            right: 12,
-            bottom: 12,
+            top: panelPos.top,
+            left: panelPos.left,
+            height: "min(720px, calc(100vh - 24px))",
             width: 340,
             zIndex: 2147482999,
             background: "white",
@@ -304,21 +351,69 @@ function EditorPanel() {
           }}
         >
           <div
+            onMouseDown={(e) => {
+              // Only start drag from empty header area, not from buttons
+              if ((e.target as HTMLElement).closest("button")) return;
+              dragState.current = {
+                dx: e.clientX - panelPos.left,
+                dy: e.clientY - panelPos.top,
+              };
+              const move = (ev: MouseEvent) => {
+                if (!dragState.current) return;
+                const nx = Math.max(
+                  0,
+                  Math.min(window.innerWidth - 340, ev.clientX - dragState.current.dx),
+                );
+                const ny = Math.max(
+                  0,
+                  Math.min(window.innerHeight - 80, ev.clientY - dragState.current.dy),
+                );
+                setPanelPos({ top: ny, left: nx });
+              };
+              const up = () => {
+                dragState.current = null;
+                document.removeEventListener("mousemove", move);
+                document.removeEventListener("mouseup", up);
+              };
+              document.addEventListener("mousemove", move);
+              document.addEventListener("mouseup", up);
+            }}
             style={{
               padding: "12px 14px",
               borderBottom: "1px solid #eee",
               background: "#faf6f5",
+              cursor: "grab",
+              userSelect: "none",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 8,
             }}
           >
-            <div
-              style={{ fontWeight: 700, fontSize: 14, color: "#521014" }}
+            <div>
+              <div style={{ fontWeight: 700, fontSize: 14, color: "#521014" }}>
+                ✥ עורך ויזואלי
+              </div>
+              <div style={{ fontSize: 11, color: "#888", marginTop: 2 }}>
+                גררי מהכותרת • לחצי על אלמנט לעריכה
+              </div>
+            </div>
+            <button
+              onClick={() => setOpen(false)}
+              style={{
+                background: "transparent",
+                border: "none",
+                fontSize: 20,
+                cursor: "pointer",
+                color: "#521014",
+                lineHeight: 1,
+              }}
+              title="סגור"
             >
-              עורך ויזואלי
-            </div>
-            <div style={{ fontSize: 11, color: "#888", marginTop: 2 }}>
-              שינויים נשמרים אוטומטית לכל המבקרים
-            </div>
+              ×
+            </button>
           </div>
+
 
           <div
             style={{
@@ -388,6 +483,8 @@ function EditorPanel() {
                           {items.map((el) => (
                             <button
                               key={el.id}
+                              onMouseEnter={() => setHoverId(el.id)}
+                              onMouseLeave={() => setHoverId(null)}
                               onClick={() => {
                                 setSelectedId(el.id);
                                 setTab("edit");
