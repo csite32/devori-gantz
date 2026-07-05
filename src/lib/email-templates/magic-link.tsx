@@ -8,6 +8,7 @@ import {
   Heading,
   Html,
   Preview,
+  Section,
   Text,
 } from '@react-email/components'
 
@@ -20,22 +21,26 @@ export const MagicLinkEmail = ({
   siteName,
   confirmationUrl,
 }: MagicLinkEmailProps) => (
-  <Html lang="en" dir="ltr">
+  <Html lang="he" dir="rtl">
     <Head />
-    <Preview>Your login link for {siteName}</Preview>
+    <Preview>קישור ההתחברות שלך ל־{siteName}</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>Your login link</Heading>
-        <Text style={text}>
-          Click the button below to log in to {siteName}. This link will expire
-          shortly.
-        </Text>
-        <Button style={button} href={confirmationUrl}>
-          Log In
-        </Button>
-        <Text style={footer}>
-          If you didn't request this link, you can safely ignore this email.
-        </Text>
+        <Section style={card}>
+          <Heading style={h1}>קישור התחברות</Heading>
+          <Text style={text}>
+            לחיצה על הכפתור למטה תבצע התחברות ל־{siteName}. הקישור תקף לזמן
+            מוגבל בלבד.
+          </Text>
+          <Section style={{ textAlign: 'center' as const }}>
+            <Button style={button} href={confirmationUrl}>
+              התחברות
+            </Button>
+          </Section>
+          <Text style={footer}>
+            אם לא ביקשת את הקישור הזה, אפשר להתעלם מהמייל.
+          </Text>
+        </Section>
       </Container>
     </Body>
   </Html>
@@ -43,26 +48,46 @@ export const MagicLinkEmail = ({
 
 export default MagicLinkEmail
 
-const main = { backgroundColor: '#ffffff', fontFamily: 'Arial, sans-serif' }
-const container = { padding: '20px 25px' }
+const main = {
+  backgroundColor: '#ffffff',
+  fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+  direction: 'rtl' as const,
+}
+const container = { padding: '24px 16px', maxWidth: '560px' }
+const card = {
+  backgroundColor: 'rgb(255, 238, 218)',
+  borderRadius: '14px',
+  padding: '32px 28px',
+  textAlign: 'right' as const,
+}
 const h1 = {
-  fontSize: '22px',
+  fontSize: '24px',
   fontWeight: 'bold' as const,
-  color: '#000000',
+  color: 'rgb(82, 16, 20)',
   margin: '0 0 20px',
+  textAlign: 'right' as const,
 }
 const text = {
-  fontSize: '14px',
-  color: '#55575d',
-  lineHeight: '1.5',
-  margin: '0 0 25px',
+  fontSize: '15px',
+  color: 'rgb(82, 16, 20)',
+  lineHeight: '1.7',
+  margin: '0 0 20px',
+  textAlign: 'right' as const,
 }
 const button = {
-  backgroundColor: '#000000',
+  backgroundColor: 'rgb(158, 36, 43)',
   color: '#ffffff',
-  fontSize: '14px',
-  borderRadius: '8px',
-  padding: '12px 20px',
+  fontSize: '15px',
+  fontWeight: 'bold' as const,
+  borderRadius: '10px',
+  padding: '14px 28px',
   textDecoration: 'none',
+  display: 'inline-block',
+  margin: '8px 0 12px',
 }
-const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0' }
+const footer = {
+  fontSize: '12px',
+  color: 'rgb(120, 80, 82)',
+  margin: '28px 0 0',
+  textAlign: 'right' as const,
+}
