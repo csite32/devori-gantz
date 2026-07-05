@@ -4,12 +4,37 @@
 //     componentTagger (dev-only), VITE_* env injection, @ path alias, React/TanStack dedupe,
 //     error logger plugins, and sandbox detection (port/host/strictPort).
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
+import path from "node:path";
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+import { loadEnv } from "vite";
+
+// Load ALL env vars (no prefix) into process.env so server routes can read
+// non-VITE secrets like SUPABASE_SERVICE_ROLE_KEY / LOVABLE_API_KEY.
+// Do NOT expose these to the client bundle.
+const serverEnv = loadEnv(process.env.NODE_ENV || "development", process.cwd(), "");
+Object.assign(process.env, serverEnv);
 
 export default defineConfig({
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this
     server: { entry: "server" },
+  },
+  vite: {
+    resolve: {
+      alias: {
+        // Force React Email's htmlparser2 chain to use hoisted entities v4.5.0.
+        // v5+ removed ./lib/decode.js and breaks SSR rendering.
+        "entities/lib/decode.js": path.resolve(
+          __dirname,
+          "node_modules/entities/lib/decode.js",
+        ),
+        "entities/lib/encode.js": path.resolve(
+          __dirname,
+          "node_modules/entities/lib/encode.js",
+        ),
+        entities: path.resolve(__dirname, "node_modules/entities"),
+      },
+    },
   },
 });
