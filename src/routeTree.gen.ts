@@ -20,6 +20,7 @@ import { Route as AuthenticatedCoursesSlugRouteImport } from './routes/_authenti
 import { Route as AuthenticatedAdminUsersIndexRouteImport } from './routes/_authenticated/admin.users.index'
 import { Route as AuthenticatedAdminCoursesIndexRouteImport } from './routes/_authenticated/admin.courses.index'
 import { Route as AuthenticatedAdminBundlesIndexRouteImport } from './routes/_authenticated/admin.bundles.index'
+import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as AuthenticatedAdminUsersIdRouteImport } from './routes/_authenticated/admin.users.$id'
 import { Route as AuthenticatedAdminCoursesNewRouteImport } from './routes/_authenticated/admin.courses.new'
 import { Route as AuthenticatedAdminCoursesIdRouteImport } from './routes/_authenticated/admin.courses.$id'
@@ -87,6 +88,12 @@ const AuthenticatedAdminBundlesIndexRoute =
     path: '/bundles/',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const LovableEmailQueueProcessRoute =
+  LovableEmailQueueProcessRouteImport.update({
+    id: '/lovable/email/queue/process',
+    path: '/lovable/email/queue/process',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedAdminUsersIdRoute =
   AuthenticatedAdminUsersIdRouteImport.update({
     id: '/users/$id',
@@ -149,6 +156,7 @@ export interface FileRoutesByFullPath {
   '/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRouteWithChildren
   '/admin/courses/new': typeof AuthenticatedAdminCoursesNewRoute
   '/admin/users/$id': typeof AuthenticatedAdminUsersIdRoute
+  '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/admin/bundles/': typeof AuthenticatedAdminBundlesIndexRoute
   '/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
   '/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
@@ -167,6 +175,7 @@ export interface FileRoutesByTo {
   '/admin/bundles/new': typeof AuthenticatedAdminBundlesNewRoute
   '/admin/courses/new': typeof AuthenticatedAdminCoursesNewRoute
   '/admin/users/$id': typeof AuthenticatedAdminUsersIdRoute
+  '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/admin/bundles': typeof AuthenticatedAdminBundlesIndexRoute
   '/admin/courses': typeof AuthenticatedAdminCoursesIndexRoute
   '/admin/users': typeof AuthenticatedAdminUsersIndexRoute
@@ -189,6 +198,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRouteWithChildren
   '/_authenticated/admin/courses/new': typeof AuthenticatedAdminCoursesNewRoute
   '/_authenticated/admin/users/$id': typeof AuthenticatedAdminUsersIdRoute
+  '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
   '/_authenticated/admin/bundles/': typeof AuthenticatedAdminBundlesIndexRoute
   '/_authenticated/admin/courses/': typeof AuthenticatedAdminCoursesIndexRoute
   '/_authenticated/admin/users/': typeof AuthenticatedAdminUsersIndexRoute
@@ -211,6 +221,7 @@ export interface FileRouteTypes {
     | '/admin/courses/$id'
     | '/admin/courses/new'
     | '/admin/users/$id'
+    | '/lovable/email/queue/process'
     | '/admin/bundles/'
     | '/admin/courses/'
     | '/admin/users/'
@@ -229,6 +240,7 @@ export interface FileRouteTypes {
     | '/admin/bundles/new'
     | '/admin/courses/new'
     | '/admin/users/$id'
+    | '/lovable/email/queue/process'
     | '/admin/bundles'
     | '/admin/courses'
     | '/admin/users'
@@ -250,6 +262,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/courses/$id'
     | '/_authenticated/admin/courses/new'
     | '/_authenticated/admin/users/$id'
+    | '/lovable/email/queue/process'
     | '/_authenticated/admin/bundles/'
     | '/_authenticated/admin/courses/'
     | '/_authenticated/admin/users/'
@@ -263,6 +276,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -343,6 +357,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/bundles/'
       preLoaderRoute: typeof AuthenticatedAdminBundlesIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/lovable/email/queue/process': {
+      id: '/lovable/email/queue/process'
+      path: '/lovable/email/queue/process'
+      fullPath: '/lovable/email/queue/process'
+      preLoaderRoute: typeof LovableEmailQueueProcessRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin/users/$id': {
       id: '/_authenticated/admin/users/$id'
@@ -472,17 +493,8 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
