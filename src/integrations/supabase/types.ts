@@ -232,6 +232,45 @@ export type Database = {
         }
         Relationships: []
       }
+      grow_webhook_logs: {
+        Row: {
+          created_at: string
+          headers: Json | null
+          id: string
+          method: string
+          parse_error: string | null
+          parsed_json: Json | null
+          processing_result: string
+          raw_body: string | null
+          received_at: string
+          source_ip: string | null
+        }
+        Insert: {
+          created_at?: string
+          headers?: Json | null
+          id?: string
+          method?: string
+          parse_error?: string | null
+          parsed_json?: Json | null
+          processing_result?: string
+          raw_body?: string | null
+          received_at?: string
+          source_ip?: string | null
+        }
+        Update: {
+          created_at?: string
+          headers?: Json | null
+          id?: string
+          method?: string
+          parse_error?: string | null
+          parsed_json?: Json | null
+          processing_result?: string
+          raw_body?: string | null
+          received_at?: string
+          source_ip?: string | null
+        }
+        Relationships: []
+      }
       lesson_progress: {
         Row: {
           completed_at: string
