@@ -156,9 +156,10 @@ export function CourseForm({
               setV((s) => ({
                 ...s,
                 title,
-                slug: slugTouched ? s.slug : slugify(title),
+                slug: s.id ? s.slug : slugify(title),
               }));
             }}
+
             className={inputClass}
           />
         </FormField>
