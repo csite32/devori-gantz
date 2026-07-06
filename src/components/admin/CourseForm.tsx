@@ -34,12 +34,6 @@ export function CourseForm({
   const signUrl = useServerFn(getCoverSignedUrl);
 
   const [v, setV] = useState<CourseFormValues>(initial);
-  // Track whether the admin edited the slug manually. If not, auto-derive
-  // from the title (handles Hebrew via a transliteration helper).
-  const [slugTouched, setSlugTouched] = useState<boolean>(
-    Boolean(initial.id && initial.slug),
-  );
-  const [showSlug, setShowSlug] = useState<boolean>(false);
   const [err, setErr] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
@@ -47,7 +41,6 @@ export function CourseForm({
 
   useEffect(() => {
     setV(initial);
-    setSlugTouched(Boolean(initial.id && initial.slug));
     setErr(null);
   }, [
     initial.id,
@@ -58,6 +51,7 @@ export function CourseForm({
     initial.is_published,
     initial.sort_order,
   ]);
+
 
   useEffect(() => {
     let active = true;
@@ -162,9 +156,10 @@ export function CourseForm({
               setV((s) => ({
                 ...s,
                 title,
-                slug: slugTouched ? s.slug : slugify(title),
+                slug: s.id ? s.slug : slugify(title),
               }));
             }}
+
             className={inputClass}
           />
         </FormField>
@@ -178,33 +173,8 @@ export function CourseForm({
           />
         </FormField>
 
-        <div>
-          <button
-            type="button"
-            onClick={() => setShowSlug((s) => !s)}
-            className="text-lg text-brand-primary-dark/70 hover:text-brand-primary cursor-pointer"
-          >
-            {showSlug ? "הסתרת הגדרות מתקדמות" : "הגדרות מתקדמות (Slug)"}
-          </button>
-          {showSlug && (
-            <div className="mt-3">
-              <FormField
-                label="Slug (אופציונלי)"
-                hint="נוצר אוטומטית מהכותרת. ניתן לערוך — אותיות אנגליות, ספרות ומקפים בלבד."
-              >
-                <input
-                  dir="ltr"
-                  value={v.slug}
-                  onChange={(e) => {
-                    setSlugTouched(true);
-                    setV({ ...v, slug: e.target.value });
-                  }}
-                  className={inputClass}
-                />
-              </FormField>
-            </div>
-          )}
-        </div>
+
+
 
         <div className="grid gap-5 md:grid-cols-[auto_1fr] items-start">
           <div>
