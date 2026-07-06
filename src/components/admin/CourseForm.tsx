@@ -173,33 +173,8 @@ export function CourseForm({
           />
         </FormField>
 
-        <div>
-          <button
-            type="button"
-            onClick={() => setShowSlug((s) => !s)}
-            className="text-lg text-brand-primary-dark/70 hover:text-brand-primary cursor-pointer"
-          >
-            {showSlug ? "הסתרת הגדרות מתקדמות" : "הגדרות מתקדמות (Slug)"}
-          </button>
-          {showSlug && (
-            <div className="mt-3">
-              <FormField
-                label="Slug (אופציונלי)"
-                hint="נוצר אוטומטית מהכותרת. ניתן לערוך — אותיות אנגליות, ספרות ומקפים בלבד."
-              >
-                <input
-                  dir="ltr"
-                  value={v.slug}
-                  onChange={(e) => {
-                    setSlugTouched(true);
-                    setV({ ...v, slug: e.target.value });
-                  }}
-                  className={inputClass}
-                />
-              </FormField>
-            </div>
-          )}
-        </div>
+
+
 
         <div className="grid gap-5 md:grid-cols-[auto_1fr] items-start">
           <div>
