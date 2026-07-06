@@ -23,6 +23,7 @@ import { Route as AuthenticatedAdminBundlesIndexRouteImport } from './routes/_au
 import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 import { Route as LovableEmailAuthWebhookRouteImport } from './routes/lovable/email/auth/webhook'
 import { Route as LovableEmailAuthPreviewRouteImport } from './routes/lovable/email/auth/preview'
+import { Route as ApiPublicWebhooksGrowRouteImport } from './routes/api/public/webhooks/grow'
 import { Route as AuthenticatedAdminUsersIdRouteImport } from './routes/_authenticated/admin.users.$id'
 import { Route as AuthenticatedAdminCoursesNewRouteImport } from './routes/_authenticated/admin.courses.new'
 import { Route as AuthenticatedAdminCoursesIdRouteImport } from './routes/_authenticated/admin.courses.$id'
@@ -106,6 +107,11 @@ const LovableEmailAuthPreviewRoute = LovableEmailAuthPreviewRouteImport.update({
   path: '/lovable/email/auth/preview',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicWebhooksGrowRoute = ApiPublicWebhooksGrowRouteImport.update({
+  id: '/api/public/webhooks/grow',
+  path: '/api/public/webhooks/grow',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedAdminUsersIdRoute =
   AuthenticatedAdminUsersIdRouteImport.update({
     id: '/users/$id',
@@ -168,6 +174,7 @@ export interface FileRoutesByFullPath {
   '/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRouteWithChildren
   '/admin/courses/new': typeof AuthenticatedAdminCoursesNewRoute
   '/admin/users/$id': typeof AuthenticatedAdminUsersIdRoute
+  '/api/public/webhooks/grow': typeof ApiPublicWebhooksGrowRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
@@ -189,6 +196,7 @@ export interface FileRoutesByTo {
   '/admin/bundles/new': typeof AuthenticatedAdminBundlesNewRoute
   '/admin/courses/new': typeof AuthenticatedAdminCoursesNewRoute
   '/admin/users/$id': typeof AuthenticatedAdminUsersIdRoute
+  '/api/public/webhooks/grow': typeof ApiPublicWebhooksGrowRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
@@ -214,6 +222,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/courses/$id': typeof AuthenticatedAdminCoursesIdRouteWithChildren
   '/_authenticated/admin/courses/new': typeof AuthenticatedAdminCoursesNewRoute
   '/_authenticated/admin/users/$id': typeof AuthenticatedAdminUsersIdRoute
+  '/api/public/webhooks/grow': typeof ApiPublicWebhooksGrowRoute
   '/lovable/email/auth/preview': typeof LovableEmailAuthPreviewRoute
   '/lovable/email/auth/webhook': typeof LovableEmailAuthWebhookRoute
   '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
@@ -239,6 +248,7 @@ export interface FileRouteTypes {
     | '/admin/courses/$id'
     | '/admin/courses/new'
     | '/admin/users/$id'
+    | '/api/public/webhooks/grow'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
@@ -260,6 +270,7 @@ export interface FileRouteTypes {
     | '/admin/bundles/new'
     | '/admin/courses/new'
     | '/admin/users/$id'
+    | '/api/public/webhooks/grow'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
@@ -284,6 +295,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/courses/$id'
     | '/_authenticated/admin/courses/new'
     | '/_authenticated/admin/users/$id'
+    | '/api/public/webhooks/grow'
     | '/lovable/email/auth/preview'
     | '/lovable/email/auth/webhook'
     | '/lovable/email/queue/process'
@@ -300,6 +312,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  ApiPublicWebhooksGrowRoute: typeof ApiPublicWebhooksGrowRoute
   LovableEmailAuthPreviewRoute: typeof LovableEmailAuthPreviewRoute
   LovableEmailAuthWebhookRoute: typeof LovableEmailAuthWebhookRoute
   LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
@@ -403,6 +416,13 @@ declare module '@tanstack/react-router' {
       path: '/lovable/email/auth/preview'
       fullPath: '/lovable/email/auth/preview'
       preLoaderRoute: typeof LovableEmailAuthPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/webhooks/grow': {
+      id: '/api/public/webhooks/grow'
+      path: '/api/public/webhooks/grow'
+      fullPath: '/api/public/webhooks/grow'
+      preLoaderRoute: typeof ApiPublicWebhooksGrowRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin/users/$id': {
@@ -533,6 +553,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  ApiPublicWebhooksGrowRoute: ApiPublicWebhooksGrowRoute,
   LovableEmailAuthPreviewRoute: LovableEmailAuthPreviewRoute,
   LovableEmailAuthWebhookRoute: LovableEmailAuthWebhookRoute,
   LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
