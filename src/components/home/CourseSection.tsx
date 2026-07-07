@@ -12,6 +12,7 @@ interface CourseBlockProps {
   description: string;
   imageRight?: boolean;
   showMainTitle?: boolean;
+  purchaseUrl: string;
 }
 
 function CourseBlock({ number, image, imageAlt, decoText, title, description, imageRight = true, showMainTitle = false }: CourseBlockProps) {
