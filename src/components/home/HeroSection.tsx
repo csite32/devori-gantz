@@ -17,10 +17,11 @@ export function HeroSection() {
     const cx = 100, cy = 100, r = 78;
     const fontSize = 18;
     const text = "40 שנות ניסיון מקצועי – עכשיו גם בדיגיטל   ";
+    const displayText = text.split('').reverse().join('');
     const svgNS = "http://www.w3.org/2000/svg";
 
-    for (let i = 0; i < text.length; i++) {
-      const angleDeg = -90 - (i * (360 / text.length));
+    for (let i = 0; i < displayText.length; i++) {
+      const angleDeg = -90 + (i * (360 / displayText.length));
       const angleRad = angleDeg * Math.PI / 180;
       const x = cx + r * Math.cos(angleRad);
       const y = cy + r * Math.sin(angleRad);
@@ -34,7 +35,7 @@ export function HeroSection() {
       el.setAttribute('text-anchor', 'middle');
       el.setAttribute('dominant-baseline', 'central');
       el.setAttribute('transform', `rotate(${angleDeg + 90},${x},${y})`);
-      el.textContent = text[i];
+      el.textContent = displayText[i];
       group.appendChild(el);
     }
   }, []);
@@ -46,11 +47,11 @@ export function HeroSection() {
       <div className="absolute top-0 left-0 bottom-0 z-10 hidden md:block" style={{ width: '44%' }}>
         <video src={videoAsset.url} autoPlay muted loop playsInline className="w-full h-full object-cover" />
       </div>
-      <header dir="ltr" className="relative z-20 flex items-center justify-between px-4 pt-5 md:px-[110px] md:pt-6 md:pr-[110px] md:pl-8">
+      <header dir="ltr" className="relative z-20 flex items-center justify-between pr-12 pl-4 pt-5 md:px-[110px] md:pt-6 md:pl-8">
         <UserIconLink />
         <img src={logoAsset.url} alt="דבורי גנץ" className="h-16 md:h-[115px] w-auto object-contain" />
       </header>
-      <div className="relative z-20 flex-1 flex items-center px-4 pb-8 md:pl-6 md:pr-[110px] md:pb-[60px] md:max-w-[58%] md:ml-auto">
+      <div className="relative z-20 flex-1 flex items-center pr-12 pl-4 pb-8 md:pl-6 md:pr-[110px] md:pb-[60px] md:max-w-[58%] md:ml-auto">
         <div>
           <h1
             data-editor-id="home.hero.title"
@@ -64,7 +65,7 @@ export function HeroSection() {
               data-editor-section="עמוד הבית — Hero"
               data-editor-label="שורת כותרת ראשונה (ראשית)"
               className="block font-bold"
-              style={{ fontSize: 'clamp(32px,6vw,117px)' }}
+              style={{ fontSize: 'clamp(46px,6vw,117px)' }}
             >
               קורסי התספורות
             </span>
@@ -73,25 +74,25 @@ export function HeroSection() {
               data-editor-section="עמוד הבית — Hero"
               data-editor-label="שורת כותרת שנייה (משנית)"
               className="block font-bold"
-              style={{ fontSize: 'clamp(32px,6vw,117px)' }}
+              style={{ fontSize: 'clamp(46px,6vw,117px)' }}
             >
               הדיגיטליים
             </span>
-            <span className="block font-normal" style={{ fontSize: 'clamp(26px,5vw,95px)' }}>של דבורי גנץ-אדלר</span>
+            <span className="block font-normal" style={{ fontSize: 'clamp(38px,5vw,95px)' }}>של דבורי גנץ-אדלר</span>
           </h1>
           <p
             data-editor-id="home.hero.subtitle"
             data-editor-section="עמוד הבית — Hero"
             data-editor-label="טקסט משנה בהירו"
             className="mt-6 text-right"
-            style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(16px, 4vw, 35px)', fontWeight: 300, lineHeight: '1.1em', color: 'rgba(82,16,20,1)', maxWidth: 650 }}
+            style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(20px, 4vw, 35px)', fontWeight: 300, lineHeight: '1.1em', color: 'rgba(82,16,20,1)', maxWidth: 650 }}
           >
             ידע, ניסיון וטכניקות מקצועיות שנצברו במשך עשרות שנים – זמינים עבורך בקורסים דיגיטליים מקצועיים, לצפייה מכל מקום ובכל זמן.
           </p>
         </div>
       </div>
       <div ref={badgeRef} className="absolute z-30 w-[120px] h-[120px] md:w-[200px] md:h-[200px]" style={{ bottom: 36, left: 36 }}>
-        <svg viewBox="0 0 200 200" className="absolute inset-0 w-full h-full" style={{ animation: 'badge-spin 25s linear infinite' }}>
+        <svg viewBox="0 0 200 200" className="absolute inset-0 w-full h-full" style={{ animation: 'badge-spin 25s linear infinite', direction: 'ltr' }}>
           <circle cx="100" cy="100" r="94" fill="none" stroke="rgba(255,20,20,1)" strokeWidth="0.7" />
           <circle cx="100" cy="100" r="62" fill="none" stroke="rgba(255,20,20,1)" strokeWidth="0.7" />
           <g id="badgeTextGroup" />
