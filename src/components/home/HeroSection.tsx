@@ -2,8 +2,45 @@ import logoAsset from "@/assets/logo_d.png.asset.json";
 import { UserIconLink } from "@/components/auth/UserIconLink";
 import arrowAsset from "@/assets/icons/arrow-3.svg.asset.json";
 import videoAsset from "@/assets/media/Video-3.mp4.asset.json";
+import { useEffect, useRef } from "react";
 
 export function HeroSection() {
+  const badgeRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const badge = badgeRef.current;
+    if (!badge) return;
+    const group = badge.querySelector('#badgeTextGroup') as SVGGElement | null;
+    if (!group) return;
+    if (group.children.length > 0) return;
+
+    const cx = 100, cy = 100, r = 78;
+    const fontSize = 18;
+    const text = "40 שנות ניסיון מקצועי – עכשיו גם בדיגיטל   ";
+    const reversedText = text.split('').reverse().join('');
+    const displayText = reversedText.slice(0, -2) + '40';
+    const svgNS = "http://www.w3.org/2000/svg";
+
+    for (let i = 0; i < displayText.length; i++) {
+      const angleDeg = -90 + (i * (360 / displayText.length));
+      const angleRad = angleDeg * Math.PI / 180;
+      const x = cx + r * Math.cos(angleRad);
+      const y = cy + r * Math.sin(angleRad);
+      const el = document.createElementNS(svgNS, 'text');
+      el.setAttribute('x', String(x));
+      el.setAttribute('y', String(y));
+      el.setAttribute('font-family', 'Discovery FS, sans-serif');
+      el.setAttribute('font-size', String(fontSize));
+      el.setAttribute('font-weight', '300');
+      el.setAttribute('fill', 'rgba(158,36,43,1)');
+      el.setAttribute('text-anchor', 'middle');
+      el.setAttribute('dominant-baseline', 'central');
+      el.setAttribute('transform', `rotate(${angleDeg + 90},${x},${y})`);
+      el.textContent = displayText[i];
+      group.appendChild(el);
+    }
+  }, []);
+
   return (
     <section dir="rtl" className="relative w-full overflow-hidden flex flex-col" style={{ height: '100vh', background: 'rgba(255,238,218,1)' }}>
       <div className="absolute top-0 right-0 h-full z-10 pointer-events-none" style={{ width: '35px', background: 'rgba(208,164,145,0.56)' }} />
@@ -55,29 +92,11 @@ export function HeroSection() {
           </p>
         </div>
       </div>
-      <div className="absolute z-30 w-[120px] h-[120px] md:w-[200px] md:h-[200px]" style={{ bottom: 36, left: 36 }}>
-        <svg viewBox="0 0 200 200" className="absolute inset-0 w-full h-full" style={{ animation: 'badge-spin 25s linear infinite' }}>
-          <defs>
-            <path
-              id="badgeCircle"
-              d="M 100,22 A 78,78 0 1 1 100,178 A 78,78 0 1 1 100,22"
-              fill="none"
-            />
-          </defs>
+      <div ref={badgeRef} className="absolute z-30 w-[120px] h-[120px] md:w-[200px] md:h-[200px]" style={{ bottom: 36, left: 36 }}>
+        <svg viewBox="0 0 200 200" className="absolute inset-0 w-full h-full" style={{ animation: 'badge-spin 25s linear infinite', direction: 'ltr' }}>
           <circle cx="100" cy="100" r="94" fill="none" stroke="rgba(255,20,20,1)" strokeWidth="0.7" />
           <circle cx="100" cy="100" r="62" fill="none" stroke="rgba(255,20,20,1)" strokeWidth="0.7" />
-          <text
-            fontFamily="Discovery FS, sans-serif"
-            fontSize={18}
-            fontWeight={300}
-            fill="rgba(158,36,43,1)"
-            textAnchor="start"
-            direction="ltr"
-          >
-            <textPath href="#badgeCircle" startOffset="0%">
-              40 שנות ניסיון מקצועי – עכשיו גם בדיגיטל   
-            </textPath>
-          </text>
+          <g id="badgeTextGroup" />
         </svg>
         <div className="absolute" style={{ top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 50, height: 58 }}>
           <img src={arrowAsset.url} alt="" style={{ width: 50, height: 58 }} />
