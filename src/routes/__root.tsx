@@ -12,6 +12,7 @@ import { useEffect, lazy, Suspense, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { OverridesProvider } from "../components/visual-editor/OverridesProvider";
+import { SiteFooter } from "../components/home/SiteFooter";
 
 // Dev-only visual editor. In production the import is tree-shaken because
 // import.meta.env.DEV is a compile-time constant → false, and the branch is dead.
@@ -141,6 +142,7 @@ function RootComponent() {
             <VisualEditor />
           </Suspense>
         )}
+        <SiteFooter />
       </OverridesProvider>
     </QueryClientProvider>
   );
