@@ -124,7 +124,7 @@ function DashboardHeader() {
           Devori Gantz
         </p>
         <h1
-          className="mt-2 truncate text-3xl md:text-5xl text-brand-primary-dark leading-tight"
+          className="mt-2 text-2xl md:text-5xl text-brand-primary-dark leading-tight"
           style={{ fontFamily: "var(--font-bateran)" }}
         >
           האזור האישי שלי

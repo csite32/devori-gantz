@@ -15,6 +15,11 @@ interface CourseBlockProps {
 }
 
 function CourseBlock({ number, image, imageAlt, decoText, title, description, imageRight = true, showMainTitle = false }: CourseBlockProps) {
+  const contentTopPadding = imageRight
+    ? number === "03"
+      ? "pt-20 md:pt-0"
+      : "pt-20 md:pt-20"
+    : "";
   return (
     <section dir="rtl" className="relative w-full overflow-hidden pt-6 pb-4 md:pt-[80px] md:pb-[100px]" style={{ background: '#fff' }}>
       {/* מספר רקע — מוסתר במובייל */}
