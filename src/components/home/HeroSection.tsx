@@ -1,7 +1,7 @@
 import logoAsset from "@/assets/logo_d.png.asset.json";
 import { UserIconLink } from "@/components/auth/UserIconLink";
 import arrowAsset from "@/assets/icons/arrow-3.svg.asset.json";
-import videoAsset from "@/assets/media/Video-3.mp4.asset.json";
+import videoAsset from "@/assets/media/Video-4.mp4.asset.json";
 import { useEffect, useRef } from "react";
 
 export function HeroSection() {
