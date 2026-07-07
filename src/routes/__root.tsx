@@ -95,6 +95,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:title", content: "Lovable App" },
       { property: "og:description", content: "Devori Gantz Insights provides data visualization and analysis tools." },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "דבורי גנץ-אדלר" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
       { name: "twitter:title", content: "Lovable App" },
