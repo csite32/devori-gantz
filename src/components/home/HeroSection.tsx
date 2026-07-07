@@ -16,8 +16,9 @@ export function HeroSection() {
 
     const cx = 100, cy = 100, r = 78;
     const fontSize = 18;
-    const text = "04 שנות ניסיון מקצועי – עכשיו גם בדיגיטל   ";
-    const displayText = text.split('').reverse().join('');
+    const text = "40 שנות ניסיון מקצועי – עכשיו גם בדיגיטל   ";
+    const reversedText = text.split('').reverse().join('');
+    const displayText = reversedText.slice(0, -2) + '40';
     const svgNS = "http://www.w3.org/2000/svg";
 
     for (let i = 0; i < displayText.length; i++) {
