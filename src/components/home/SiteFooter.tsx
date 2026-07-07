@@ -1,3 +1,5 @@
+import { Link } from "@tanstack/react-router";
+
 export function SiteFooter() {
   return (
     <footer
@@ -24,6 +26,13 @@ export function SiteFooter() {
           >
             פיתוח: חיה פוגל Csite
           </a>
+          <Link
+            to="/accessibility"
+            className="m-0 text-brand-primary-dark text-base md:text-[22px] no-underline hover:text-brand-primary-dark"
+            style={{ fontFamily: 'Discovery FS, sans-serif', fontWeight: 400 }}
+          >
+            הצהרת נגישות
+          </Link>
         </div>
       </div>
     </footer>
