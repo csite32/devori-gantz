@@ -65,10 +65,10 @@ export function PremiumSection() {
               1,800 ₪ <span style={{ fontWeight: 600 }}>במקום 2,400 ₪.</span>
             </div>
             <div style={{ width: '100%', textAlign: 'right' }}>
-              <button className="inline-flex items-center group" style={{ gap: 14, padding: '16px 40px', background: 'white', color: 'rgba(82,16,20,1)', fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(14px, 2vw, 25px)', fontWeight: 300, border: 'none', borderRadius: 33.5, cursor: 'pointer', direction: 'rtl' }}>
+              <a href="https://pay.grow.link/MTAyNzQ2~f1c15c4145daff9afe7167b00da09c11-MzY1NTkxOQ" className="inline-flex items-center group" style={{ gap: 14, padding: '16px 40px', background: 'white', color: 'rgba(82,16,20,1)', fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(14px, 2vw, 25px)', fontWeight: 300, border: 'none', borderRadius: 33.5, cursor: 'pointer', direction: 'rtl', textDecoration: 'none' }}>
                 <span>לרכישת חבילת פרימיום</span>
                 <img src={arrowBtn2Asset.url} alt="" style={{ width: 28, height: 23 }} className="premium-arrow-hover" />
-              </button>
+              </a>
             </div>
           </div>
         </div>
