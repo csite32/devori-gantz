@@ -99,9 +99,9 @@ function CourseBlock({ number, image, imageAlt, decoText, title, description, im
 export function CourseSections() {
   return (
     <>
-      <CourseBlock number="01" image={butterflyCutAsset.url} imageAlt="בטרפליי קאט" decoText="Butterfly Cut" title="בטרפליי קאט" description="למדי את כל שלבי העבודה, החלוקות, הזוויות והטכניקות ליצירת תספורת מדויקת, מחמיאה ומקצועית." imageRight={true} showMainTitle={true} />
-      <CourseBlock number="02" image={shaggyBobAsset.url} imageAlt="שאגי בוב" decoText="Shaggy Bob" title="שאגי בוב" description="קורס מקצועי שילמד אותך כיצד ליצור מראה טבעי, מלא תנועה ונפח, עם כל הדגשים שהופכים את התוצאה למושלמת." imageRight={false} />
-      <CourseBlock number="03" image={lobChicAsset.url} imageAlt="לוב שיק" decoText="Lob Chic" title="לוב שיק" description="תספורת קלאסית ועדכנית עם הסברים מפורטים, חלוקות נכונות וטכניקות עבודה מתקדמות." imageRight={true} />
+      <CourseBlock number="01" image={butterflyCutAsset.url} imageAlt="בטרפליי קאט" decoText="Butterfly Cut" title="בטרפליי קאט" description="למדי את כל שלבי העבודה, החלוקות, הזוויות והטכניקות ליצירת תספורת מדויקת, מחמיאה ומקצועית." imageRight={true} showMainTitle={true} purchaseUrl="https://pay.grow.link/MTAyNzQ2~9a960482beaf118ad4c38986822171b4-MzY1NTg2Nw" />
+      <CourseBlock number="02" image={shaggyBobAsset.url} imageAlt="שאגי בוב" decoText="Shaggy Bob" title="שאגי בוב" description="קורס מקצועי שילמד אותך כיצד ליצור מראה טבעי, מלא תנועה ונפח, עם כל הדגשים שהופכים את התוצאה למושלמת." imageRight={false} purchaseUrl="https://pay.grow.link/MTAyNzQ2~f53fe1c86cfa93fdf0f9933325aea3e9-MzY1NTg4OA" />
+      <CourseBlock number="03" image={lobChicAsset.url} imageAlt="לוב שיק" decoText="Lob Chic" title="לוב שיק" description="תספורת קלאסית ועדכנית עם הסברים מפורטים, חלוקות נכונות וטכניקות עבודה מתקדמות." imageRight={true} purchaseUrl="https://pay.grow.link/MTAyNzQ2~5894efd6209fa0263194035f264a7bbc-MzY1NTg5OQ" />
     </>
   );
 }
