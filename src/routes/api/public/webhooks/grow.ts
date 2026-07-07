@@ -7,14 +7,6 @@ const CORS_HEADERS = {
   'Access-Control-Max-Age': '86400',
 } as const
 
-// TODO (phase 2): signature verification
-// Once Grow's real payload + signing scheme are known, populate these and
-// verify the request BEFORE any business logic runs.
-// const GROW_WEBHOOK_SECRET = process.env.GROW_WEBHOOK_SECRET
-// const SIGNATURE_HEADER = '' // e.g. 'x-grow-signature'
-// const TIMESTAMP_HEADER = '' // e.g. 'x-grow-timestamp'
-// const SIGNATURE_TOLERANCE_SECONDS = 300
-
 function extractSourceIp(headers: Record<string, string>): string | null {
   const cf = headers['cf-connecting-ip']
   if (cf) return cf
@@ -34,7 +26,7 @@ export const Route = createFileRoute('/api/public/webhooks/grow')({
         // 1. Read the raw body first — required for future signature verification.
         const rawBody = await request.text()
 
-        // 2. Collect all headers.
+        // 2. Collect all headers (lower-cased).
         const headers: Record<string, string> = {}
         request.headers.forEach((value, key) => {
           headers[key.toLowerCase()] = value
@@ -53,26 +45,70 @@ export const Route = createFileRoute('/api/public/webhooks/grow')({
 
         const sourceIp = extractSourceIp(headers)
 
-        // 4. Persist the log. Failures here must NOT fail the response, or
-        // Grow will retry indefinitely.
+        // 4. Persist the raw log up front so we never lose the record even if
+        //    downstream processing crashes. Failures here must NOT fail the
+        //    response, or Grow will retry indefinitely.
+        let logId: string | null = null
         try {
-          const { supabaseAdmin } = await import('@/integrations/supabase/client.server')
-          const { error } = await supabaseAdmin.from('grow_webhook_logs').insert({
-            method: 'POST',
-            source_ip: sourceIp,
-            headers,
-            raw_body: rawBody,
-            parsed_json: parsedJson as never,
-            parse_error: parseError,
-            processing_result: 'logged_only',
-          })
+          const { supabaseAdmin } = await import(
+            '@/integrations/supabase/client.server'
+          )
+          const { data, error } = await supabaseAdmin
+            .from('grow_webhook_logs')
+            .insert({
+              method: 'POST',
+              source_ip: sourceIp,
+              headers,
+              raw_body: rawBody,
+              parsed_json: parsedJson as never,
+              parse_error: parseError,
+              processing_result: 'logged_only',
+            })
+            .select('id')
+            .single()
           if (error) {
             console.error('[grow-webhook] failed to persist log', error)
+          } else {
+            logId = data.id
           }
         } catch (err) {
           console.error('[grow-webhook] unexpected error while logging', err)
         }
 
+        // 5. Business processing. Only runs if we have a log row AND JSON
+        //    parsed cleanly. All error paths inside processGrowWebhook update
+        //    the log row and return — nothing throws out to us.
+        if (logId && parseError === null) {
+          try {
+            const { processGrowWebhook } = await import('@/lib/grow-webhook.server')
+            await processGrowWebhook({
+              logId,
+              parsedJson,
+              rawBody,
+              headers,
+            })
+          } catch (err) {
+            console.error('[grow-webhook] processing crashed', err)
+            // Best-effort mark of failure; we still return 200 below.
+            try {
+              const { supabaseAdmin } = await import(
+                '@/integrations/supabase/client.server'
+              )
+              await supabaseAdmin
+                .from('grow_webhook_logs')
+                .update({
+                  processing_result: 'processing_error',
+                  processing_error:
+                    err instanceof Error ? err.message : String(err),
+                })
+                .eq('id', logId)
+            } catch (updErr) {
+              console.error('[grow-webhook] failed to mark log error', updErr)
+            }
+          }
+        }
+
+        // Always 200 so Grow does not retry on our internal issues.
         return Response.json(
           { ok: true, received: true },
           { status: 200, headers: CORS_HEADERS },
