@@ -15,6 +15,11 @@ interface CourseBlockProps {
 }
 
 function CourseBlock({ number, image, imageAlt, decoText, title, description, imageRight = true, showMainTitle = false }: CourseBlockProps) {
+  const contentTopPadding = imageRight
+    ? number === "03"
+      ? "pt-20 md:pt-0"
+      : "pt-20 md:pt-20"
+    : "";
   return (
     <section dir="rtl" className="relative w-full overflow-hidden pt-6 pb-4 md:pt-[80px] md:pb-[100px]" style={{ background: '#fff' }}>
       {/* מספר רקע — מוסתר במובייל */}
@@ -44,10 +49,9 @@ function CourseBlock({ number, image, imageAlt, decoText, title, description, im
         }}>
 
         {/* עמודת תוכן */}
-        <div className="flex flex-col w-full md:min-h-[500px]"
+        <div className={`flex flex-col w-full md:min-h-[500px] ${contentTopPadding}`}
           style={{
             direction: 'rtl', textAlign: 'right', position: 'relative',
-            paddingTop: imageRight ? 80 : 0,
             justifyContent: imageRight ? 'space-between' : 'center',
             alignItems: 'flex-end',
             order: imageRight ? 1 : 2
