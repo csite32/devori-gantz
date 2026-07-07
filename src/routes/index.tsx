@@ -32,6 +32,7 @@ function HomePage() {
       <PremiumSection />
       <BenefitsSection />
       <DvoriSection />
+      <ContactSection />
     </main>
   );
 }
