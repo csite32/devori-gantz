@@ -389,7 +389,7 @@ button:hover .premium-arrow-hover {
 .a11y-fab {
   position: fixed;
   bottom: 20px;
-  left: 20px;
+  right: 20px;
   z-index: 2147483000;
   width: 52px;
   height: 52px;
@@ -422,7 +422,7 @@ button:hover .premium-arrow-hover {
 .a11y-panel {
   position: fixed;
   bottom: 20px;
-  left: 20px;
+  right: 20px;
   z-index: 2147483200;
   width: min(360px, calc(100vw - 24px));
   max-height: min(80vh, 720px);
@@ -439,13 +439,13 @@ button:hover .premium-arrow-hover {
 }
 @media (max-width: 480px) {
   .a11y-panel {
-    left: 12px;
     right: 12px;
+    left: 12px;
     bottom: 12px;
     width: auto;
     max-height: 85vh;
   }
-  .a11y-fab { bottom: 14px; left: 14px; width: 48px; height: 48px; }
+  .a11y-fab { bottom: 14px; right: 14px; width: 48px; height: 48px; }
 }
 .a11y-panel-header {
   display: flex;
