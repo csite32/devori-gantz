@@ -58,7 +58,7 @@ function CourseBlock({ number, image, imageAlt, decoText, title, description, im
             order: imageRight ? 1 : 2
           }}>
           {/* טקסט דקורטיבי — מוסתר במובייל (דסקטופ בלבד) */}
-          <div aria-hidden className="pointer-events-none select-none hidden md:block" style={{
+          <div aria-hidden className="pointer-events-none select-none hidden md:block deco-float" style={{
             fontFamily: 'Bateran, cursive', fontSize: 180, fontWeight: 400,
             color: 'rgba(255,20,20,1)', whiteSpace: 'nowrap', lineHeight: 1,
             position: 'absolute',

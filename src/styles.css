@@ -228,6 +228,15 @@
   0%, 100% { transform: translateX(0); }
   50% { transform: translateX(-4px); }
 }
+@keyframes deco-float {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-12px); }
+}
+
+.deco-float {
+  animation: deco-float 7s ease-in-out infinite alternate;
+  will-change: transform;
+}
 
 .group:hover .arrow-hover,
 button:hover .arrow-hover {
