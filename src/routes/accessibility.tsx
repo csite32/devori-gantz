@@ -78,9 +78,9 @@ function AccessibilityStatementPage() {
         נתקלתם בבעיית נגישות באתר? נשמח לקבל משוב באמצעות פנייה לרכז הנגישות שלנו:
       </p>
       <ul className="mb-4 list-none pr-0 leading-relaxed">
-        <li><strong>שם רכז הנגישות:</strong> [יש למלא על ידי בעל האתר]</li>
-        <li><strong>דוא"ל:</strong> [יש למלא על ידי בעל האתר]</li>
-        <li><strong>טלפון:</strong> [יש למלא על ידי בעל האתר]</li>
+        <li><strong>שם רכז הנגישות:</strong> גנץ</li>
+        <li><strong>דוא"ל:</strong> <a href="mailto:Ganz.wigs@gmail.com">Ganz.wigs@gmail.com</a></li>
+        <li><strong>טלפון:</strong> <a href="tel:+9723-568-7631">03-568-7631</a></li>
         <li><strong>זמן מענה:</strong> עד 10 ימי עסקים</li>
       </ul>
 
