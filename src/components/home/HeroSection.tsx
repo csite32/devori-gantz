@@ -72,7 +72,7 @@ export function HeroSection() {
             fontWeight={300}
             fill="rgba(158,36,43,1)"
             textAnchor="start"
-            direction="rtl"
+            direction="ltr"
           >
             <textPath href="#badgeCircle" startOffset="0%">
               40 שנות ניסיון מקצועי – עכשיו גם בדיגיטל   
