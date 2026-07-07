@@ -230,7 +230,7 @@
 }
 @keyframes deco-float {
   0% { transform: translateX(0); }
-  100% { transform: translateX(-12px); }
+  100% { transform: translateX(-26px); }
 }
 
 .deco-float {
