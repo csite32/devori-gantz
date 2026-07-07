@@ -92,16 +92,15 @@ function PaymentSuccessPage() {
               style={{ fontFamily: "var(--font-bateran)" }}
             >
               התשלום התקבל בהצלחה
-              <span
+              <svg
                 aria-hidden
-                className="align-middle text-[1.1em]"
-                style={{
-                  fontFamily:
-                    "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif",
-                }}
+                viewBox="0 0 12 28"
+                className="inline-block align-middle h-[0.85em] w-auto mr-1"
+                fill="currentColor"
               >
-                !
-              </span>
+                <rect x="4" y="0" width="4" height="18" rx="2" />
+                <circle cx="6" cy="24" r="3" />
+              </svg>
             </h1>
 
             <div
