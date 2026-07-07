@@ -4,7 +4,6 @@ import { CourseSections } from "@/components/home/CourseSection";
 import { PremiumSection } from "@/components/home/PremiumSection";
 import { BenefitsSection } from "@/components/home/BenefitsSection";
 import { DvoriSection } from "@/components/home/DvoriSection";
-import { SiteFooter } from "@/components/home/SiteFooter";
 import { useGsapAnimations } from "@/hooks/useGsapAnimations";
 
 export const Route = createFileRoute("/")({
@@ -30,7 +29,6 @@ function HomePage() {
       <PremiumSection />
       <BenefitsSection />
       <DvoriSection />
-      <SiteFooter />
     </main>
   );
 }
