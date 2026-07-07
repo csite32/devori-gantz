@@ -16,7 +16,7 @@ export function ContactSection() {
           יש לכם שאלה? אנחנו כאן בשבילכם
         </h2>
 
-        <div className="flex flex-col items-center justify-center gap-8 md:flex-row md:gap-16">
+        <div className="flex flex-col items-start justify-center gap-8 md:flex-row md:items-center md:gap-16">
           <a
             href="tel:035687631"
             className="group inline-flex items-center gap-4 no-underline transition-colors"
