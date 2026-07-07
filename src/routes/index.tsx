@@ -9,12 +9,14 @@ import { useGsapAnimations } from "@/hooks/useGsapAnimations";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "דבורי גנץ-אדלר | קורסי תספורות דיגיטליים" },
+      { title: "דבורי גנץ-אדלר | קורסי התספורות הדיגיטליים" },
       {
         name: "description",
         content:
-          "קורסי תספורות דיגיטליים של דבורי גנץ-אדלר – ידע וניסיון של עשרות שנים בפורמט מקצועי, לצפייה מכל מקום ובכל זמן.",
+          "למדי את שיטות התספורת המקצועיות של דבורי גנץ-אדלר בקורסים דיגיטליים מקצועיים.",
       },
+      { property: "og:title", content: "דבורי גנץ-אדלר | קורסי התספורות הדיגיטליים" },
+      { property: "og:description", content: "למדי את שיטות התספורת המקצועיות של דבורי גנץ-אדלר בקורסים דיגיטליים מקצועיים." },
     ],
   }),
   component: HomePage,
