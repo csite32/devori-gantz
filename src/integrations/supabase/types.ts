@@ -240,6 +240,7 @@ export type Database = {
           method: string
           parse_error: string | null
           parsed_json: Json | null
+          processing_error: string | null
           processing_result: string
           raw_body: string | null
           received_at: string
@@ -252,6 +253,7 @@ export type Database = {
           method?: string
           parse_error?: string | null
           parsed_json?: Json | null
+          processing_error?: string | null
           processing_result?: string
           raw_body?: string | null
           received_at?: string
@@ -264,6 +266,7 @@ export type Database = {
           method?: string
           parse_error?: string | null
           parsed_json?: Json | null
+          processing_error?: string | null
           processing_result?: string
           raw_body?: string | null
           received_at?: string
@@ -603,6 +606,17 @@ export type Database = {
       enqueue_email: {
         Args: { payload: Json; queue_name: string }
         Returns: number
+      }
+      grant_grow_purchase: {
+        Args: {
+          p_buyer_email: string
+          p_product_id: string
+          p_provider_id: string
+          p_provider_txn_id: string
+          p_raw_payload: Json
+          p_user_id: string
+        }
+        Returns: undefined
       }
       has_role: {
         Args: {
