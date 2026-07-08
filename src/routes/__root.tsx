@@ -144,6 +144,33 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const w = window as unknown as { gtag?: (...args: unknown[]) => void };
+    if (typeof w.gtag !== "function") return;
+    w.gtag("event", "page_view", {
+      page_path: window.location.pathname + window.location.search,
+      page_location: window.location.href,
+      page_title: document.title,
+    });
+  }, []);
+
+  const router = useRouter();
+  useEffect(() => {
+    const unsub = router.subscribe("onResolved", () => {
+      if (typeof window === "undefined") return;
+      const w = window as unknown as { gtag?: (...args: unknown[]) => void };
+      if (typeof w.gtag !== "function") return;
+      w.gtag("event", "page_view", {
+        page_path: window.location.pathname + window.location.search,
+        page_location: window.location.href,
+        page_title: document.title,
+      });
+    });
+    return () => unsub();
+  }, [router]);
+
+
   return (
     <QueryClientProvider client={queryClient}>
       <OverridesProvider>
