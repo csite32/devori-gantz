@@ -433,6 +433,9 @@ function ProfileCard({ profile }: { profile: DashboardData["profile"] }) {
           </div>
         </div>
       </div>
+      {passwordOpen && (
+        <PasswordModal onClose={() => setPasswordOpen(false)} />
+      )}
     </section>
   );
 }
