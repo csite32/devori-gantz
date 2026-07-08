@@ -13,9 +13,10 @@ interface CourseBlockProps {
   imageRight?: boolean;
   showMainTitle?: boolean;
   purchaseUrl: string;
+  price: string;
 }
 
-function CourseBlock({ number, image, imageAlt, decoText, title, description, imageRight = true, showMainTitle = false, purchaseUrl }: CourseBlockProps) {
+function CourseBlock({ number, image, imageAlt, decoText, title, description, imageRight = true, showMainTitle = false, purchaseUrl, price }: CourseBlockProps) {
   const contentTopPadding = imageRight
     ? number === "03"
       ? "pt-12 md:pt-0"
@@ -79,7 +80,7 @@ function CourseBlock({ number, image, imageAlt, decoText, title, description, im
             }}>{decoText}</div>
             <h3 className="gsap-title" style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(28px, 4vw, 60px)', fontWeight: 300, color: 'rgba(82,16,20,1)', display: 'block', marginBottom: 12 }}>{title}</h3>
             <p style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(16px, 2.5vw, 28px)', fontWeight: 300, lineHeight: 1.4, color: 'rgba(82,16,20,1)', marginBottom: 12 }}>{description}</p>
-            <div style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(28px, 4vw, 50px)', fontWeight: 600, color: 'rgba(158,36,43,1)', marginBottom: 8 }}>580 ₪</div>
+            <div style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(28px, 4vw, 50px)', fontWeight: 600, color: 'rgba(158,36,43,1)', marginBottom: 8 }}>{price} ₪</div>
             <a href={purchaseUrl} className="inline-flex items-center group" style={{ gap: 14, padding: '14px 32px', border: '1px solid rgba(158,36,43,1)', borderRadius: 33.5, background: 'transparent', cursor: 'pointer', fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(16px, 2vw, 22px)', fontWeight: 300, color: 'rgba(82,16,20,1)', direction: 'rtl', marginTop: 15, textDecoration: 'none' }}>
               <span>לרכישת הקורס</span>
               <img src={arrowBtnAsset.url} alt="" style={{ width: 28, height: 23 }} className="arrow-hover" />
@@ -96,12 +97,12 @@ function CourseBlock({ number, image, imageAlt, decoText, title, description, im
   );
 }
 
-export function CourseSections() {
+export function CourseSections({ prices }: { prices: { butterfly: string; shaggy: string; lob: string } }) {
   return (
     <>
-      <CourseBlock number="01" image={butterflyCutAsset.url} imageAlt="בטרפליי קאט" decoText="Butterfly Cut" title="בטרפליי קאט" description="למדי את כל שלבי העבודה, החלוקות, הזוויות והטכניקות ליצירת תספורת מדויקת, מחמיאה ומקצועית." imageRight={true} showMainTitle={true} purchaseUrl="https://pay.grow.link/MTAyNzQ2~9a960482beaf118ad4c38986822171b4-MzY1NTg2Nw" />
-      <CourseBlock number="02" image={shaggyBobAsset.url} imageAlt="שאגי בוב" decoText="Shaggy Bob" title="שאגי בוב" description="קורס מקצועי שילמד אותך כיצד ליצור מראה טבעי, מלא תנועה ונפח, עם כל הדגשים שהופכים את התוצאה למושלמת." imageRight={false} purchaseUrl="https://pay.grow.link/MTAyNzQ2~f53fe1c86cfa93fdf0f9933325aea3e9-MzY1NTg4OA" />
-      <CourseBlock number="03" image={lobChicAsset.url} imageAlt="לוב שיק" decoText="Lob Chic" title="לוב שיק" description="תספורת קלאסית ועדכנית עם הסברים מפורטים, חלוקות נכונות וטכניקות עבודה מתקדמות." imageRight={true} purchaseUrl="https://pay.grow.link/MTAyNzQ2~5894efd6209fa0263194035f264a7bbc-MzY1NTg5OQ" />
+      <CourseBlock number="01" image={butterflyCutAsset.url} imageAlt="בטרפליי קאט" decoText="Butterfly Cut" title="בטרפליי קאט" description="למדי את כל שלבי העבודה, החלוקות, הזוויות והטכניקות ליצירת תספורת מדויקת, מחמיאה ומקצועית." imageRight={true} showMainTitle={true} purchaseUrl="https://pay.grow.link/MTAyNzQ2~9a960482beaf118ad4c38986822171b4-MzY1NTg2Nw" price={prices.butterfly} />
+      <CourseBlock number="02" image={shaggyBobAsset.url} imageAlt="שאגי בוב" decoText="Shaggy Bob" title="שאגי בוב" description="קורס מקצועי שילמד אותך כיצד ליצור מראה טבעי, מלא תנועה ונפח, עם כל הדגשים שהופכים את התוצאה למושלמת." imageRight={false} purchaseUrl="https://pay.grow.link/MTAyNzQ2~f53fe1c86cfa93fdf0f9933325aea3e9-MzY1NTg4OA" price={prices.shaggy} />
+      <CourseBlock number="03" image={lobChicAsset.url} imageAlt="לוב שיק" decoText="Lob Chic" title="לוב שיק" description="תספורת קלאסית ועדכנית עם הסברים מפורטים, חלוקות נכונות וטכניקות עבודה מתקדמות." imageRight={true} purchaseUrl="https://pay.grow.link/MTAyNzQ2~5894efd6209fa0263194035f264a7bbc-MzY1NTg5OQ" price={prices.lob} />
     </>
   );
 }

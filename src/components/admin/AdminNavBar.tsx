@@ -5,6 +5,7 @@ const items: Item[] = [
   { to: "/admin", label: "ראשי", exact: true },
   { to: "/admin/courses", label: "קורסים" },
   { to: "/admin/users", label: "משתמשים" },
+  { to: "/admin/pricing", label: "מחירי עמוד הבית" },
 ];
 
 export function AdminNavBar() {
