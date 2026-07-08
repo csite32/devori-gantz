@@ -121,30 +121,35 @@ function PaymentSuccessPage() {
             >
               <p>תודה על הרכישה.</p>
               <p>אנחנו מכינים עבורך את הגישה לקורס.</p>
-              <p>
-                אם זו הרכישה הראשונה שלך, בתוך מספר רגעים יישלח אלייך מייל
-                להגדרת סיסמה וכניסה לאזור האישי.
+              <p className="font-bold text-brand-primary">
+                אם זו הרכישה הראשונה שלך באתר, בתוך מספר רגעים יישלח אלייך מייל הזמנה לכתובת הדוא"ל שהזנת בעת הרכישה.
               </p>
               <p>
-                אם כבר יש לך חשבון באתר, ניתן להתחבר כבר עכשיו והקורס החדש
+                לחצי על כפתור ההזמנה שבמייל, והוא יכניס אותך ישירות לאזור הקורסים באתר.
+              </p>
+              <p>
+                אם אינך רואה את המייל, מומלץ לבדוק גם בתיקיית הספאם או קידומי המכירות.
+              </p>
+              <p>
+                אם כבר יש לך חשבון באתר, ניתן להתחבר כבר עכשיו, והקורס החדש
                 יתווסף אוטומטית לאזור האישי בתוך זמן קצר.
               </p>
             </div>
 
-            <div className="mt-10 md:mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="mt-10 md:mt-12 flex flex-col items-center justify-center gap-3">
               <Link
-                to="/dashboard"
+                to="/"
                 className="inline-flex w-full sm:w-auto items-center justify-center rounded-full bg-brand-primary px-8 py-3 text-base md:text-lg text-brand-white shadow-md hover:bg-brand-primary-dark transition"
                 style={{ fontFamily: "var(--font-discovery)" }}
               >
-                כניסה לאזור האישי
+                חזרה לעמוד הבית
               </Link>
               <Link
-                to="/"
-                className="inline-flex w-full sm:w-auto items-center justify-center rounded-full border border-brand-primary/30 px-8 py-3 text-base md:text-lg text-brand-primary-dark hover:bg-brand-primary hover:text-brand-white hover:border-brand-primary transition"
+                to="/auth"
+                className="text-sm text-brand-primary-dark/70 hover:text-brand-primary transition"
                 style={{ fontFamily: "var(--font-discovery)" }}
               >
-                חזרה לעמוד הבית
+                כבר התחברת בעבר? לחצי כאן לכניסה לאזור האישי
               </Link>
             </div>
           </div>
