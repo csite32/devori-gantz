@@ -136,20 +136,20 @@ function PaymentSuccessPage() {
               </p>
             </div>
 
-            <div className="mt-10 md:mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="mt-10 md:mt-12 flex flex-col items-center justify-center gap-3">
               <Link
-                to="/dashboard"
+                to="/"
                 className="inline-flex w-full sm:w-auto items-center justify-center rounded-full bg-brand-primary px-8 py-3 text-base md:text-lg text-brand-white shadow-md hover:bg-brand-primary-dark transition"
                 style={{ fontFamily: "var(--font-discovery)" }}
               >
-                כניסה לאזור האישי
+                חזרה לעמוד הבית
               </Link>
               <Link
-                to="/"
-                className="inline-flex w-full sm:w-auto items-center justify-center rounded-full border border-brand-primary/30 px-8 py-3 text-base md:text-lg text-brand-primary-dark hover:bg-brand-primary hover:text-brand-white hover:border-brand-primary transition"
+                to="/auth"
+                className="text-sm text-brand-primary-dark/70 hover:text-brand-primary transition"
                 style={{ fontFamily: "var(--font-discovery)" }}
               >
-                חזרה לעמוד הבית
+                כבר התחברת בעבר? לחצי כאן לכניסה לאזור האישי
               </Link>
             </div>
           </div>
