@@ -79,7 +79,7 @@ function CourseBlock({ number, image, imageAlt, decoText, title, description, im
             }}>{decoText}</div>
             <h3 className="gsap-title" style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(28px, 4vw, 60px)', fontWeight: 300, color: 'rgba(82,16,20,1)', display: 'block', marginBottom: 12 }}>{title}</h3>
             <p style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(16px, 2.5vw, 28px)', fontWeight: 300, lineHeight: 1.4, color: 'rgba(82,16,20,1)', marginBottom: 12 }}>{description}</p>
-            <div style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(28px, 4vw, 50px)', fontWeight: 600, color: 'rgba(158,36,43,1)', marginBottom: 8 }}>800 ₪</div>
+            <div style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(28px, 4vw, 50px)', fontWeight: 600, color: 'rgba(158,36,43,1)', marginBottom: 8 }}>580 ₪</div>
             <a href={purchaseUrl} className="inline-flex items-center group" style={{ gap: 14, padding: '14px 32px', border: '1px solid rgba(158,36,43,1)', borderRadius: 33.5, background: 'transparent', cursor: 'pointer', fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(16px, 2vw, 22px)', fontWeight: 300, color: 'rgba(82,16,20,1)', direction: 'rtl', marginTop: 15, textDecoration: 'none' }}>
               <span>לרכישת הקורס</span>
               <img src={arrowBtnAsset.url} alt="" style={{ width: 28, height: 23 }} className="arrow-hover" />
