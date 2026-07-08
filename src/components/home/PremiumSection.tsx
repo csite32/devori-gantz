@@ -62,7 +62,7 @@ export function PremiumSection({ bundleText }: { bundleText: string }) {
               </p>
             </div>
             <div style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(24px, 4vw, 50px)', fontWeight: 600, color: 'white', textAlign: 'right', direction: 'rtl', width: '100%', margin: 0 }}>
-              1,500 ₪ <span style={{ fontWeight: 600 }}>במקום 1,740 ₪</span>
+              {bundleText}
             </div>
             <div style={{ width: '100%', textAlign: 'right' }}>
               <a href="https://pay.grow.link/MTAyNzQ2~f1c15c4145daff9afe7167b00da09c11-MzY1NTkxOQ" className="inline-flex items-center group" style={{ gap: 14, padding: '16px 40px', background: 'white', color: 'rgba(82,16,20,1)', fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(14px, 2vw, 25px)', fontWeight: 300, border: 'none', borderRadius: 33.5, cursor: 'pointer', direction: 'rtl', textDecoration: 'none' }}>
