@@ -394,6 +394,29 @@ function ProfileCard({ profile }: { profile: DashboardData["profile"] }) {
               <ValueRow value={profile.email || "—"} ltr />
             </Field>
 
+            <div>
+              <button
+                type="button"
+                onClick={() => setPasswordOpen(true)}
+                className="inline-flex items-center gap-2 rounded-full border border-brand-primary/40 bg-brand-white px-5 py-2.5 text-sm text-brand-primary hover:bg-brand-primary hover:text-brand-white transition"
+              >
+                <svg
+                  aria-hidden
+                  viewBox="0 0 24 24"
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <rect x="3" y="11" width="18" height="11" rx="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+                שינוי סיסמה
+              </button>
+            </div>
+
             {msg && (
               <p className="text-sm text-brand-primary flex items-center gap-2">
                 <span
