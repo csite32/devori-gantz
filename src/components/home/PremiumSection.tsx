@@ -58,7 +58,7 @@ export function PremiumSection({ bundleText }: { bundleText: string }) {
                 ))}
               </div>
               <p style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(14px, 2vw, 26px)', fontWeight: 300, color: 'white', textAlign: 'right', margin: 0 }}>
-                רכשי את 3 הקורסים יחד ותיהני מ־25% הנחה!
+                רכשי את 3 הקורסים יחד ותיהני מהנחה
               </p>
             </div>
             <div style={{ fontFamily: 'Discovery FS, sans-serif', fontSize: 'clamp(24px, 4vw, 50px)', fontWeight: 600, color: 'white', textAlign: 'right', direction: 'rtl', width: '100%', margin: 0 }}>
