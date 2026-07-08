@@ -20,6 +20,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedCoursesSlugRouteImport } from './routes/_authenticated/courses.$slug'
+import { Route as AuthenticatedAdminPricingRouteImport } from './routes/_authenticated/admin.pricing'
 import { Route as AuthenticatedAdminUsersIndexRouteImport } from './routes/_authenticated/admin.users.index'
 import { Route as AuthenticatedAdminCoursesIndexRouteImport } from './routes/_authenticated/admin.courses.index'
 import { Route as AuthenticatedAdminBundlesIndexRouteImport } from './routes/_authenticated/admin.bundles.index'
@@ -90,6 +91,12 @@ const AuthenticatedCoursesSlugRoute =
     id: '/courses/$slug',
     path: '/courses/$slug',
     getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAdminPricingRoute =
+  AuthenticatedAdminPricingRouteImport.update({
+    id: '/pricing',
+    path: '/pricing',
+    getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
 const AuthenticatedAdminUsersIndexRoute =
   AuthenticatedAdminUsersIndexRouteImport.update({
@@ -188,6 +195,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/admin/pricing': typeof AuthenticatedAdminPricingRoute
   '/courses/$slug': typeof AuthenticatedCoursesSlugRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/admin/bundles/$id': typeof AuthenticatedAdminBundlesIdRoute
@@ -214,6 +222,7 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/admin/pricing': typeof AuthenticatedAdminPricingRoute
   '/courses/$slug': typeof AuthenticatedCoursesSlugRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/admin/bundles/$id': typeof AuthenticatedAdminBundlesIdRoute
@@ -242,6 +251,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/admin/pricing': typeof AuthenticatedAdminPricingRoute
   '/_authenticated/courses/$slug': typeof AuthenticatedCoursesSlugRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/admin/bundles/$id': typeof AuthenticatedAdminBundlesIdRoute
@@ -271,6 +281,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/admin'
     | '/dashboard'
+    | '/admin/pricing'
     | '/courses/$slug'
     | '/admin/'
     | '/admin/bundles/$id'
@@ -297,6 +308,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/reset-password'
     | '/dashboard'
+    | '/admin/pricing'
     | '/courses/$slug'
     | '/admin'
     | '/admin/bundles/$id'
@@ -324,6 +336,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/_authenticated/admin'
     | '/_authenticated/dashboard'
+    | '/_authenticated/admin/pricing'
     | '/_authenticated/courses/$slug'
     | '/_authenticated/admin/'
     | '/_authenticated/admin/bundles/$id'
@@ -435,6 +448,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/courses/$slug'
       preLoaderRoute: typeof AuthenticatedCoursesSlugRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin/pricing': {
+      id: '/_authenticated/admin/pricing'
+      path: '/pricing'
+      fullPath: '/admin/pricing'
+      preLoaderRoute: typeof AuthenticatedAdminPricingRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
     }
     '/_authenticated/admin/users/': {
       id: '/_authenticated/admin/users/'
@@ -566,6 +586,7 @@ const AuthenticatedAdminCoursesIdRouteWithChildren =
   )
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminPricingRoute: typeof AuthenticatedAdminPricingRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
   AuthenticatedAdminBundlesIdRoute: typeof AuthenticatedAdminBundlesIdRoute
   AuthenticatedAdminBundlesNewRoute: typeof AuthenticatedAdminBundlesNewRoute
@@ -578,6 +599,7 @@ interface AuthenticatedAdminRouteChildren {
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminPricingRoute: AuthenticatedAdminPricingRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   AuthenticatedAdminBundlesIdRoute: AuthenticatedAdminBundlesIdRoute,
   AuthenticatedAdminBundlesNewRoute: AuthenticatedAdminBundlesNewRoute,
