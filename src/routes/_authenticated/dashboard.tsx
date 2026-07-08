@@ -167,6 +167,7 @@ function ProfileCard({ profile }: { profile: DashboardData["profile"] }) {
   const [uploading, setUploading] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
+  const [passwordOpen, setPasswordOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
