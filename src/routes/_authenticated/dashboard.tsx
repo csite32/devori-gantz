@@ -762,6 +762,14 @@ function PasswordModal({ onClose }: { onClose: () => void }) {
       setErr("הסיסמה חייבת להכיל לפחות 8 תווים.");
       return;
     }
+    if (!/[A-Za-z]/.test(pw1)) {
+      setErr("הסיסמה חייבת לכלול לפחות אות אחת באנגלית.");
+      return;
+    }
+    if (!/\d/.test(pw1)) {
+      setErr("הסיסמה חייבת לכלול לפחות ספרה אחת.");
+      return;
+    }
     if (pw1 !== pw2) {
       setErr("הסיסמאות אינן תואמות.");
       return;
@@ -770,7 +778,29 @@ function PasswordModal({ onClose }: { onClose: () => void }) {
     const { error } = await supabase.auth.updateUser({ password: pw1 });
     setSaving(false);
     if (error) {
-      setErr("שינוי הסיסמה נכשל. נסי שוב.");
+      const raw = (error.message || "").toLowerCase();
+      const code = (error as { code?: string }).code?.toLowerCase() ?? "";
+      let friendly = "אירעה שגיאה בעת שינוי הסיסמה. נסי שוב בעוד מספר דקות.";
+      if (
+        code.includes("same_password") ||
+        raw.includes("should be different") ||
+        raw.includes("different from the old")
+      ) {
+        friendly = "הסיסמה החדשה חייבת להיות שונה מהסיסמה הנוכחית.";
+      } else if (raw.includes("at least") && raw.includes("character")) {
+        friendly = "הסיסמה חייבת להכיל לפחות 8 תווים.";
+      } else if (raw.includes("letter")) {
+        friendly = "הסיסמה חייבת לכלול לפחות אות אחת באנגלית.";
+      } else if (raw.includes("digit") || raw.includes("number")) {
+        friendly = "הסיסמה חייבת לכלול לפחות ספרה אחת.";
+      } else if (raw.includes("weak") || raw.includes("pwned") || raw.includes("compromised")) {
+        friendly = "הסיסמה חלשה מדי או נמצאה בדליפות מידע. יש לבחור סיסמה חזקה יותר.";
+      } else if (raw.includes("rate") || raw.includes("too many")) {
+        friendly = "בוצעו יותר מדי ניסיונות. נסי שוב בעוד מספר דקות.";
+      } else if (raw.includes("session") || raw.includes("jwt") || raw.includes("token")) {
+        friendly = "פג תוקף ההתחברות. יש להתנתק ולהתחבר מחדש.";
+      }
+      setErr(friendly);
       return;
     }
     setMsg("הסיסמה עודכנה בהצלחה.");
