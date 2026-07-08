@@ -27,6 +27,13 @@ export function SiteFooter() {
             פיתוח: חיה פוגל Csite
           </a>
           <Link
+            to="/privacy"
+            className="m-0 text-brand-primary-dark text-base md:text-[22px] no-underline hover:text-brand-primary-dark"
+            style={{ fontFamily: 'Discovery FS, sans-serif', fontWeight: 400 }}
+          >
+            מדיניות פרטיות
+          </Link>
+          <Link
             to="/accessibility"
             className="m-0 text-brand-primary-dark text-base md:text-[22px] no-underline hover:text-brand-primary-dark"
             style={{ fontFamily: 'Discovery FS, sans-serif', fontWeight: 400 }}
