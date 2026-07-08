@@ -13,9 +13,10 @@ interface CourseBlockProps {
   imageRight?: boolean;
   showMainTitle?: boolean;
   purchaseUrl: string;
+  price: string;
 }
 
-function CourseBlock({ number, image, imageAlt, decoText, title, description, imageRight = true, showMainTitle = false, purchaseUrl }: CourseBlockProps) {
+function CourseBlock({ number, image, imageAlt, decoText, title, description, imageRight = true, showMainTitle = false, purchaseUrl, price }: CourseBlockProps) {
   const contentTopPadding = imageRight
     ? number === "03"
       ? "pt-12 md:pt-0"
