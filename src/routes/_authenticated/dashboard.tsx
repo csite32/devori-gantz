@@ -733,3 +733,175 @@ function CoursePlaceholder() {
   );
 }
 
+function PasswordModal({ onClose }: { onClose: () => void }) {
+  const [pw1, setPw1] = useState("");
+  const [pw2, setPw2] = useState("");
+  const [show1, setShow1] = useState(false);
+  const [show2, setShow2] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const [msg, setMsg] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [onClose]);
+
+  async function handleSave(e: React.FormEvent) {
+    e.preventDefault();
+    setErr(null);
+    setMsg(null);
+    if (pw1.length < 8) {
+      setErr("הסיסמה חייבת להכיל לפחות 8 תווים.");
+      return;
+    }
+    if (pw1 !== pw2) {
+      setErr("הסיסמאות אינן תואמות.");
+      return;
+    }
+    setSaving(true);
+    const { error } = await supabase.auth.updateUser({ password: pw1 });
+    setSaving(false);
+    if (error) {
+      setErr("שינוי הסיסמה נכשל. נסי שוב.");
+      return;
+    }
+    setMsg("הסיסמה עודכנה בהצלחה.");
+    setTimeout(() => onClose(), 1200);
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      dir="rtl"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="password-modal-title"
+    >
+      <div
+        className="absolute inset-0 bg-brand-primary-dark/40 backdrop-blur-sm"
+        onClick={onClose}
+      />
+      <form
+        onSubmit={handleSave}
+        className="relative w-full max-w-md rounded-[24px] border border-brand-accent-soft/60 bg-brand-white p-6 md:p-8"
+        style={{
+          boxShadow: "0 30px 60px -30px rgba(82,16,20,0.45)",
+          fontFamily: "var(--font-discovery)",
+        }}
+      >
+        <div className="flex items-center gap-3">
+          <span aria-hidden className="h-[1px] w-8 bg-brand-primary/40" />
+          <p className="text-xs tracking-[0.3em] uppercase text-brand-primary/80">
+            אבטחת חשבון
+          </p>
+        </div>
+        <h2
+          id="password-modal-title"
+          className="mt-2 text-2xl md:text-3xl text-brand-primary-dark"
+          style={{ fontFamily: "var(--font-bateran)" }}
+        >
+          שינוי סיסמה
+        </h2>
+
+        <div className="mt-6 space-y-4">
+          <PasswordField
+            label="סיסמה חדשה"
+            value={pw1}
+            onChange={setPw1}
+            show={show1}
+            onToggle={() => setShow1((v) => !v)}
+          />
+          <PasswordField
+            label="אימות סיסמה"
+            value={pw2}
+            onChange={setPw2}
+            show={show2}
+            onToggle={() => setShow2((v) => !v)}
+          />
+
+          {err && <p className="text-sm text-brand-accent-alert">{err}</p>}
+          {msg && <p className="text-sm text-brand-primary">{msg}</p>}
+        </div>
+
+        <div className="mt-8 flex flex-col-reverse sm:flex-row gap-2 sm:justify-end">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-full border border-brand-accent-soft px-5 py-2.5 text-sm text-brand-primary-dark hover:bg-brand-background-light transition"
+          >
+            ביטול
+          </button>
+          <button
+            type="submit"
+            disabled={saving}
+            className="rounded-full bg-brand-primary px-6 py-2.5 text-sm text-brand-white shadow-md hover:bg-brand-primary-dark transition disabled:opacity-60"
+          >
+            {saving ? "שומר…" : "שמירת סיסמה"}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+function PasswordField({
+  label,
+  value,
+  onChange,
+  show,
+  onToggle,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  show: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <div>
+      <label className="block text-sm font-medium text-brand-primary-dark mb-2">
+        {label}
+      </label>
+      <div className="relative">
+        <input
+          type={show ? "text" : "password"}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          dir="ltr"
+          autoComplete="new-password"
+          className="w-full rounded-xl border border-brand-accent-soft bg-brand-white px-4 py-2.5 pl-11 text-brand-primary-dark outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/15"
+        />
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-label={show ? "הסתרת סיסמה" : "הצגת סיסמה"}
+          className="absolute inset-y-0 left-0 flex items-center px-3 text-brand-primary-dark/60 hover:text-brand-primary transition"
+        >
+          {show ? (
+            <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a20.17 20.17 0 0 1 5.06-5.94" />
+              <path d="M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a20.3 20.3 0 0 1-3.16 4.19" />
+              <path d="M14.12 14.12a3 3 0 0 1-4.24-4.24" />
+              <line x1="1" y1="1" x2="23" y2="23" />
+            </svg>
+          ) : (
+            <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+          )}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+
