@@ -110,6 +110,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
     ],
+    scripts: [
+      {
+        src: "https://www.googletagmanager.com/gtag/js?id=G-7R73DFC8DW",
+        async: true,
+      },
+      {
+        children:
+          "window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;gtag('js', new Date());gtag('config', 'G-7R73DFC8DW', { send_page_view: false });",
+      },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
@@ -133,6 +143,33 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const w = window as unknown as { gtag?: (...args: unknown[]) => void };
+    if (typeof w.gtag !== "function") return;
+    w.gtag("event", "page_view", {
+      page_path: window.location.pathname + window.location.search,
+      page_location: window.location.href,
+      page_title: document.title,
+    });
+  }, []);
+
+  const router = useRouter();
+  useEffect(() => {
+    const unsub = router.subscribe("onResolved", () => {
+      if (typeof window === "undefined") return;
+      const w = window as unknown as { gtag?: (...args: unknown[]) => void };
+      if (typeof w.gtag !== "function") return;
+      w.gtag("event", "page_view", {
+        page_path: window.location.pathname + window.location.search,
+        page_location: window.location.href,
+        page_title: document.title,
+      });
+    });
+    return () => unsub();
+  }, [router]);
+
 
   return (
     <QueryClientProvider client={queryClient}>
