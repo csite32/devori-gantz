@@ -4,7 +4,7 @@ import premium3Asset from "@/assets/courses/Premium3.webp.asset.json";
 import arrowBtn2Asset from "@/assets/icons/Arrow_button2.svg.asset.json";
 import vectorAsset from "@/assets/icons/Vector.svg.asset.json";
 
-export function PremiumSection() {
+export function PremiumSection({ bundleText }: { bundleText: string }) {
   return (
     <section dir="rtl" className="premium-section-wrapper relative w-full overflow-hidden flex flex-col" style={{ minHeight: '100vh', background: 'rgba(82,16,20,1)' }}>
 
