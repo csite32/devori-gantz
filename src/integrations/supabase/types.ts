@@ -274,6 +274,33 @@ export type Database = {
         }
         Relationships: []
       }
+      homepage_pricing: {
+        Row: {
+          id: string
+          key: string
+          label: string
+          updated_at: string
+          value: string
+          value_type: string
+        }
+        Insert: {
+          id?: string
+          key: string
+          label: string
+          updated_at?: string
+          value: string
+          value_type: string
+        }
+        Update: {
+          id?: string
+          key?: string
+          label?: string
+          updated_at?: string
+          value?: string
+          value_type?: string
+        }
+        Relationships: []
+      }
       lesson_progress: {
         Row: {
           completed_at: string
